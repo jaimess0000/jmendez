@@ -47,6 +47,7 @@
         }
     }
       /* Add your own styling for the movie and TV show galleries here */
+        
       body {
           font-family: 'Helvetica Light', Arial, sans-serif;
           margin: 0;
@@ -72,7 +73,7 @@
           z-index: 1000;
           position: fixed;
           top: 0;
-          margin-top: 20px;
+          /* margin-top: 20px; */
       }
 
       header a {
@@ -83,7 +84,9 @@
       }
 
       header a:hover {
-          border-bottom: 2px solid white;
+          /*border-bottom: 2px solid white;*/
+           color: #FF4081;
+           transform: scale(1.1);
       }
 
       #content {
@@ -193,7 +196,11 @@
           justify-content: space-between;
           margin-top: 50px;
       }
-
+ /* Add this style block in your HTML file or link to an external CSS file */
+  .experience-entry,
+  .education-entry {
+    text-align: center;
+  }
       .about-me,
       .hobbies {
           width: 48%;
@@ -520,6 +527,42 @@
         <ul>
             <li>Interned for 1 year and 4 months, gaining hands-on experience in 3D and motion graphics.</li>
             <li>Developed a strong foundation in industry-standard software and workflows.</li>
+        </ul>
+    </div>
+</div>
+<!-- Education Section -->
+<div class="education-section" id="education-section">
+    <h2 class="gallery-title">Education</h2>
+
+    <!-- Coco School México (Jan 2017 - Dec 2017) -->
+    <div class="education-entry">
+        <h3>Coco School México</h3>
+        <p>Master VFX, Visual Effects (MAYA, NUKE) | Mexico City Metropolitan Area</p>
+        <p>Jan 2017 - Dec 2017</p>
+        <ul>
+            <li>Actively engaged in collaborative projects, applying theoretical knowledge to real-world scenarios.</li>
+            <li>Initiated a student-led workshop series on advanced compositing techniques, demonstrating leadership and a commitment to knowledge sharing.</li>
+        </ul>
+    </div>
+
+    <!-- Universidad Politecnica Metropolitana de Hidalgo (Jan 2014 - Jan 2017) -->
+    <div class="education-entry">
+        <h3>Universidad Politecnica Metropolitana de Hidalgo</h3>
+        <p>Animation and Visual Effects (Bachelor degree) | Pachuca de Soto Area, Mexico</p>
+        <p>Jan 2014 - Jan 2017</p>
+        <ul>
+            <li>Participated in extracurricular activities, including organizing industry talks and networking events.</li>
+            <li>Collaborated with fellow students on a short film project, showcasing teamwork and project management skills.</li>
+        </ul>
+    </div>
+
+    <!-- Instituto Cardan (Jan 2015 - Jan 2016) -->
+    <div class="education-entry">
+        <h3>Instituto Cardan</h3>
+        <p>Nuke Compositing (Online)</p>
+        <p>Jan 2015 - Jan 2016</p>
+        <ul>
+            <li>Independently managed coursework while balancing professional commitments, showcasing a strong work ethic and time management skills.</li>
         </ul>
     </div>
 </div>
