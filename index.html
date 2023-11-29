@@ -2,338 +2,497 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/serpapi@1.0.0"></script>
+
+
     <title>JAIME ALAN MENDEZ CASTRO</title>
     <style>
- {
-        /* Adjust styles for smaller screens here */
-        header {
-            margin-top: 10px;
-        }
-
-        .gallery-title {
-            font-size: 96px;
-        }
-
-        .gallery-item {
-            width: 100%;
-        }
-
-        .about-me-hobbies {
-            flex-direction: column;
-        }
-
-        .about-me,
-        .hobbies {
-            width: 100%;
-        }
-
-        #video-container {
-            height: auto;
-            padding: 20px;
-        }
-
-        .video-label {
-            width: 100%;
-        }
-
-        #wipe-divider {
-            display: none;
-        }
-
-        #fullscreen-button,
-        #nav-left,
-        #nav-right {
-            font-size: 18px;
-        }
-    }
-      /* Add your own styling for the movie and TV show galleries here */
-        
-      body {
-          font-family: 'Helvetica Light', Arial, sans-serif;
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-          display: flex;
-          flex-direction: column;
-          opacity: 1;
-          transition: opacity 0.5s ease-in-out;
-
-
-      }
-
-      body.fade-out {
-          opacity: 0;
-      }
-
-      header {
-          background-color: #333;
-          padding: 10px;
-          text-align: center;
-          width: 100%;
-          z-index: 1000;
-          position: fixed;
-          top: 0;
-          /* margin-top: 20px; */
-      }
-
-      header a {
-          color: white;
-          text-decoration: none;
-          margin: 15px;
-          font-size: 18px;
-      }
-
-      header a:hover {
-          /*border-bottom: 2px solid white;*/
-           color: #FF4081;
-           transform: scale(1.1);
-      }
-
-      #content {
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: space-between;
-          width: 100%;
-          margin-top: 50px;
-          padding-top: 40px;
-      }
-
-      .gallery-section {
-          margin-bottom: 1430px;
-          width: 100%;
-      }
-
-      .gallery-title {
-        font-size: 12.5em; /* Increased font size for gallery titles */
-        font-weight: bold;
-        text-align: center;
-        margin-bottom: 20px; /* Adjusted margin for better spacing */
-    }
-
-      .gallery {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 20px;
-          justify-content: center;
-          max-width: 1200px;
-          margin: 0 auto;
-      }
-
-      .gallery-item {
-          position: relative;
-          width: 250px;
-          text-align: center;
-          transition: transform 0.3s ease-in-out;
-          cursor: pointer;
-          margin-bottom: 20px;
-      }
-
-      .gallery-item:hover {
-          transform: scale(1.1);
-      }
-
-      .item-poster {
-          max-width: 100%;
-          height: auto;
-          border-radius: 8px;
-          transition: transform 0.5s ease-in-out;
-      }
-
-      .item-title {
-          margin-top: 10px;
-          font-size: 16px;
-          font-weight: bold;
-          color: #333;
-          transition: color 0.3s ease-in-out;
-      }
-
-      .gallery-item:hover .item-title {
-          color: #FF4081;
-      }
-
-      /* Larger cover for "TAYLOR SWIFT | THE ERAS TOUR" live show */
-      .gallery-item[data-title="TAYLOR SWIFT | THE ERAS TOUR"] {
-          width: 100%;
-          margin: 0;
-      }
-
-      .gallery-item[data-title="TAYLOR SWIFT | THE ERAS TOUR"] .item-poster {
-          width: 250px;
-          max-height: 550px;
-      }
-
-      .gallery-item a {
-          display: block;
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          z-index: 1;
-      }
-
-      section {
-          margin-top: 100px;
-          text-align: center;
-          width: 100%;
-      }
-
-      h2 {
-          font-size: 24px;
-          font-weight: bold;
-          color: #333;
-          margin-bottom: 10px;
-      }
-
-      p {
-          font-size: 18px;
-          color: #666;
-          margin-top: 10px;
-      }
-
-      .about-me-hobbies {
-          display: flex;
-          justify-content: space-between;
-          margin-top: 50px;
-      }
- /* Add this style block in your HTML file or link to an external CSS file */
-  .experience-entry,
-  .education-entry {
-    text-align: center;
+     @media screen and (max-width: 600px) {
+            /* Adjust styles for smaller screens here */
+            header {
+      padding: 5px;
+      font-size: 14px;
   }
-      .about-me,
-      .hobbies {
-          width: 48%;
-          text-align: left;
-      }
 
-      .about-me h2,
-      .hobbies h2 {
-          font-size: 58px;
-          font-weight: bold;
-          color: #333;
-          margin-bottom: 15px;
-      }
+  header a {
+      margin: 10px;
+      font-size: 14px;
+  }
 
-      .about-me p,
-      .hobbies p {
-          font-size: 48px;
-          color: #666;
-          line-height: 1.6;
-      }
+            .gallery-title {
+                font-size: 96px;
+            }
 
-      #video-container {
-    position: relative;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    max-width: 1200px;
-    height: 720px;
-    overflow: hidden;
-    margin-top: 20px;
-}
+            .gallery-item {
+                width: 100%;
+            }
 
-.video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  position: absolute;
-  top: 0;
-  left: 0;
-  transition: clip-path 0.3s ease-in-out;
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-}
+            .about-me-hobbies {
+                flex-direction: column;
+            }
+
+            .about-me,
+            .hobbies {
+                width: 100%;
+            }
+
+            #video-container {
+                height: auto;
+                 margin-top: 10px;
+                padding: 20px;
+            }
+
+            .video-label {
+                width: 100%;
+            }
+
+            #wipe-divider {
+                display: none;
+            }
+
+            #fullscreen-button,
+            #nav-left,
+            #nav-right {
+                font-size: 18px;
+            }
+        }
+          /* Add your own styling for the movie and TV show galleries here */
+
+          body {
+              font-family: 'Helvetica Light', Arial, sans-serif;
+              margin: 0;
+              padding: 0;
+              box-sizing: border-box;
+              display: flex;
+              flex-direction: column;
+              opacity: 1;
+              transition: opacity 0.5s ease-in-out;
 
 
+          }
 
-      .video-label {
-          position: absolute;
-          font-size: 18px;
-          font-weight: bold;
-          z-index: 2;
-          text-align: center;
-          width: 45%;
-          color: #fff;
-          opacity: 0.7;
-          padding: 5px;
-      }
 
-      .label1 {
-          left: 0;
-          background-color: #333;
-          border-radius: 0 0 0 10px;
-      }
-
-      .label2 {
-          right: 0;
-          background-color: #333;
-          border-radius: 0 0 10px 0;
-      }
-
-      #video2 {
-          clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-      }
-
-      #wipe-divider {
-          position: absolute;
-          top: 0;
-          bottom: 0;
-          left: 50%;
-          width: 2px;
-          background-color: transparent;
-          cursor: ew-resize;
-          z-index: 1;
-      }
-
-      #fullscreen-button,
-      #nav-left,
-      #nav-right {
-          position: absolute;
-          font-size: 24px;
-          color: #333;
-          background-color: #fff;
-          border: none;
-          cursor: pointer;
-      }
-
-      #fullscreen-button {
-          bottom: 10px;
-          right: 10px;
-          padding: 8px 15px;
-      }
-
-      #nav-left {
-          top: 50%;
-          transform: translateY(-50%);
-          left: 10px;
-      }
-
-      #nav-right {
-          top: 50%;
-          transform: translateY(-50%);
-          right: 10px;
-      }
-
-      #legend {
-          position: absolute;
-          bottom: 20px;
-          left: 50%;
-          transform: translateX(-50%);
-          color: #fff;
-          font-size: 22px;
-          font-weight: bold;
-          opacity: 0.5;
-          animation: blink 2s infinite;
-      }
-
-      @keyframes blink {
-          50% {
+          body.fade-out {
               opacity: 0;
           }
+
+          header {
+       /* background-color: #333; */
+        background-color: white;
+        padding: 10px;
+        color: gray;
+        text-align: center;
+        width: 100%;
+        z-index: 1000;
+        position: fixed;
+        top: 0;
+        opacity: 1
+        font-weight: lighter;
+    }
+
+    header:hover {
+        background-color: white; /* Change the color as per your preference */
+        opacity: 1
+
+    }
+
+          header a {
+              color: black;
+              text-decoration: none;
+              margin: 15px;
+              font-size: 18px;
+              opacity: .4;
+              font-weight: normal;
+          }
+
+          header a:hover {
+              /*border-bottom: 2px solid white;*/
+               color: #FF4081;
+                /* background-color: white;*/
+               transform: scale(1.1);
+               opacity: 1;
+                animation: blink 2.3s infinite;
+                font-weight: bold;
+                opacity: 1
+          }
+
+          #content {
+              display: flex;
+              flex-wrap: wrap;
+              justify-content: space-between;
+              width: 100%;
+              margin-top: 50px;
+              padding-top: 40px;
+          }
+
+          .gallery-section {
+              margin-bottom: 1430px;
+              width: 100%;
+          }
+
+          .gallery-title {
+            font-size: 12.5em; /* Increased font size for gallery titles */
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px; /* Adjusted margin for better spacing */
+        }
+
+          .gallery {
+              display: flex;
+              flex-wrap: wrap;
+              gap: 20px;
+              justify-content: center;
+              max-width: 1200px;
+              margin: 0 auto;
+          }
+
+          .gallery-item {
+              position: relative;
+              width: 250px;
+              text-align: center;
+              transition: transform 0.3s ease-in-out;
+              cursor: pointer;
+              margin-bottom: 20px;
+          }
+
+          .gallery-item:hover {
+              transform: scale(1.1);
+          }
+
+          .item-poster {
+              max-width: 100%;
+              height: auto;
+              border-radius: 8px;
+              transition: transform 0.5s ease-in-out;
+          }
+
+          .item-title {
+              margin-top: 10px;
+              font-size: 16px;
+              font-weight: bold;
+              color: #333;
+              transition: color 0.3s ease-in-out;
+
+          }
+
+          .gallery-item:hover .item-title {
+              color: #FF4081;
+              animation: blink 2.3s infinite;
+          }
+
+          /* Larger cover for "TAYLOR SWIFT | THE ERAS TOUR" live show */
+          .gallery-item[data-title="TAYLOR SWIFT | THE ERAS TOUR"] {
+              width: 100%;
+              margin: 0;
+          }
+
+          .gallery-item[data-title="TAYLOR SWIFT | THE ERAS TOUR"] .item-poster {
+              width: 250px;
+              max-height: 550px;
+          }
+
+          .gallery-item a {
+              display: block;
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              z-index: 1;
+          }
+
+          section {
+              margin-top: 100px;
+              text-align: center;
+              width: 100%;
+          }
+
+          h2 {
+              font-size: 24px;
+              font-weight: bold;
+              color: #333;
+              margin-bottom: 10px;
+          }
+
+          p {
+              font-size: 18px;
+              color: #666;
+              margin-top: 10px;
+          }
+
+          .about-me-hobbies {
+              display: flex;
+              justify-content: space-between;
+              margin-top: 50px;
+          }
+
+            .experience-entry {
+              width: 48%;
+              text-align: left;
+
+                margin-bottom: 50px;
+            }
+
+            .company-logo-container {
+              overflow: hidden; /* Hide any overflow beyond the circle */
+                  position: absolute;
+      margin: 20px;
+
+                height: 400px;
+                width: 400px;
+                background-color: #FF4081;
+                border-radius: 50%;
+                left: 50%;
+                top: 50%;
+                transform: translate(220%, -50%);
+            }
+
+            .company-logo-container img {
+                width: 100%; /* Make the image fill the circular container */
+                height: 100%; /* Make the image fill the circular container */
+                object-fit: cover; /* Ensure the image covers the container */
+                border-radius: 50%;
+
+            }
+            .experience-entry h3 {
+              width: 100%;
+              font-size: 200px;
+              line-height: 250px;
+              font-weight: bolder;
+              text-transform: uppercase;
+              color: #de466c;
+              text-shadow: 20px 0px 0px #de466c;
+              outline: dashed;
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+              /* background-size: 10%; */
+              z-index: -1;
+              t: translate(-15% );
+              position: absolute;
+    }
+  .experience-entry  p {
+      font-weight: bolder;
+      color : gray
+
+  }
+.experience-entry li {
+
+  }
+      .experience-entry,
+      .education-entry {
+        font-size: 50px;
+      transform: translate(50%, 0%);
+      position: relative;
+       display: Center;
+         width:50%;
+          height: 3%;
+         text-align: rtl;
+
+        /*  margin: 85px; */
+
+         justify-content: center;
+
+
       }
 
-    </style>
+      .circle {
+      position: relative;
+      margin: 20px;
+      height: 400px;
+      width: 400px;
+      background-color: #FF4081;
+      border-radius: 50%;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, 0%);
+      transition: transform 2s ease-in-out;
+    }
+
+    .circle:hover:before {
+      position: absolute;
+      content: '';
+      height: calc(100% + 10px);
+      width: calc(100% + 10px);
+      border: 8px dashed #FF4081;
+      top: -13px;
+      left: -13px;
+      border-radius: inherit;
+      animation: spin 8s linear infinite;
+
+
+    }
+
+    @keyframes spin {
+      100% {
+        transform: rotateZ(360deg);
+      }
+    }
+
+      .about-me-img:hover {
+
+     transform: scale(.9);
+               color: #FF4081;
+
+                opacity: 1;
+      transition: opacity 1s, background 1s;
+      background: #FF4081;
+
+
+
+
+
+
+          }
+
+      .about-me-img {
+      border-radius: 50%;
+
+
+    /*   width:29%;
+      position: relative;
+       left: 50%;
+        transform: translateX(-50%);*/
+       opacity: .5;
+          /*  border-radius: 50%;*/
+            margin-bottom: 20px; /* Adjust the margin as needed */
+               transition: transform .3s ease-in-out;
+        }
+
+
+          .about-me,
+          .hobbies {
+              width: 48%;
+              text-align: left;
+          }
+
+          .about-me h2,
+          .hobbies h2 {
+              font-size: 58px;
+              font-weight: bold;
+              color: #333;
+              margin-bottom: 15px;
+          }
+
+          .about-me p,
+          .hobbies p {
+              font-size: 48px;
+              color: #666;
+              line-height: 1.6;
+          }
+
+          #video-container {
+        position: relative;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        max-width: 1200px;
+        height: 720px;
+        overflow: hidden;
+        margin-top: 20px;
+    }
+
+    .video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      top: 0;
+      left: 0;
+      transition: clip-path 0.3s ease-in-out;
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+
+
+
+          .video-label {
+              position: absolute;
+              font-size: 18px;
+              font-weight: bold;
+              z-index: 2;
+              text-align: center;
+              width: 45%;
+              color: #fff;
+              opacity: 0.7;
+              padding: 5px;
+          }
+
+          .label1 {
+              left: 0;
+              background-color: #333;
+              border-radius: 0 0 0 10px;
+          }
+
+          .label2 {
+              right: 0;
+              background-color: #333;
+              border-radius: 0 0 10px 0;
+          }
+
+          #video2 {
+              clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+          }
+
+          #wipe-divider {
+              position: absolute;
+              top: 0;
+              bottom: 0;
+              left: 50%;
+              width: 2px;
+              background-color: transparent;
+              cursor: ew-resize;
+              z-index: 1;
+          }
+
+          #fullscreen-button,
+          #nav-left,
+          #nav-right {
+              position: absolute;
+              font-size: 24px;
+              color: #333;
+              background-color: #fff;
+              border: none;
+              cursor: pointer;
+          }
+
+          #fullscreen-button {
+              bottom: 10px;
+              right: 10px;
+              padding: 8px 15px;
+          }
+
+          #nav-left {
+              top: 50%;
+              transform: translateY(-50%);
+              left: 10px;
+          }
+
+          #nav-right {
+              top: 50%;
+              transform: translateY(-50%);
+              right: 10px;
+          }
+
+          #legend {
+              position: absolute;
+              bottom: 20px;
+              left: 50%;
+              transform: translateX(-50%);
+              color: #fff;
+              font-size: 22px;
+              font-weight: bold;
+              opacity: 0.5;
+              animation: blink 2s infinite;
+          }
+
+          @keyframes blink {
+              50% {
+                  opacity: 0;
+              }
+          }
+
+        </style>
 </head>
 
 <body class="">
@@ -342,9 +501,10 @@
         <a href="#tv-show-section" onclick="navigateTo('tv-show-section')">TV Shows</a>
         <a href="#movie-section" onclick="navigateTo('movie-section')">Movies</a>
         <a href="#aboutme-section" onclick="navigateTo('aboutme-section')">About Me</a>
+        <a href="#experience-section" onclick="navigateTo('experience-section')">Experience</a>
+        <a href="#education-section" onclick="navigateTo('education-section')">Education</a>
         <a href="#demo-reel-section" onclick="navigateTo('demo-reel-section')">Demo Reel</a>
     </header>
-
     <div id="content">
 
       <!-- live Shows Section -->
@@ -368,7 +528,9 @@
         <!-- About Me Section -->
         <div class="gallery-section" id="aboutme-section">
             <h2 class="gallery-title">About Me</h2>
+           <div class="circle"> <img src="https://media.licdn.com/dms/image/D5603AQHBPRGpZCd3Cg/profile-displayphoto-shrink_400_400/0/1691299117440?e=1705536000&v=beta&t=xFwdHNsoiqzYLn5ByJp8XNNBevVCbQ3WX9vPBOrNlYQ" alt="Profile Image" class="about-me-img"></div>
             <div class="about-me-hobbies">
+
                 <div class="about-me">
                     <h2>About Me - Professional Compositor</h2>
                     <p>
@@ -388,148 +550,186 @@
                 </div>
             </div>
         </div>
-<!-- Demo Reel Comparison Section -->
-        <div class="gallery-section" id="demo-reel-section">
-        <h2 class="gallery-title">DEMOREEL</h2>
-        <div id="video-container">
 
-              <div id="wipe-divider"></div>
-              <video class="video" id="video1" src="video1.mp4" autoplay="" muted="" loop=""></video>
-              <video class="video" id="video2" src="video2.mp4" autoplay="" muted="" loop=""></video>
-              <div class="video-label label1" id="label1">Comp</div>
-              <div class="video-label label2" id="label2">Footage</div>
-              <button id="fullscreen-button" onclick="toggleFullscreen()">📺</button>
-              <button id="nav-left" onclick="changeVideos(-1)">◀</button>
-              <button id="nav-right" onclick="changeVideos(1)">▶</button>
-              <div id="legend">Press 'P' to Play/Pause, move the cursor to use the wipe <br> </div>
 
-          </div>
+        <!-- Experience Section -->
+     <div class="experience-section" id="experience-section">
+         <h2 class="gallery-title">Experience</h2>
 
-        </div>
-            <!-- Experience Section -->
-<div class="experience-section" id="experience-section">
-    <h2 class="gallery-title">Experience</h2>
+         <!-- Ingenuity Studios, LLC -->
+         <div class="experience-entry" data-company="Ingenuity Studios, LLC">
+             <h3>Ingenuity Studios, LLC</h3>
+             <div class="company-logo-container">
+                 <img src="" alt="Company Logo">
+             </div>
+         </div>
+         <div class="experience-entry" data-company="Ingenuity Studios, LLC">
+             <p>Lead Compositor | Los Angeles, California, Estados Unidos</p>
+             <p>May 2021 - Present</p>
+             <ul>
+                 <li>Leading a team of compositors, ensuring seamless integration of visual effects into diverse projects.</li>
+                 <li>Spearheading the development of innovative compositing techniques.</li>
+             </ul>
+         </div>
 
-    <!-- Ingenuity Studios -->
-    <div class="experience-entry">
-        <h3>Ingenuity Studios, LLC</h3>
-        <p>Lead Compositor | Los Angeles, California, Estados Unidos</p>
-        <p>May 2021 - Present</p>
-        <ul>
-            <li>Leading a team of compositors, ensuring seamless integration of visual effects into diverse projects.</li>
-            <li>Spearheading the development of innovative compositing techniques.</li>
-        </ul>
-    </div>
+         <!-- CINEMA MAQUINA -->
+         <div class="experience-entry" data-company="CINEMA MAQUINA">
+             <h3>CINEMA MAQUINA</h3>
+             <div class="company-logo-container">
+                 <img src="" alt="Company Logo">
+             </div>
+         </div>
+         <div class="experience-entry" data-company="CINEMA MAQUINA">
+             <p>Compositor | Mexico City Metropolitan Area</p>
+             <p>April 2021 - October 2021</p>
+             <ul>
+                 <li>Delivering visually stunning compositions for high-profile projects.</li>
+                 <li>Collaborating with cross-functional teams to develop unique visual effects solutions.</li>
+             </ul>
+         </div>
 
-    <!-- CINEMA MAQUINA -->
-    <div class="experience-entry">
-        <h3>CINEMA MAQUINA</h3>
-        <p>Compositor | Mexico City Metropolitan Area</p>
-        <p>April 2021 - October 2021</p>
-        <ul>
-            <li>Delivering visually stunning compositions for high-profile projects.</li>
-            <li>Collaborating with cross-functional teams to develop unique visual effects solutions.</li>
-        </ul>
-    </div>
+         <!-- Argos Comunicacion -->
+         <div class="experience-entry" data-company="Argos Comunicacion">
+             <h3>Argos Comunicacion</h3>
+             <div class="company-logo-container">
+                 <img src="" alt="Company Logo">
+             </div>
+         </div>
+         <div class="experience-entry" data-company="Argos Comunicacion">
+             <p>Compositor | Mexico City Metropolitan Area</p>
+             <p>February 2021 - April 2021</p>
+             <ul>
+                 <li>Contributed as a Compositor for 3 months, bringing visual effects expertise to projects.</li>
+             </ul>
+         </div>
 
-    <!-- Argos Comunicacion -->
-    <div class="experience-entry">
-        <h3>Argos Comunicacion</h3>
-        <p>Compositor | Mexico City Metropolitan Area</p>
-        <p>February 2021 - April 2021</p>
-        <ul>
-            <li>Contributed as a Compositor for 3 months, bringing visual effects expertise to projects.</li>
-        </ul>
-    </div>
+         <!-- Ollin VFX (January 2020 - January 2021) -->
+         <div class="experience-entry" data-company="Ollin VFX">
+             <h3>Ollin VFX</h3>
+             <div class="company-logo-container">
+                 <img src="" alt="Company Logo">
+             </div>
+         </div>
+         <div class="experience-entry" data-company="Ollin VFX">
+             <p>Compositor | Mexico City Metropolitan Area</p>
+             <p>January 2020 - January 2021</p>
+             <ul>
+                 <li>Served as a Compositor for 1 year, actively contributing to visual effects projects.</li>
+                 <li>Followed leads and supervisor's instructions, using a variety of compositing techniques.</li>
+             </ul>
+         </div>
 
-    <!-- Ollin VFX (January 2020 - January 2021) -->
-    <div class="experience-entry">
-        <h3>Ollin VFX</h3>
-        <p>Compositor | Mexico City Metropolitan Area</p>
-        <p>January 2020 - January 2021</p>
-        <ul>
-            <li>Served as a Compositor for 1 year, actively contributing to visual effects projects.</li>
-            <li>Followed leads and supervisor's instructions, using a variety of compositing techniques.</li>
-        </ul>
-    </div>
+         <!-- Mighty Studio (October 2020 - December 2020) -->
+         <div class="experience-entry" data-company="Mighty Studio">
+             <h3>Mighty Studio</h3>
+             <div class="company-logo-container">
+                 <img src="" alt="Company Logo">
+             </div>
+         </div>
+         <div class="experience-entry" data-company="Mighty Studio">
+             <p>Compositor | Guadalajara, Jalisco, México</p>
+             <p>October 2020 - December 2020</p>
+             <ul>
+                 <li>Specialized in composing VFX for promotional series on YouTube for children during a 3-month engagement.</li>
+                 <li>Received commendation for efficiently meeting tight deadlines without compromising on the quality of deliverables.</li>
+             </ul>
+         </div>
 
-    <!-- Mighty Studio (October 2020 - December 2020) -->
-    <div class="experience-entry">
-        <h3>Mighty Studio</h3>
-        <p>Compositor | Guadalajara, Jalisco, México</p>
-        <p>October 2020 - December 2020</p>
-        <ul>
-            <li>Specialized in composing VFX for promotional series on YouTube for children during a 3-month engagement.</li>
-            <li>Received commendation for efficiently meeting tight deadlines without compromising on the quality of deliverables.</li>
-        </ul>
-    </div>
+         <!-- The Mill (September 2019 - December 2019) -->
+         <div class="experience-entry" data-company="The Mill">
+             <h3>The Mill</h3>
+             <div class="company-logo-container">
+                 <img src="" alt="Company Logo">
+             </div>
+         </div>
+         <div class="experience-entry" data-company="The Mill">
+             <p>Compositor | Montreal, Canada Area</p>
+             <p>September 2019 - December 2019</p>
+             <ul>
+                 <li>Worked as a Compositor for 4 months, bringing expertise to the visual effects team.</li>
+                 <li>Collaborated with international teams to deliver high-impact visual effects for renowned brands.</li>
+             </ul>
+         </div>
 
-    <!-- The Mill (September 2019 - December 2019) -->
-    <div class="experience-entry">
-        <h3>The Mill</h3>
-        <p>Compositor | Montreal, Canada Area</p>
-        <p>September 2019 - December 2019</p>
-        <ul>
-            <li>Worked as a Compositor for 4 months, bringing expertise to the visual effects team.</li>
-            <li>Collaborated with international teams to deliver high-impact visual effects for renowned brands.</li>
-        </ul>
-    </div>
+         <!-- Labodigital (March 2019 - September 2019) -->
+         <div class="experience-entry" data-company="Labodigital">
+             <h3>Labodigital</h3>
+             <div class="company-logo-container">
+                 <img src="" alt="Company Logo">
+             </div>
+         </div>
+         <div class="experience-entry" data-company="Labodigital">
+             <p>Compositor | Mexico City Metropolitan Area</p>
+             <p>March 2019 - September 2019</p>
+             <ul>
+                 <li>Contributed as a Compositor for 7 months, playing a key role in visual effects projects.</li>
+                 <li>Implemented streamlined compositing workflows, resulting in increased project efficiency.</li>
+             </ul>
+         </div>
 
-    <!-- Labodigital (March 2019 - September 2019) -->
-    <div class="experience-entry">
-        <h3>Labodigital</h3>
-        <p>Compositor | Mexico City Metropolitan Area</p>
-        <p>March 2019 - September 2019</p>
-        <ul>
-            <li>Contributed as a Compositor for 7 months, playing a key role in visual effects projects.</li>
-            <li>Implemented streamlined compositing workflows, resulting in increased project efficiency.</li>
-        </ul>
-    </div>
+         <!-- Ollin VFX (October 2018 - February 2019) -->
+         <div class="experience-entry" data-company="Ollin VFX">
+             <h3>Ollin VFX</h3>
+             <div class="company-logo-container">
+                 <img src="" alt="Company Logo">
+             </div>
+         </div>
+         <div class="experience-entry" data-company="Ollin VFX">
+             <p>Compositor | Mexico City Metropolitan Area</p>
+             <p>October 2018 - February 2019</p>
+             <ul>
+                 <li>Engaged in compositing work for 5 months, demonstrating skills in visual effects.</li>
+                 <li>Collaborated closely with directors and producers, translating their visions into captivating visual effects sequences.</li>
+             </ul>
+         </div>
 
-    <!-- Ollin VFX (October 2018 - February 2019) -->
-    <div class="experience-entry">
-        <h3>Ollin VFX</h3>
-        <p>Compositor | Mexico City Metropolitan Area</p>
-        <p>October 2018 - February 2019</p>
-        <ul>
-            <li>Engaged in compositing work for 5 months, demonstrating skills in visual effects.</li>
-            <li>Collaborated closely with directors and producers, translating their visions into captivating visual effects sequences.</li>
-        </ul>
-    </div>
+         <!-- Flipbook Studio (February 2018 - October 2018) -->
+         <div class="experience-entry" data-company="Flipbook Studio">
+             <h3>Flipbook Studio</h3>
+             <div class="company-logo-container">
+                 <img src="" alt="Company Logo">
+             </div>
+         </div>
+         <div class="experience-entry" data-company="Flipbook Studio">
+             <p>Jr Compositor | Ensenada Area, Mexico</p>
+             <p>February 2018 - October 2018</p>
+             <ul>
+                 <li>Served as a Junior Compositor for 9 months, gaining experience in the field.</li>
+                 <li>Assumed responsibilities beyond the role, actively contributing to concept development and pre-visualization.</li>
+             </ul>
+         </div>
 
-    <!-- Flipbook Studio (February 2018 - October 2018) -->
-    <div class="experience-entry">
-        <h3>Flipbook Studio</h3>
-        <p>Jr Compositor | Ensenada Area, Mexico</p>
-        <p>February 2018 - October 2018</p>
-        <ul>
-            <li>Served as a Junior Compositor for 9 months, gaining experience in the field.</li>
-            <li>Assumed responsibilities beyond the role, actively contributing to concept development and pre-visualization.</li>
-        </ul>
-    </div>
+         <!-- Ollin VFX (July 2017 - February 2018) -->
+         <div class="experience-entry" data-company="Ollin VFX">
+             <h3>Ollin VFX</h3>
+             <div class="company-logo-container">
+                 <img src="" alt="Company Logo"> </div> </div>
+         <div class="experience-entry" data-company="Ollin VFX">
+             <p>Jr. Compositor | Mexico City Metropolitan Area</p>
+             <p>July 2017 - February 2018</p>
+             <ul>
+                 <li>Started as a Junior Compositor and contributed for 8 months in visual effects projects.</li>
+                 <li>Eagerly embraced challenges, successfully troubleshooting and resolving complex compositing issues.</li>
+             </ul>
+         </div>
 
-    <!-- Ollin VFX (July 2017 - February 2018) -->
-    <div class="experience-entry">
-        <h3>Ollin VFX</h3>
-        <p>Jr. Compositor | Mexico City Metropolitan Area</p>
-        <p>July 2017 - February 2018</p>
-        <ul>
-            <li>Started as a Junior Compositor and contributed for 8 months in visual effects projects.</li>
-            <li>Eagerly embraced challenges, successfully troubleshooting and resolving complex compositing issues.</li>
-        </ul>
-    </div>
+         <!-- Alux Media Studios (July 2015 - October 2016) -->
+         <div class="experience-entry" data-company="Alux Media Studios">
+             <h3>Alux Media Studios</h3>
+             <div class="company-logo-container">
+                 <img src="" alt="Company Logo">
+             </div>
+         </div>
+         <div class="experience-entry" data-company="Alux Media Studios">
+             <p>3D and Motion Graphics Intern | Pachuca de Soto Area, Mexico</p>
+             <p>July 2015 - October 2016</p>
+             <ul>
+                 <li>Interned for 1 year and 4 months, gaining hands-on experience in 3D and motion graphics.</li>
+                 <li>Developed a strong foundation in industry-standard software and workflows.</li>
+             </ul>
+         </div>
+     </div>
 
-    <!-- Alux Media Studios (July 2015 - October 2016) -->
-    <div class="experience-entry">
-        <h3>Alux Media Studios</h3>
-        <p>3D and Motion Graphics Intern | Pachuca de Soto Area, Mexico</p>
-        <p>July 2015 - October 2016</p>
-        <ul>
-            <li>Interned for 1 year and 4 months, gaining hands-on experience in 3D and motion graphics.</li>
-            <li>Developed a strong foundation in industry-standard software and workflows.</li>
-        </ul>
-    </div>
-</div>
 <!-- Education Section -->
 <div class="education-section" id="education-section">
     <h2 class="gallery-title">Education</h2>
@@ -566,12 +766,96 @@
         </ul>
     </div>
 </div>
+<!-- Demo Reel Comparison Section -->
+        <div class="gallery-section" id="demo-reel-section">
+        <h2 class="gallery-title">DEMOREEL</h2>
+        <div id="video-container">
 
+              <div id="wipe-divider"></div>
+              <video class="video" id="video1" src="video1.mp4" autoplay="" muted="" loop=""></video>
+              <video class="video" id="video2" src="video2.mp4" autoplay="" muted="" loop=""></video>
+              <div class="video-label label1" id="label1">Comp</div>
+              <div class="video-label label2" id="label2">Footage</div>
+              <button id="fullscreen-button" onclick="toggleFullscreen()">📺</button>
+              <button id="nav-left" onclick="changeVideos(-1)">◀</button>
+              <button id="nav-right" onclick="changeVideos(1)">▶</button>
+              <div id="legend">Press 'P' to Play/Pause, move the cursor to use the wipe <br> </div>
+
+          </div>
+
+        </div>
 
     </div><!-- Live Shows Section -->
 
 
     <script>
+   /* $(document).ready(function () {
+        // Iterate thttps://code.jquery.com/jquery-3.6.4.min.jshrough each experience entry
+        $('.experience-entry').each(function () {
+            // Get the company name from data attribute
+            var companyName = $(this).data('company');
+
+            // Make a request to Unsplash API to fetch an image based on the company name
+            $.ajax({
+                url: 'https://api.unsplash.com/photos/random',
+                method: 'GET',
+                data: {
+                    query: companyName,
+                    client_id: 'oYucr7LUbWsXHSaZsrwVrZAbkbUoqhjUB7LzLsKLcxM', // Replace with your Unsplash API access key
+                },
+                success: function (response) {
+                    // Set the fetched image as the source of the circular image container
+                    $(this).find('.company-logo-container img').attr('src', response.urls.regular);
+                }.bind(this),
+                error: function (error) {
+                    console.error('Error fetching image:', error);
+                },
+            });
+        });
+    });*/
+
+    $(document).ready(function () {
+           // Your SerpApi endpoint for Google Images search
+           const serpapiEndpoint = "https://serpapi.com/search";
+
+           // CORS Anywhere proxy URL
+           const corsAnywhereUrl = 'https://cors-anywhere.herokuapp.com/';
+           const parameter =", office"
+           // Iterate through each experience entry
+           $('.experience-entry').each(function () {
+               // Get the company name from data attribute
+               var companyName = $(this).data('company');
+
+               // Make a request to SerpAPI via CORS Anywhere to fetch an image based on the company name
+               $.ajax({
+                   url: corsAnywhereUrl + serpapiEndpoint,
+                   method: 'GET',
+                   data: {
+                       engine: 'google_images',
+                       q: companyName + parameter,
+                       api_key: '9407aa19393789428c0f78b227cddfc5ff8ac51f5c8328b30385c1246a596a17', // Replace with your SerpAPI API key
+                       tbm: 'isch', // Set to image search
+                       output: 'json', // Set output format to JSON
+                   },
+                   success: function (response) {
+                       // Check if there are image results
+                       if (response.images_results && response.images_results.length > 0) {
+                           // Assuming the first result is the logo image
+                           var imageUrl = response.images_results[0].original;
+                          var imageUrl2 = response.images_results[1].original;
+                           // Set the fetched image as the source of the circular image container
+                           $(this).find('.company-logo-container img').attr('src', imageUrl);
+                          $(this).find('h3').css('background-image', 'url(' + imageUrl + ')');
+                       } else {
+                           console.error('No image results found for:', companyName);
+                       }
+                   }.bind(this),
+                   error: function (error) {
+                       console.error('Error fetching image:', error);
+                   },
+               });
+           });
+       });
         const apiKey = '19d5a00c7fbc1259c7f25b844e5a8498';
         const listId = '8278274-portfolio';
         const movieGallery = document.getElementById('movie-gallery');
@@ -686,7 +970,16 @@
                 wipeDivider.style.left = '-10px';
             }
         });
-
+        document.getElementById('video-container').addEventListener('click', function () {
+            if (isPaused) {
+                video1.play();
+                video2.play();
+            } else {
+                video1.pause();
+                video2.pause();
+            }
+            isPaused = !isPaused;
+        });
         document.addEventListener('keydown', (event) => {
             if (event.code === 'KeyP') {
                 isPaused = !isPaused;
