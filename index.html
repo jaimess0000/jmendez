@@ -967,28 +967,44 @@
   }
 
   fullscreenButton.addEventListener('click', toggleFullscreen);
-        document.addEventListener('touchstart', function (e) {
-    touchStartX = e.touches[0].clientX;
-});
+  let lastTouchUpdateTimestamp = 0;
+  const touchThrottleInterval = 120; // Adjust this value to control the touch throttle interval
 
-document.addEventListener('touchmove', function (e) {
+  document.addEventListener('touchstart', function (e) {
+      touchStartX = e.touches[0].clientX;
+      isPaused = !isPaused;
+      if (isPaused) {
+          video1.pause();
+          video2.pause();
+      } else {
+          video1.play();
+          video2.play();
+      }
+  });
 
-        e.preventDefault(); // Prevent scrolling while moving the wiper
-        const containerRect = videoContainer.getBoundingClientRect();
-        const percentage = ((e.touches[0].clientX - containerRect.left) / videoContainer.offsetWidth) * 100;
-        video1.style.clipPath = `polygon(0 0, ${percentage}% 0, ${percentage}% 100%, 0 100%)`;
-        video2.style.clipPath = `polygon(${percentage}% 0, 100% 0, 100% 100%, ${percentage}% 100%)`;
-        wipeDivider.style.left = `${percentage}%`;
+  document.addEventListener('touchmove', function (e) {
+      e.preventDefault(); // Prevent scrolling while moving the wiper
 
-});
+      const currentTimestamp = Date.now();
 
-document.addEventListener('touchend', function () {
-    touchStartX = 0;
-});
+      if (currentTimestamp - lastTouchUpdateTimestamp > touchThrottleInterval) {
+          lastTouchUpdateTimestamp = currentTimestamp;
 
-document.addEventListener('touchcancel', function () {
-    touchStartX = 0;
-});
+          const containerRect = videoContainer.getBoundingClientRect();
+          const percentage = ((e.touches[0].clientX - containerRect.left) / videoContainer.offsetWidth) * 100;
+          video1.style.clipPath = `polygon(0 0, ${percentage}% 0, ${percentage}% 100%, 0 100%)`;
+          video2.style.clipPath = `polygon(${percentage}% 0, 100% 0, 100% 100%, ${percentage}% 100%)`;
+          wipeDivider.style.left = `${percentage}%`;
+      }
+  });
+
+  document.addEventListener('touchend', function () {
+      touchStartX = 0;
+  });
+
+  document.addEventListener('touchcancel', function () {
+      touchStartX = 0;
+  });
 
 let lastUpdateTimestamp = 0;
 const throttleInterval = 120; // Adjust this value to control the throttle interval
