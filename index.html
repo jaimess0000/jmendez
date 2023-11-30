@@ -941,54 +941,73 @@
         const totalSets = 8;
 
         function toggleFullscreen() {
-            if (videoContainer.requestFullscreen) {
-                videoContainer.requestFullscreen();
-            } else if (videoContainer.mozRequestFullScreen) {
-                videoContainer.mozRequestFullScreen();
-            } else if (videoContainer.webkitRequestFullscreen) {
-                videoContainer.webkitRequestFullscreen();
-            } else if (videoContainer.msRequestFullscreen) {
-                videoContainer.msRequestFullscreen();
-            }
-        }
-
-        fullscreenButton.addEventListener('click', toggleFullscreen);
-        document.addEventListener('touchstart', function (e) {
-          touchStartX = e.touches[0].clientX;
-      });
-
-      document.addEventListener('touchmove', function (e) {
-          if (isPaused) {
-              e.preventDefault(); // Prevent scrolling while moving the wiper
-              const percentage = ((e.touches[0].clientX - touchStartX) / window.innerWidth) * 100;
-              const transformedPercentage = `translateX(${percentage}%)`;
-
-              video1.style.transform = `translateX(-${percentage}%)`;
-              video2.style.transform = transformedPercentage;
-              wipeDivider.style.left = `${percentage}%`;
+      if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
+          // Browser is currently in fullscreen, so exit fullscreen
+          if (document.exitFullscreen) {
+              document.exitFullscreen();
+          } else if (document.webkitExitFullscreen) {
+              document.webkitExitFullscreen();
+          } else if (document.mozCancelFullScreen) {
+              document.mozCancelFullScreen();
+          } else if (document.msExitFullscreen) {
+              document.msExitFullscreen();
           }
-      });
+      } else {
+          // Browser is not in fullscreen, so enter fullscreen
+          if (videoContainer.requestFullscreen) {
+              videoContainer.requestFullscreen();
+          } else if (videoContainer.webkitRequestFullscreen) {
+              videoContainer.webkitRequestFullscreen();
+          } else if (videoContainer.mozRequestFullScreen) {
+              videoContainer.mozRequestFullScreen();
+          } else if (videoContainer.msRequestFullscreen) {
+              videoContainer.msRequestFullscreen();
+          }
+      }
+  }
 
-      document.addEventListener('touchend', function () {
-          touchStartX = 0;
-      });
+  fullscreenButton.addEventListener('click', toggleFullscreen);
+        document.addEventListener('touchstart', function (e) {
+    touchStartX = e.touches[0].clientX;
+});
 
-      document.addEventListener('touchcancel', function () {
-          touchStartX = 0;
-      });
+document.addEventListener('touchmove', function (e) {
+
+        e.preventDefault(); // Prevent scrolling while moving the wiper
+        const containerRect = videoContainer.getBoundingClientRect();
+        const percentage = ((e.touches[0].clientX - containerRect.left) / videoContainer.offsetWidth) * 100;
+        video1.style.clipPath = `polygon(0 0, ${percentage}% 0, ${percentage}% 100%, 0 100%)`;
+        video2.style.clipPath = `polygon(${percentage}% 0, 100% 0, 100% 100%, ${percentage}% 100%)`;
+        wipeDivider.style.left = `${percentage}%`;
+
+});
+
+document.addEventListener('touchend', function () {
+    touchStartX = 0;
+});
+
+document.addEventListener('touchcancel', function () {
+    touchStartX = 0;
+});
+
+let lastUpdateTimestamp = 0;
+const throttleInterval = 120; // Adjust this value to control the throttle interval
 
 document.addEventListener('mousemove', function (event) {
-    if (isPaused) {
-        const percentage = (event.clientX / window.innerWidth) * 100;
-        const transformedPercentage = `translateX(${percentage}%)`;
+    const currentTimestamp = Date.now();
 
-        video1.style.transform = `translateX(-${percentage}%)`;
-        video2.style.transform = transformedPercentage;
+    if (isPaused && currentTimestamp - lastUpdateTimestamp > throttleInterval) {
+        lastUpdateTimestamp = currentTimestamp;
+
+        const containerRect = videoContainer.getBoundingClientRect();
+        const percentage = ((event.clientX - containerRect.left) / videoContainer.offsetWidth) * 100;
+        video1.style.clipPath = `polygon(0 0, ${percentage}% 0, ${percentage}% 100%, 0 100%)`;
+        video2.style.clipPath = `polygon(${percentage}% 0, 100% 0, 100% 100%, ${percentage}% 100%)`;
         wipeDivider.style.left = `${percentage}%`;
     }
 });
 
-document.addEventListener('mouseleave', function () {
+document.addEventListener('mouseleave', () => {
     if (isPaused) {
         wipeDivider.style.left = '-10px';
     }
