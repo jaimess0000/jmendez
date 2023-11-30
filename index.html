@@ -954,43 +954,46 @@
 
         fullscreenButton.addEventListener('click', toggleFullscreen);
         document.addEventListener('touchstart', function (e) {
-    touchStartX = e.touches[0].clientX;
-});
+          touchStartX = e.touches[0].clientX;
+      });
 
-document.addEventListener('touchmove', function (e) {
-  
-        e.preventDefault(); // Prevent scrolling while moving the wiper
-        const containerRect = videoContainer.getBoundingClientRect();
-        const percentage = ((e.touches[0].clientX - containerRect.left) / videoContainer.offsetWidth) * 100;
-        video1.style.clipPath = `polygon(0 0, ${percentage}% 0, ${percentage}% 100%, 0 100%)`;
-        video2.style.clipPath = `polygon(${percentage}% 0, 100% 0, 100% 100%, ${percentage}% 100%)`;
+      document.addEventListener('touchmove', function (e) {
+          if (isPaused) {
+              e.preventDefault(); // Prevent scrolling while moving the wiper
+              const percentage = ((e.touches[0].clientX - touchStartX) / window.innerWidth) * 100;
+              const transformedPercentage = `translateX(${percentage}%)`;
+
+              video1.style.transform = `translateX(-${percentage}%)`;
+              video2.style.transform = transformedPercentage;
+              wipeDivider.style.left = `${percentage}%`;
+          }
+      });
+
+      document.addEventListener('touchend', function () {
+          touchStartX = 0;
+      });
+
+      document.addEventListener('touchcancel', function () {
+          touchStartX = 0;
+      });
+
+document.addEventListener('mousemove', function (event) {
+    if (isPaused) {
+        const percentage = (event.clientX / window.innerWidth) * 100;
+        const transformedPercentage = `translateX(${percentage}%)`;
+
+        video1.style.transform = `translateX(-${percentage}%)`;
+        video2.style.transform = transformedPercentage;
         wipeDivider.style.left = `${percentage}%`;
-
+    }
 });
 
-document.addEventListener('touchend', function () {
-    touchStartX = 0;
+document.addEventListener('mouseleave', function () {
+    if (isPaused) {
+        wipeDivider.style.left = '-10px';
+    }
 });
 
-document.addEventListener('touchcancel', function () {
-    touchStartX = 0;
-});
-
-        document.addEventListener('mousemove', (event) => {
-            if (isPaused) {
-                const containerRect = videoContainer.getBoundingClientRect();
-                const percentage = ((event.clientX - containerRect.left) / videoContainer.offsetWidth) * 100;
-                video1.style.clipPath = `polygon(0 0, ${percentage}% 0, ${percentage}% 100%, 0 100%)`;
-                video2.style.clipPath = `polygon(${percentage}% 0, 100% 0, 100% 100%, ${percentage}% 100%)`;
-                wipeDivider.style.left = `${percentage}%`;
-            }
-        });
-
-        document.addEventListener('mouseleave', () => {
-            if (isPaused) {
-                wipeDivider.style.left = '-10px';
-            }
-        });
 
         document.addEventListener('keydown', (event) => {
             if (event.code === 'KeyP') {
