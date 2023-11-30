@@ -958,14 +958,14 @@
 });
 
 document.addEventListener('touchmove', function (e) {
-    if (isPaused) {
+  
         e.preventDefault(); // Prevent scrolling while moving the wiper
         const containerRect = videoContainer.getBoundingClientRect();
         const percentage = ((e.touches[0].clientX - containerRect.left) / videoContainer.offsetWidth) * 100;
         video1.style.clipPath = `polygon(0 0, ${percentage}% 0, ${percentage}% 100%, 0 100%)`;
         video2.style.clipPath = `polygon(${percentage}% 0, 100% 0, 100% 100%, ${percentage}% 100%)`;
         wipeDivider.style.left = `${percentage}%`;
-    }
+
 });
 
 document.addEventListener('touchend', function () {
