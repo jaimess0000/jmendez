@@ -8,17 +8,11 @@
 
     <title>JAIME ALAN MENDEZ CASTRO</title>
     <style>
-     @media screen and (max-width: 600px) {
+  @media screen and (max-width: 600px) {
             /* Adjust styles for smaller screens here */
             header {
-      padding: 5px;
-      font-size: 14px;
-  }
-
-  header a {
-      margin: 10px;
-      font-size: 14px;
-  }
+                margin-top: 10px;
+            }
 
             .gallery-title {
                 font-size: 96px;
@@ -38,10 +32,15 @@
             }
 
             #video-container {
-                height: auto;
-                 margin-top: 10px;
-                padding: 20px;
-            }
+    height: auto;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+.video {
+    height: auto;
+    width: 100%;
+}
 
             .video-label {
                 width: 100%;
@@ -231,7 +230,7 @@
               width: 48%;
               text-align: left;
 
-                margin-bottom: 50px;
+                margin-bottom: 300px;
             }
 
             .company-logo-container {
@@ -936,12 +935,10 @@
         const label2 = document.getElementById('label2');
         const fullscreenButton = document.getElementById('fullscreen-button');
         const legend = document.getElementById('legend');
-
+        let touchStartX = 0;
         let isPaused = false;
         let videoSet = 1;
         const totalSets = 8;
-        const wipeDivider = document.getElementById('wipe-divider');
-        let touchStartX = 0;
 
         function toggleFullscreen() {
             if (videoContainer.requestFullscreen) {
@@ -956,38 +953,10 @@
         }
 
         fullscreenButton.addEventListener('click', toggleFullscreen);
-
-
-        document.addEventListener('mousemove', (event) => {
-            if (isPaused) {
-                const containerRect = videoContainer.getBoundingClientRect();
-                const percentage = ((event.clientX - containerRect.left) / videoContainer.offsetWidth) * 100;
-                video1.style.clipPath = `polygon(0 0, ${percentage}% 0, ${percentage}% 100%, 0 100%)`;
-                video2.style.clipPath = `polygon(${percentage}% 0, 100% 0, 100% 100%, ${percentage}% 100%)`;
-                wipeDivider.style.left = `${percentage}%`;
-            }
-        });
-
-        document.addEventListener('mouseleave', () => {
-            if (isPaused) {
-                wipeDivider.style.left = '-10px';
-            }
-        });
-    /*    document.getElementById('video-container').addEventListener('click', function () {
-            if (isPaused) {
-                video1.play();
-                video2.play();
-            } else {
-                video1.pause();
-                video2.pause();
-            }
-            isPaused = !isPaused;
-        });
-
         document.addEventListener('touchstart', function (e) {
     touchStartX = e.touches[0].clientX;
 });
-*/
+
 document.addEventListener('touchmove', function (e) {
     if (isPaused) {
         e.preventDefault(); // Prevent scrolling while moving the wiper
@@ -1006,6 +975,23 @@ document.addEventListener('touchend', function () {
 document.addEventListener('touchcancel', function () {
     touchStartX = 0;
 });
+
+        document.addEventListener('mousemove', (event) => {
+            if (isPaused) {
+                const containerRect = videoContainer.getBoundingClientRect();
+                const percentage = ((event.clientX - containerRect.left) / videoContainer.offsetWidth) * 100;
+                video1.style.clipPath = `polygon(0 0, ${percentage}% 0, ${percentage}% 100%, 0 100%)`;
+                video2.style.clipPath = `polygon(${percentage}% 0, 100% 0, 100% 100%, ${percentage}% 100%)`;
+                wipeDivider.style.left = `${percentage}%`;
+            }
+        });
+
+        document.addEventListener('mouseleave', () => {
+            if (isPaused) {
+                wipeDivider.style.left = '-10px';
+            }
+        });
+
         document.addEventListener('keydown', (event) => {
             if (event.code === 'KeyP') {
                 isPaused = !isPaused;
