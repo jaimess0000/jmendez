@@ -1,498 +1,1058 @@
 <html lang="en"><head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/serpapi@1.0.0"></script>
+
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/serpapi@1.0.0"></script>
 
 
     <title>JAIME ALAN MENDEZ CASTRO</title>
-    <style>
-  @media screen and (max-width: 600px) {
-            /* Adjust styles for smaller screens here */
-            header {
-                margin-top: 10px;
-            }
 
-            .gallery-title {
-                font-size: 96px;
-            }
+<style>
 
-            .gallery-item {
-                width: 100%;
-            }
-
-            .about-me-hobbies {
-                flex-direction: column;
-            }
-
-            .about-me,
-            .hobbies {
-                width: 100%;
-            }
-
-            #video-container {
-    height: auto;
-    padding: 10px;
-    margin-top: 10px;
-}
-
-.video {
-    height: auto;
-    width: 100%;
-}
-
-            .video-label {
-                width: 100%;
-            }
-
-            #wipe-divider {
-                display: none;
-            }
-
-            #fullscreen-button,
-            #nav-left,
-            #nav-right {
-                font-size: 18px;
-            }
-        }
-          /* Add your own styling for the movie and TV show galleries here */
-
-          body {
-              font-family: 'Helvetica Light', Arial, sans-serif;
-              margin: 0;
-              padding: 0;
-              box-sizing: border-box;
-              display: flex;
-              flex-direction: column;
-              opacity: 1;
-              transition: opacity 0.5s ease-in-out;
+              body {
+                  font-family: 'Helvetica Light', Arial, sans-serif;
+                  margin: 0;
+                  padding: 0;
+                  box-sizing: border-box;
+                  display: flex;
+                  flex-direction: column;
+                  opacity: 1;
+                  transition: opacity 0.5s ease-in-out;
 
 
-          }
+              }
 
 
-          body.fade-out {
-              opacity: 0;
-          }
+              body.fade-out {
+                  opacity: 0;
+              }
 
-          header {
-       /* background-color: #333; */
-        background-color: white;
-        padding: 10px;
-        color: gray;
-        text-align: center;
-        width: 100%;
-        z-index: 1000;
-        position: fixed;
-        top: 0;
-        opacity: 1
-        font-weight: lighter;
-    }
-
-    header:hover {
-        background-color: white; /* Change the color as per your preference */
-        opacity: 1
-
-    }
-
-          header a {
-              color: black;
-              text-decoration: none;
-              margin: 15px;
-              font-size: 18px;
-              opacity: .4;
-              font-weight: normal;
-          }
-
-          header a:hover {
-              /*border-bottom: 2px solid white;*/
-               color: #FF4081;
-                /* background-color: white;*/
-               transform: scale(1.1);
-               opacity: 1;
-                animation: blink 2.3s infinite;
-                font-weight: bold;
-                opacity: 1
-          }
-
-          #content {
-              display: flex;
-              flex-wrap: wrap;
-              justify-content: space-between;
-              width: 100%;
-              margin-top: 50px;
-              padding-top: 40px;
-          }
-
-          .gallery-section {
-              margin-bottom: 1430px;
-              width: 100%;
-          }
-
-          .gallery-title {
-            font-size: 12.5em; /* Increased font size for gallery titles */
-            font-weight: bold;
+              header {
+           /* background-color: #333; */
+            background-color: transparent;
+            padding: 10px;
+            color: gray;
             text-align: center;
-            margin-bottom: 20px; /* Adjusted margin for better spacing */
+            width: 100%;
+            z-index: 1000;
+            position: fixed;
+            top: 0;
+            opacity: 0;
+            font-weight: lighter;
         }
 
-          .gallery {
-              display: flex;
-              flex-wrap: wrap;
-              gap: 20px;
-              justify-content: center;
-              max-width: 1200px;
-              margin: 0 auto;
-          }
+        header:hover {
+            background-color: white; /* Change the color as per your preference */
+            opacity: 1
 
-          .gallery-item {
-              position: relative;
-              width: 250px;
-              text-align: center;
-              transition: transform 0.3s ease-in-out;
-              cursor: pointer;
-              margin-bottom: 20px;
-          }
+        }
 
-          .gallery-item:hover {
-              transform: scale(1.1);
-          }
+              header a {
+                  color: black;
+                  text-decoration: none;
+                  margin: 45px;
+                  font-size: 48px;
 
-          .item-poster {
-              max-width: 100%;
-              height: auto;
-              border-radius: 8px;
-              transition: transform 0.5s ease-in-out;
-          }
+                  font-weight: normal;
+              }
 
-          .item-title {
-              margin-top: 10px;
-              font-size: 16px;
-              font-weight: bold;
-              color: #333;
-              transition: color 0.3s ease-in-out;
+              header a:hover {
+                  /*border-bottom: 2px solid white;*/
+                   color: #FF4081;
+                    /* background-color: white;*/
+                   transform: scale(1.1);
+                   opacity: 1;
+                    animation: blink 2.3s infinite;
+                    font-weight: bold;
+                    opacity: 1
+              }
 
-          }
+              #content {
+                  display: flex;
+                  flex-wrap: wrap;
+                  justify-content: space-between;
+                  width: 100%;
+                  margin-top: 50px;
+                  pa dding-top: 40px;
+              }
 
-          .gallery-item:hover .item-title {
-              color: #FF4081;
-              animation: blink 2.3s infinite;
-          }
+              .gallery-section {
+                  margin-bottom: 430px;
+                  width: 100%;
+              }
 
-          /* Larger cover for "TAYLOR SWIFT | THE ERAS TOUR" live show */
-          .gallery-item[data-title="TAYLOR SWIFT | THE ERAS TOUR"] {
-              width: 100%;
-              margin: 0;
-          }
-
-          .gallery-item[data-title="TAYLOR SWIFT | THE ERAS TOUR"] .item-poster {
-              width: 250px;
-              max-height: 550px;
-          }
-
-          .gallery-item a {
-              display: block;
-              position: absolute;
-              top: 0;
-              left: 0;
-              width: 100%;
-              height: 100%;
-              z-index: 1;
-          }
-
-          section {
-              margin-top: 100px;
-              text-align: center;
-              width: 100%;
-          }
-
-          h2 {
-              font-size: 24px;
-              font-weight: bold;
-              color: #333;
-              margin-bottom: 10px;
-          }
-
-          p {
-              font-size: 18px;
-              color: #666;
-              margin-top: 10px;
-          }
-
-          .about-me-hobbies {
-              display: flex;
-              justify-content: space-between;
-              margin-top: 50px;
-          }
-
-            .experience-entry {
-              width: 48%;
-              text-align: left;
-
-                margin-bottom: 300px;
+              .gallery-title {
+                font-size: 12.5em; /* Increased font size for gallery titles */
+                font-weight: bold;
+                text-align: center;
+                margin-bottom: 20px; /* Adjusted margin for better spacing */
             }
 
-            .company-logo-container {
-              overflow: hidden; /* Hide any overflow beyond the circle */
+              .gallery {
+                  display: flex;
+                  flex-wrap: wrap;
+                  gap: 20px;
+                  justify-content: center;
+                  max-width: 1200px;
+                  margin: 0 auto;
+              }
+
+              .gallery-item {
+                  position: relative;
+                  width: 250px;
+                  text-align: center;
+                  transition: transform 0.3s ease-in-out;
+                  cursor: pointer;
+                  margin-bottom: 20px;
+              }
+
+              .gallery-item:hover {
+                  transform: scale(1.1);
+              }
+
+              .item-poster {
+                  max-width: 100%;
+                  height: auto;
+                  border-radius: 8px;
+                  transition: transform 0.5s ease-in-out;
+              }
+
+              .item-title {
+                  margin-top: 10px;
+                  font-size: 16px;
+                  font-weight: bold;
+                  color: #333;
+                  transition: color 0.3s ease-in-out;
+
+              }
+
+              .gallery-item:hover .item-title {
+                  color: #FF4081;
+                  animation: blink 2.3s infinite;
+              }
+
+              /* Larger cover for "TAYLOR SWIFT | THE ERAS TOUR" live show */
+              .gallery-item[data-title="TAYLOR SWIFT | THE ERAS TOUR"] {
+                  width: 100%;
+                  margin: 0;
+              }
+
+              .gallery-item[data-title="TAYLOR SWIFT | THE ERAS TOUR"] .item-poster {
+                  width: 250px;
+                  max-height: 550px;
+              }
+
+              .gallery-item a {
+                  display: block;
                   position: absolute;
-      margin: 20px;
+                  top: 0;
+                  left: 0;
+                  width: 100%;
+                  height: 100%;
+                  z-index: 1;
+              }
 
-                height: 400px;
-                width: 400px;
-                background-color: #FF4081;
-                border-radius: 50%;
-                left: 50%;
-                top: 50%;
-                transform: translate(220%, -50%);
-            }
+              section {
+                  margin-top: 100px;
+                  text-align: center;
+                  width: 100%;
+              }
 
-            .company-logo-container img {
-                width: 100%; /* Make the image fill the circular container */
-                height: 100%; /* Make the image fill the circular container */
-                object-fit: cover; /* Ensure the image covers the container */
-                border-radius: 50%;
+              h2 {
+                  font-size: 24px;
+                  font-weight: bold;
+                  color: #333;
+                  margin-bottom: 10px;
+              }
 
-            }
-            .experience-entry h3 {
-              width: 100%;
-              font-size: 200px;
-              line-height: 250px;
+              p {
+                  font-size: 58px;
+                  color: #666;
+                  margin-top: -14px;
+
+
+              }
+
+              .about-me-hobbies {
+                  display: flex;
+                  justify-content: space-between;
+                  margin-top: 50px;
+                  width: 50%;
+                  padding-left: 28%;
+              }
+
+                .experience-entry {
+                  width: 48%;
+                  text-align: left;
+
+                    margin-bottom: 496px;
+                }
+
+                .company-logo-container {
+                  overflow: hidden;
+            position: absolute;
+            margin: 284px;
+            height: 795px;
+            width: 260%;
+            background-color: #FF4081;
+            border-radius: -225%;
+            left: -72%;
+            top: -36%;
+
+            z-index: -100;
+            outline: dashed;
+            outline-width: 8px;
+            animation: color 9s infinite linear;
+
+                }
+                .company-logo-container_mill {
+                  overflow: hidden;
+            position: absolute;
+            margin: 284px;
+            height: 795px;
+            width: 260%;
+            background-color: #FF4081;
+            border-radius: -225%;
+            left: -72%;
+            top: -36%;
+
+            z-index: -100;
+            outline: dashed;
+            outline-width: 8px;
+            animation: color 9s infinite linear;
+
+                }
+
+                .company-logo-container img {
+                  height: 212%;
+    margin-top: -400px;
+
+                }
+                .company-logo-container_mill img{
+                  height: 79%;
+    margin-top: 52px;
+    margin-left: 95px;
+
+                }
+
+
+
+                @keyframes color {
+      0%   { color : #33CCCC; }
+      20%  { color : #33CC36; }
+      40%  { color: #B8CC33; }
+      60%  { color: #FCCA00; }
+      80%  { color: #33CC36; }
+      100% { color: #33CCCC; }
+    }
+                .experience-entry h3 {
+                  width: 118%;
+                  width: 118%;
+              font-size: 252px;
+              line-height: 219px;
               font-weight: bolder;
               text-transform: uppercase;
-              color: #de466c;
-              text-shadow: 20px 0px 0px #de466c;
-              outline: dashed;
+              text-shadow: 34px 2px 0px rgb(255 0 169);
+              animation: color 9s infinite linear;
+              /* outline: dashed; */
               -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              /* background-size: 10%; */
+              /* -webkit-text-fill-color: transparent; */
+              background-size: 13%;
               z-index: -1;
               t: translate(-15% );
               position: absolute;
-    }
-  .experience-entry  p {
-      font-weight: bolder;
-      color : gray
-
-  }
-.experience-entry li {
-
-  }
-      .experience-entry,
-      .education-entry {
-        font-size: 50px;
-      transform: translate(50%, 0%);
-      position: relative;
-       display: Center;
-         width:50%;
-          height: 3%;
-         text-align: rtl;
-
-        /*  margin: 85px; */
-
-         justify-content: center;
-
-
-      }
-
-      .circle {
-      position: relative;
-      margin: 20px;
-      height: 400px;
-      width: 400px;
-      background-color: #FF4081;
-      border-radius: 50%;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, 0%);
-      transition: transform 2s ease-in-out;
-    }
-
-    .circle:hover:before {
-      position: absolute;
-      content: '';
-      height: calc(100% + 10px);
-      width: calc(100% + 10px);
-      border: 8px dashed #FF4081;
-      top: -13px;
-      left: -13px;
-      border-radius: inherit;
-      animation: spin 8s linear infinite;
-
-
-    }
-
-    @keyframes spin {
-      100% {
-        transform: rotateZ(360deg);
-      }
-    }
-
-      .about-me-img:hover {
-
-     transform: scale(.9);
-               color: #FF4081;
-
-                opacity: 1;
-      transition: opacity 1s, background 1s;
-      background: #FF4081;
-
-
-
-
-
-
-          }
-
-      .about-me-img {
-      border-radius: 50%;
-
-
-    /*   width:29%;
-      position: relative;
-       left: 50%;
-        transform: translateX(-50%);*/
-       opacity: .5;
-          /*  border-radius: 50%;*/
-            margin-bottom: 20px; /* Adjust the margin as needed */
-               transition: transform .3s ease-in-out;
         }
 
 
-          .about-me,
-          .hobbies {
-              width: 48%;
-              text-align: left;
+      .experience-entry  p {
+          font-weight: bolder;
+          color : black
+          font-size: 50px;
+      }
+    .experience-entry li {
+
+      }
+          .experience-entry,
+          .education-entry {
+            font-size: 64px;
+    transform: translate(50%, 0%);
+    position: relative;
+    display: Center;
+    width: 50%;
+    height:2%;
+
+
           }
 
-          .about-me h2,
-          .hobbies h2 {
-              font-size: 58px;
-              font-weight: bold;
-              color: #333;
-              margin-bottom: 15px;
+          .circle {
+          position: relative;
+          margin: 20px;
+          height: 400px;
+          width: 400px;
+          background-color: #FF4081;
+          border-radius: 50%;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, 0%);
+          transition: transform 2s ease-in-out;
+        }
+
+        .circle:hover:before {
+          position: absolute;
+          content: '';
+          height: calc(100% + 10px);
+          width: calc(100% + 10px);
+          border: 8px dashed #FF4081;
+          top: -13px;
+          left: -13px;
+          border-radius: inherit;
+          animation: spin 8s linear infinite;
+
+
+        }
+
+        @keyframes spin {
+          100% {
+            transform: rotateZ(360deg);
           }
+        }
+        .about-me-img:hover {
 
-          .about-me p,
-          .hobbies p {
-              font-size: 48px;
-              color: #666;
-              line-height: 1.6;
-          }
+           transform: scale(.9);
+                     color: #FF4081;
 
-          #video-container {
-        position: relative;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 100%;
-        max-width: 1200px;
-        height: 720px;
-        overflow: hidden;
-        margin-top: 20px;
-    }
-
-    .video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      position: absolute;
-      top: 0;
-      left: 0;
-      transition: clip-path 0.3s ease-in-out;
-      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-    }
+                      opacity: 1;
+            transition: opacity 1s, background 1s;
+            background: #FF4081;
 
 
 
-          .video-label {
-              position: absolute;
-              font-size: 18px;
-              font-weight: bold;
-              z-index: 2;
-              text-align: center;
-              width: 45%;
-              color: #fff;
-              opacity: 0.7;
-              padding: 5px;
-          }
 
-          .label1 {
-              left: 0;
-              background-color: #333;
-              border-radius: 0 0 0 10px;
-          }
 
-          .label2 {
-              right: 0;
-              background-color: #333;
-              border-radius: 0 0 10px 0;
-          }
 
-          #video2 {
-              clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-          }
+                }
 
-          #wipe-divider {
-              position: absolute;
-              top: 0;
-              bottom: 0;
-              left: 50%;
-              width: 2px;
-              background-color: transparent;
-              cursor: ew-resize;
-              z-index: 1;
-          }
+            .about-me-img {
+            border-radius: 50%;
 
-          #fullscreen-button,
-          #nav-left,
-          #nav-right {
-              position: absolute;
-              font-size: 24px;
-              color: #333;
-              background-color: #fff;
-              border: none;
-              cursor: pointer;
-          }
 
-          #fullscreen-button {
-              bottom: 10px;
-              right: 10px;
-              padding: 8px 15px;
-          }
-
-          #nav-left {
-              top: 50%;
-              transform: translateY(-50%);
-              left: 10px;
-          }
-
-          #nav-right {
-              top: 50%;
-              transform: translateY(-50%);
-              right: 10px;
-          }
-
-          #legend {
-              position: absolute;
-              bottom: 20px;
-              left: 50%;
-              transform: translateX(-50%);
-              color: #fff;
-              font-size: 22px;
-              font-weight: bold;
-              opacity: 0.5;
-              animation: blink 2s infinite;
-          }
-
-          @keyframes blink {
-              50% {
-                  opacity: 0;
+          /*   width:29%;
+            position: relative;
+             left: 50%;
+              transform: translateX(-50%);*/
+             opacity: .5;
+                /*  border-radius: 50%;*/
+                  margin-bottom: 20px; /* Adjust the margin as needed */
+                     transition: transform .3s ease-in-out;
               }
-          }
 
-        </style>
+
+                .about-me,
+                .hobbies {
+                    width: 48%;
+                    text-align: left;
+                }
+
+                .about-me h2,
+                .hobbies h2 {
+                    font-size: 58px;
+                    font-weight: bold;
+                    color: #333;
+                    margin-bottom: 15px;
+                }
+
+                .about-me p,
+                .hobbies p {
+                    font-size: 48px;
+                    color: #666;
+                    line-height: 1.6;
+                }
+
+
+                        #video-container {
+                      position: relative;
+                      bottom: 0;
+                      left: 50%;
+                      transform: translateX(-50%);
+                      width: 100%;
+                      max-width: 1200px;
+                      height: 720px;
+                      overflow: hidden;
+                      margin-top: 20px;
+                  }
+
+                  .video {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    transition: clip-path 0.3s ease-in-out;
+                    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+                  }
+
+
+
+
+              .video-label {
+                  position: absolute;
+                  font-size: 18px;
+                  font-weight: bold;
+                  z-index: 2;
+                  text-align: center;
+                  width: 45%;
+                  color: #fff;
+                  opacity: 0.7;
+                  padding: 5px;
+              }
+
+              .label1 {
+                  left: 0;
+                  background-color: #333;
+                  border-radius: 0 0 0 10px;
+              }
+
+              .label2 {
+                  right: 0;
+                  background-color: #333;
+                  border-radius: 0 0 10px 0;
+              }
+
+              #video2 {
+                  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+              }
+
+              #wipe-divider {
+                  position: absolute;
+                  top: 0;
+                  bottom: 0;
+                  left: 50%;
+                  width: 2px;
+                  background-color: transparent;
+                  cursor: ew-resize;
+                  z-index: 1;
+              }
+
+              #fullscreen-button,
+              #nav-left,
+              #nav-right {
+                  position: absolute;
+                  font-size: 24px;
+                  color: #333;
+                  background-color: #fff;
+                  border: none;
+                  cursor: pointer;
+              }
+
+              #fullscreen-button {
+                  bottom: 10px;
+                  right: 10px;
+                  padding: 8px 15px;
+              }
+
+              #nav-left {
+                  top: 50%;
+                  transform: translateY(-50%);
+                  left: 10px;
+              }
+
+              #nav-right {
+                  top: 50%;
+                  transform: translateY(-50%);
+                  right: 10px;
+              }
+
+              #legend {
+                  position: absolute;
+                  bottom: 20px;
+                  left: 50%;
+                  transform: translateX(-50%);
+                  color: #fff;
+                  font-size: 22px;
+                  font-weight: bold;
+                  opacity: 0.5;
+                  animation: blink 2s infinite;
+              }
+
+              @keyframes blink {
+                  50% {
+                      opacity: 0;
+                  }
+              }
+              body {
+                         margin: 0; /* Remove default body margin */
+
+                     }
+
+                     #bg-wrap {
+                         position: fixed;
+                         top: 0;
+                         left: 0;
+                         width: 100%;
+                         height: 100%;
+                         z-index: -1; /* Place the background behind other elements */
+                     }
+                     /* Cool infinite background scrolling animation.
+                      * Twitter: @kootoopas
+                      */
+                     /* Exo thin font from Google. */
+                     @import url(https://fonts.googleapis.com/css?family=Exo:100);
+                     /* Background data (Original source: https://subtlepatterns.com/grid-me/) */
+                     /* Animations */
+                     @-webkit-keyframes bg-scrolling-reverse {
+                       100% {
+                         background-position: 50px 50px;
+                       }
+                     }
+                     @-moz-keyframes bg-scrolling-reverse {
+                       100% {
+                         background-position: 50px 50px;
+                       }
+                     }
+                     @-o-keyframes bg-scrolling-reverse {
+                       100% {
+                         background-position: 50px 50px;
+                       }
+                     }
+                     @keyframes bg-scrolling-reverse {
+                       100% {
+                         background-position: 50px 50px;
+                       }
+                     }
+                     @-webkit-keyframes bg-scrolling {
+                       0% {
+                         background-position: 50px 50px;
+                       }
+                     }
+                     @-moz-keyframes bg-scrolling {
+                       0% {
+                         background-position: 50px 50px;
+                       }
+                     }
+                     @-o-keyframes bg-scrolling {
+                       0% {
+                         background-position: 50px 50px;
+                       }
+                     }
+                     @keyframes bg-scrolling {
+                       0% {
+                         background-position: 50px 50px;
+                       }
+                     }
+                     /* Main styles */
+                     body {
+
+                       margin-top: 13.5rem;
+                       color: black;
+                       font: 400 16px/1.5 exo, ubuntu, "segoe ui", helvetica, arial, sans-serif;
+                       text-align: center;
+                       /* img size is 50x50 */
+                       background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAIAAACRXR/mAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAABnSURBVHja7M5RDYAwDEXRDgmvEocnlrQS2SwUFST9uEfBGWs9c97nbGtDcquqiKhOImLs/UpuzVzWEi1atGjRokWLFi1atGjRokWLFi1atGjRokWLFi1af7Ukz8xWp8z8AAAA//8DAJ4LoEAAlL1nAAAAAElFTkSuQmCC") repeat 0 0;
+                       -webkit-animation: bg-scrolling-reverse 0.92s infinite;
+                       /* Safari 4+ */
+                       -moz-animation: bg-scrolling-reverse 0.92s infinite;
+                       /* Fx 5+ */
+                       -o-animation: bg-scrolling-reverse 0.92s infinite;
+                       /* Opera 12+ */
+                       animation: bg-scrolling-reverse 0.92s infinite;
+                       /* IE 10+ */
+                       -webkit-animation-timing-function: linear;
+                       -moz-animation-timing-function: linear;
+                       -o-animation-timing-function: linear;
+                       animation-timing-function: linear;
+                     }
+                     body::before {
+                      /* content: "'The most important thing is that you have to have the visual effects working for you, instead of you working for the visual effects.'";*/
+
+
+                       font-size: 5rem;
+                       font-weight: 100;
+                       padding-top: 200px;
+                       font-style: italic;
+
+                     }
+                     q {
+                       color: #8f8f91;
+                       font-style: italic;
+                         font-size: 218%;
+
+                     }
+
+                     q::before,
+                     q::after {
+                       font-size: larger;
+                       color: #f00;
+                       background: #ccc;
+
+                     }
+
+                     q::before {
+                       content: open-quote;
+
+                     }
+
+                     q::after {
+                       content: close-quote;
+
+                     }
+
+
+       font-family: 'Helvetica Light', Arial, sans-serif;
+       margin: 0;
+       padding: 0;
+       box-sizing: border-box;
+       display: flex;
+       flex-direction: column;
+       opacity: 1;
+       transition: opacity 0.5s ease-in-out;
+       overflow-x: hidden; /* Disable scrolling on the x-axis */
+   }
+
+   body.fade-out {
+       opacity: 0;
+   }
+
+
+
+   .topnav {
+       display: none;
+       overflow: hidden;
+       background-color: #333;
+       position: fixed;
+       width: 100%;
+       top: 0;
+       z-index: 1001; /* Place above the header */
+   }
+
+   .topnav a {
+       float: left;
+       display: block;
+       color: #f2f2f2;
+       text-align: center;
+       padding: 14px 16px;
+       text-decoration: none;
+       font-size: 17px;
+   }
+
+   .topnav a:hover {
+       background-color: #ddd;
+       color: black;
+   }
+
+   .topnav a.active {
+       background-color: #04AA6D;
+       color: white;
+   }
+
+   .topnav .icon {
+       display: block;
+       float: right;
+       color: #f2f2f2;
+       text-align: center;
+       padding: 14px 16px;
+       text-decoration: none;
+       font-size: 17px;
+       position: fixed; /* Fix the button position */
+       top: 0;
+       right: 0;
+       z-index: 1002; /* Place above the mobile menu */
+   }
+
+   @media screen and (max-width: 1900px) {
+       .topnav {
+           display: block;
+       }
+
+       .topnav a:not(:first-child) {
+           display: none;
+       }
+
+       .topnav a.icon {
+           float: right;
+           display: block;
+       }
+
+       .topnav.responsive {
+           position: fixed;
+           top: 0;
+       }
+
+       .topnav.responsive a {
+           float: none;
+           display: block;
+           text-align: left;
+       }
+
+       /* Additional styles for mobile responsiveness */
+       header {
+           display: none;
+       }
+       body {
+    font-family: 'Helvetica Light', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out;
+}
+.circle {
+position: relative;
+margin: 10px;
+height: 200px;
+width: 200px;
+background-color: #FF4081;
+border-radius: 50%;
+left: 50%;
+top: 50%;
+transform: translate(-50%, 0%);
+transition: transform 2s ease-in-out;
+}
+
+.about-me-img {
+border-radius: 50%;
+
+
+/*   width:29%;
+position: relative;
+ left: 50%;
+  transform: translateX(-50%);*/
+ opacity: 1;
+    /*  border-radius: 50%;*/
+      margin-bottom: 20px; /* Adjust the margin as needed */
+         transition: transform .3s ease-in-out;
+         height: 200px;
+         width: 200px;
+  }
+
+body.fade-out {
+    opacity: 0;
+}
+
+header {
+    background-color: transparent;
+    padding: 10px;
+    color: gray;
+    text-align: center;
+    width: 100%;
+    z-index: 1000;
+    position: fixed;
+    top: 0;
+    font-weight: lighter;
+}
+
+header:hover {
+    background-color: white;
+}
+
+header a {
+    color: black;
+    text-decoration: none;
+    margin: 10px;
+    font-size: 16px;
+    opacity: .4;
+    font-weight: normal;
+}
+
+header a:hover {
+    color: #FF4081;
+    transform: scale(1.1);
+    opacity: 1;
+    font-weight: bold;
+}
+
+#content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: -255px;
+    padding-top: 40px;
+}
+
+.gallery-section {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.gallery-title {
+    font-size: 50px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+    margin-top:222px;
+}
+
+.gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+
+.gallery-item:hover {
+    transform: scale(1.1);
+}
+
+.item-poster {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    transition: transform 0.5s ease-in-out;
+}
+
+.item-title {
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    transition: color 0.3s ease-in-out;
+}
+
+.gallery-item:hover .item-title {
+    color: #FF4081;
+}
+
+section {
+    text-align: center;
+    width: 100%;
+    margin-top: 20px;
+}
+
+h2 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 18px;
+    color: #666;
+    margin-top: 50px;
+
+}
+
+.about-me-hobbies {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    width: 100%;
+    padding-left: 0%;
+}
+
+.about-me,
+.hobbies {
+
+  text-align: left;
+    margin-bottom: 16px;
+    transform: translate(50%, 0%);
+    position: inherit;
+    display: Center;
+    width: 50%;
+    height: 8%;
+    padding-right: 20;
+}
+
+.about-me h2,
+.hobbies h2 {
+    font-size: 24px; /* Adjusted font size for better readability */
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.about-me p,
+.hobbies p {
+    font-size: 18px;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 10px; /* Added margin for better spacing */
+}
+
+.experience-entry,
+.education-entry {
+    font-size: 18px;
+    text-align: left;
+    margin-bottom: -80px;
+    height:4%;
+
+}
+
+.company-logo-container {
+  overflow: hidden;
+    position: relative;
+    margin: 20px;
+    margin-bottom: 20px;
+    height: 115px;
+    width: 374px;
+    background-color: #FF4081;
+    border-radius: 0%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-55%, -30%);
+    margin-bottom: 50px;
+    outline-width: 8px;
+}
+
+
+
+.company-logo-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0%;
+margin-top: 0px;
+
+}
+@keyframes color {
+    0%   { color: #33CCCC; }
+    20%  { color: #33CC36; }
+    40%  { color: #B8CC33; }
+    60%  { color: #FCCA00; }
+    80%  { color: #33CC36; }
+    100% { color: #33CCCC; }
+}
+
+.experience-entry h3 {
+  width: 100%;
+      font-size: 24px;
+      line-height: 36px;
+      font-weight: bold;
+      text-transform: uppercase;
+      text-shadow: 2px 0px 1px #ff00de;
+      animation: color 9s infinite linear;
+      /*outline: dashed;*/
+      outline-width: medium;
+      -webkit-background-clip: text;
+      background-size: 100%;
+      z-index: -1;
+      t: translate(-15%);
+      outline-width: 8px;
+      text-align: center;
+}
+
+#video-container {
+    position: relative;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+
+
+
+    overflow: hidden;
+    margin-top: 20px;
+    margin-bottom: 89px;
+
+    width: 58%;
+      height: 34.5%;
+      padding: 16%;
+}
+
+.video {
+
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: clip-path 0.3s ease-in-out;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.video-label {
+    position: absolute;
+    font-size: 18px;
+    font-weight: bold;
+    z-index: 2;
+    text-align: center;
+    width: 45%;
+    color: #fff;
+    opacity: 0.7;
+    padding: 5px;
+}
+
+.label1 {
+    left: 0;
+    background-color: #333;
+    border-radius: 0 0 0 10px;
+}
+
+.label2 {
+    right: 0;
+    background-color: #333;
+    border-radius: 0 0 10px 0;
+}
+
+#video2 {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+
+#wipe-divider {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+    background-color: transparent;
+    cursor: ew-resize;
+    z-index: 1;
+}
+
+#fullscreen-button,
+#nav-left,
+#nav-right {
+    position: absolute;
+    font-size: 24px;
+    color: #333;
+    background-color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+#fullscreen-button {
+    bottom: 10px;
+    right: 10px;
+    padding: 8px 15px;
+}
+
+#nav-left {
+    top: 50%;
+    transform: translateY(-50%);
+    left: 10px;
+}
+
+#nav-right {
+    top: 50%;
+    transform: translateY(-50%);
+    right: 10px;
+}
+
+#legend {
+  display: none;
+}
+
+@keyframes blink {
+    50% {
+        opacity: 0;
+    }
+}
+   }
+            </style>
 </head>
+
 
 <body class="">
     <header>
@@ -504,7 +1064,111 @@
         <a href="#education-section" onclick="navigateTo('education-section')">Education</a>
         <a href="#demo-reel-section" onclick="navigateTo('demo-reel-section')">Demo Reel</a>
     </header>
+    <div class="topnav" id="myTopnav">
+        <a href="#live-show-section-link" class="active" onclick="navigateTo('demo-reel-section')">Jaime Mendez</a>
+    <a href="#live-show-section-link"  onclick="navigateTo('live-show-section-link')">Live Shows</a>
+    <a href="#tv-show-section" onclick="navigateTo('tv-show-section')">TV Shows</a>
+    <a href="#movie-section" onclick="navigateTo('movie-section')">Movies</a>
+    <a href="#aboutme-section" onclick="navigateTo('aboutme-section')">About Me</a>
+    <a href="#experience-section" onclick="navigateTo('experience-section')">Experience</a>
+    <a href="#education-section" onclick="navigateTo('education-section')">Education</a>
+    <a href="#demo-reel-section" onclick="navigateTo('demo-reel-section')">Demo Reel</a>
+    <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+        <i class="fa fa-bars"></i>
+    </a>
+</div>
+
+<script>
+    function myFunction() {
+        var x = document.getElementById("myTopnav");
+        if (x.className === "topnav") {
+            x.className += " responsive";
+            document.body.style.overflow = "hidden"; // Disable scrolling when the mobile menu is open
+        } else {
+            x.className = "topnav";
+            document.body.style.overflow = ""; // Enable scrolling when the mobile menu is closed
+        }
+    }
+
+    function navigateTo(sectionId) {
+        // ... your existing code ...
+
+        // Highlight the active section in the navigation bar based on the scroll position
+        var sections = document.querySelectorAll(".gallery-section");
+        var navLinks = document.querySelectorAll("#myTopnav a");
+
+        sections.forEach(function (section, index) {
+            var rect = section.getBoundingClientRect();
+            if (rect.top <= 0 && rect.bottom > 0) {
+                // Section is in view
+                navLinks.forEach(link => link.classList.remove("active"));
+                navLinks[index].classList.add("active");
+
+                // Move the active section to the top of the navigation bar
+                var parent = navLinks[index].parentNode;
+                parent.insertBefore(navLinks[index], parent.firstChild);
+                parent.appendChild(navLinks[index]);
+            }
+        });
+    }
+
+    // Disable touchmove on the body element to prevent scrolling on touch devices
+    document.body.addEventListener('touchmove', function (e) {
+        // Check if the topnav is open before preventing default
+        var topnav = document.getElementById("myTopnav");
+        if (topnav.className.includes("responsive")) {
+            e.preventDefault();
+        }
+    });
+
+    // Close the mobile menu when a link is clicked
+    var links = document.getElementsByClassName("nav-link");
+    for (var i = 0; i < links.length; i++) {
+        links[i].addEventListener('click', function () {
+            var x = document.getElementById("myTopnav");
+            x.className = "topnav";
+            document.body.style.overflow = ""; // Enable scrolling when the mobile menu is closed
+        });
+    }
+
+    // Close the mobile menu when clicking outside of it
+    document.addEventListener('click', function (e) {
+        var topnav = document.getElementById("myTopnav");
+        if (!e.target.matches('.topnav') && !e.target.matches('.icon')) {
+            topnav.className = "topnav";
+            document.body.style.overflow = ""; // Enable scrolling when the mobile menu is closed
+        }
+    });
+</script>
+
+<p>
+
+
+  <q cite="http://www.w3.org/People/Berners-Lee/FAQ.html#Internet">
+    The most important thing is that you have to have the visual effects working for you, instead of you working for the visual effects.
+</p><h3><b> David Jonathan Heyman</b></h3>
+
+
+
     <div id="content">
+
+      <!-- Demo Reel Comparison Section -->
+              <div class="gallery-section" id="demo-reel-section">
+              <h2 class="gallery-title">Demo Reel</h2>
+              <div id="video-container">
+
+                    <div id="wipe-divider"></div>
+                    <video class="video" id="video1" src="video1.mp4" autoplay="" muted="" loop=""></video>
+                    <video class="video" id="video2" src="video2.mp4" autoplay="" muted="" loop=""></video>
+
+                    <button id="fullscreen-button" onclick="toggleFullscreen()">📺</button>
+                    <button id="nav-left" onclick="changeVideos(-1)">◀</button>
+                    <button id="nav-right" onclick="changeVideos(1)">▶</button>
+                    <div id="legend">Press 'P' to Play/Pause, move the cursor to use the wipe <br> </div>
+
+                </div>
+
+              </div>
 
       <!-- live Shows Section -->
         <div class="gallery-section" id="live-show-section-link">
@@ -531,10 +1195,10 @@
             <div class="about-me-hobbies">
 
                 <div class="about-me">
-                    <h2>About Me - Professional Compositor</h2>
+                    <h2>About Me</h2>
                     <p>
-                        With over 8 years of experience in the dynamic field of visual effects (VFX), I specialize in live
-                        action films Chroma key, Matchmove, CGI, and various other aspects of VFX; My commitment to
+                       Im a compositing artist  with over 8 years of experience in the dynamic field of visual effects (VFX), I specialize in live
+                        action films, Chroma key, Matchmove, CGI, and various other aspects of VFX; My commitment to
                         delivering high-quality results has been a constant throughout my career.
                     </p>
                 </div>
@@ -557,9 +1221,9 @@
 
          <!-- Ingenuity Studios, LLC -->
          <div class="experience-entry" data-company="Ingenuity Studios, LLC">
-             <h3>Ingenuity Studios, LLC</h3>
+             <h3 style='background-image: url("ingenuity.png");scale: ;scroll-behavior: auto;'>Ingenuity Studios, LLC</h3>
              <div class="company-logo-container">
-                 <img src="" alt="Company Logo">
+                 <img src="ingenuity.png" alt="Company Logo">
              </div>
          </div>
          <div class="experience-entry" data-company="Ingenuity Studios, LLC">
@@ -575,7 +1239,7 @@
          <div class="experience-entry" data-company="CINEMA MAQUINA">
              <h3>CINEMA MAQUINA</h3>
              <div class="company-logo-container">
-                 <img src="" alt="Company Logo">
+                 <img src="cinemamaquina.png" alt="Company Logo">
              </div>
          </div>
          <div class="experience-entry" data-company="CINEMA MAQUINA">
@@ -591,7 +1255,7 @@
          <div class="experience-entry" data-company="Argos Comunicacion">
              <h3>Argos Comunicacion</h3>
              <div class="company-logo-container">
-                 <img src="" alt="Company Logo">
+                 <img src="argos.png" alt="Company Logo">
              </div>
          </div>
          <div class="experience-entry" data-company="Argos Comunicacion">
@@ -606,7 +1270,7 @@
          <div class="experience-entry" data-company="Ollin VFX">
              <h3>Ollin VFX</h3>
              <div class="company-logo-container">
-                 <img src="" alt="Company Logo">
+                 <img src="ollin.png" alt="Company Logo">
              </div>
          </div>
          <div class="experience-entry" data-company="Ollin VFX">
@@ -622,7 +1286,7 @@
          <div class="experience-entry" data-company="Mighty Studio">
              <h3>Mighty Studio</h3>
              <div class="company-logo-container">
-                 <img src="" alt="Company Logo">
+                 <img src="migthy.png" alt="Company Logo">
              </div>
          </div>
          <div class="experience-entry" data-company="Mighty Studio">
@@ -637,8 +1301,8 @@
          <!-- The Mill (September 2019 - December 2019) -->
          <div class="experience-entry" data-company="The Mill">
              <h3>The Mill</h3>
-             <div class="company-logo-container">
-                 <img src="" alt="Company Logo">
+             <div class="company-logo-container_mill">
+                 <img src="mill.gif" alt="Company Logo">
              </div>
          </div>
          <div class="experience-entry" data-company="The Mill">
@@ -654,7 +1318,7 @@
          <div class="experience-entry" data-company="Labodigital">
              <h3>Labodigital</h3>
              <div class="company-logo-container">
-                 <img src="" alt="Company Logo">
+                 <img src="labo.png" alt="Company Logo">
              </div>
          </div>
          <div class="experience-entry" data-company="Labodigital">
@@ -670,7 +1334,7 @@
          <div class="experience-entry" data-company="Ollin VFX">
              <h3>Ollin VFX</h3>
              <div class="company-logo-container">
-                 <img src="" alt="Company Logo">
+                 <img src="ollin.png" alt="Company Logo">
              </div>
          </div>
          <div class="experience-entry" data-company="Ollin VFX">
@@ -686,7 +1350,7 @@
          <div class="experience-entry" data-company="Flipbook Studio">
              <h3>Flipbook Studio</h3>
              <div class="company-logo-container">
-                 <img src="" alt="Company Logo">
+                 <img src="flipbook.jpg" alt="Company Logo">
              </div>
          </div>
          <div class="experience-entry" data-company="Flipbook Studio">
@@ -702,7 +1366,7 @@
          <div class="experience-entry" data-company="Ollin VFX">
              <h3>Ollin VFX</h3>
              <div class="company-logo-container">
-                 <img src="" alt="Company Logo"> </div> </div>
+                 <img src="ollin.png" alt="Company Logo"> </div> </div>
          <div class="experience-entry" data-company="Ollin VFX">
              <p>Jr. Compositor | Mexico City Metropolitan Area</p>
              <p>July 2017 - February 2018</p>
@@ -732,10 +1396,13 @@
 <!-- Education Section -->
 <div class="education-section" id="education-section">
     <h2 class="gallery-title">Education</h2>
-
     <!-- Coco School México (Jan 2017 - Dec 2017) -->
-    <div class="education-entry">
+    <div class="experience-entry" >
         <h3>Coco School México</h3>
+        <div class="company-logo-container">
+            <img src="path/to/coco-school-logo.png" alt="Coco School México Logo">
+        </div></div>
+        <div class="experience-entry" >
         <p>Master VFX, Visual Effects (MAYA, NUKE) | Mexico City Metropolitan Area</p>
         <p>Jan 2017 - Dec 2017</p>
         <ul>
@@ -745,8 +1412,12 @@
     </div>
 
     <!-- Universidad Politecnica Metropolitana de Hidalgo (Jan 2014 - Jan 2017) -->
-    <div class="education-entry">
-        <h3>Universidad Politecnica Metropolitana de Hidalgo</h3>
+    <div class="experience-entry">
+        <h3>UPMH</h3>
+        <div class="company-logo-container">
+            <img src="path/to/upmh-logo.png" alt="UPMH Logo">
+        </div></div>
+            <div class="experience-entry" >
         <p>Animation and Visual Effects (Bachelor degree) | Pachuca de Soto Area, Mexico</p>
         <p>Jan 2014 - Jan 2017</p>
         <ul>
@@ -756,33 +1427,19 @@
     </div>
 
     <!-- Instituto Cardan (Jan 2015 - Jan 2016) -->
-    <div class="education-entry">
+    <div class="experience-entry">
         <h3>Instituto Cardan</h3>
+        <div class="company-logo-container">
+            <img src="img.jpg" alt="Instituto Cardan Logo">
+        </div></div>
+            <div class="experience-entry" >
         <p>Nuke Compositing (Online)</p>
         <p>Jan 2015 - Jan 2016</p>
         <ul>
             <li>Independently managed coursework while balancing professional commitments, showcasing a strong work ethic and time management skills.</li>
         </ul>
     </div>
-</div>
-<!-- Demo Reel Comparison Section -->
-        <div class="gallery-section" id="demo-reel-section">
-        <h2 class="gallery-title">DEMOREEL</h2>
-        <div id="video-container">
 
-              <div id="wipe-divider"></div>
-              <video class="video" id="video1" src="video1.mp4" autoplay="" muted="" loop=""></video>
-              <video class="video" id="video2" src="video2.mp4" autoplay="" muted="" loop=""></video>
-              <div class="video-label label1" id="label1">Comp</div>
-              <div class="video-label label2" id="label2">Footage</div>
-              <button id="fullscreen-button" onclick="toggleFullscreen()">📺</button>
-              <button id="nav-left" onclick="changeVideos(-1)">◀</button>
-              <button id="nav-right" onclick="changeVideos(1)">▶</button>
-              <div id="legend">Press 'P' to Play/Pause, move the cursor to use the wipe <br> </div>
-
-          </div>
-
-        </div>
 
     </div><!-- Live Shows Section -->
 
@@ -813,7 +1470,7 @@
         });
     });*/
 
-    $(document).ready(function () {
+/*    $(document).ready(function () {
            // Your SerpApi endpoint for Google Images search
            const serpapiEndpoint = "https://serpapi.com/search";
 
@@ -854,7 +1511,7 @@
                    },
                });
            });
-       });
+       });*/
         const apiKey = '19d5a00c7fbc1259c7f25b844e5a8498';
         const listId = '8278274-portfolio';
         const movieGallery = document.getElementById('movie-gallery');
