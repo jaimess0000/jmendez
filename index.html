@@ -230,6 +230,23 @@
             animation: color 9s infinite linear;
 
                 }
+                .company-logo-container_coco {
+                  overflow: hidden;
+                position: absolute;
+                margin: 284px;
+                height: 795px;
+                width: 260%;
+                background-color: #FF4081;
+                border-radius: -225%;
+                left: -72%;
+                top: -36%;
+
+                z-index: -100;
+                outline: dashed;
+                outline-width: 8px;
+                animation: color 9s infinite linear;
+
+                }
 
                 .company-logo-container img {
                   height: 212%;
@@ -242,6 +259,11 @@
     margin-left: 95px;
 
                 }
+                .company-logo-container_coco img{
+                  height: 470%;
+    margin-top: -1469px;
+  }
+
 
 
 
@@ -295,8 +317,8 @@
           .circle {
           position: relative;
           margin: 20px;
-          height: 400px;
-          width: 400px;
+          height: 800px;
+          width: 800px;
           background-color: #FF4081;
           border-radius: 50%;
           left: 50%;
@@ -908,13 +930,51 @@ p {
     outline-width: 8px;
 }
 
-
+.company-logo-container_mill {
+  overflow: hidden;
+    position: relative;
+    margin: 20px;
+    margin-bottom: 20px;
+    height: 115px;
+    width: 374px;
+    background-color: #FF4081;
+    border-radius: 0%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-55%, -30%);
+    margin-bottom: 50px;
+    outline-width: 8px;
+}
+.company-logo-container_coco{
+  overflow: hidden;
+    position: relative;
+    margin: 20px;
+    margin-bottom: 20px;
+    height: 115px;
+    width: 374px;
+    background-color: #FF4081;
+    border-radius: 0%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-55%, -30%);
+    margin-bottom: 50px;
+    outline-width: 8px;
+}
 
 .company-logo-container img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     border-radius: 0%;
+margin-top: 0px;
+
+}
+
+  .company-logo-container_coco img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0%;
 margin-top: 0px;
 
 }
@@ -1050,6 +1110,25 @@ margin-top: 0px;
     }
 }
    }
+   /* Button Styles */
+#quoteButton {
+    background-color: transparent;
+    color: #333; /* Dark gray text color */
+    padding: 10px 20px;
+    border: 2px solid #333; /* Dark gray border */
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#quoteButton:hover,
+#quoteButton:active {
+    background-color: #333; /* Dark gray background on hover/active */
+    color: #fff; /* White text color on hover/active */
+}
+
             </style>
 </head>
 
@@ -1139,17 +1218,150 @@ margin-top: 0px;
             document.body.style.overflow = ""; // Enable scrolling when the mobile menu is closed
         }
     });
+    $(document).ready(function(){
+  		var quoteSource=[
+  		{
+  			quote: "Start by doing what's necessary; then do what's possible; and suddenly you are doing the impossible.",
+  			name:"Francis of Assisi"
+  	    },
+  	    {
+  	    	quote:"Believe you can and you're halfway there.",
+  	    	name:"Theodore Roosevelt"
+  	    },
+  	    {
+  	    	quote:"It does not matter how slowly you go as long as you do not stop.",
+  	    	name:"Confucius"
+  	    },
+  	    {
+  	    	quote:"Our greatest weakness lies in giving up. The most certain way to succeed is always to try just one more time.",
+  	    	name:"Thomas A. Edison"
+  	    },
+  	    {
+  	    	quote:"The will to win, the desire to succeed, the urge to reach your full potential... these are the keys that will unlock the door to personal excellence.",
+  	    	name:"Confucius"
+  	    },
+  	    {
+  	    	quote:"Don't watch the clock; do what it does. Keep going.",
+  	    	name:"Sam Levenson"
+  	    },
+  	    {
+  	    	quote:"A creative man is motivated by the desire to achieve, not by the desire to beat others.",
+  	    	name:"Ayn Rand"
+  	    },
+  	    {
+  	    	quote:"A creative man is motivated by the desire to achieve, not by the desire to beat others.",
+  	    	name:"Ayn Rand"
+  	    },
+  	    {
+  	    	quote:"Expect problems and eat them for breakfast.",
+  	    	name:"Alfred A. Montapert"
+  	    },
+  	    {
+  	    	quote:"Start where you are. Use what you have. Do what you can.",
+  	    	name:"Arthur Ashe"
+  	    },
+  	    {
+  	    	quote:"Ever tried. Ever failed. No matter. Try Again. Fail again. Fail better.",
+  	    	name:"Samuel Beckett"
+  	    },
+  	    {
+  	    	quote:"Be yourself; everyone else is already taken.",
+  	    	name:"Oscar Wilde"
+  	    },
+  	    {
+  	    	quote:"Two things are infinite: the universe and human stupidity; and I'm not sure about the universe.",
+  	    	name:"Albert Einstein"
+  	    },
+  	    {
+  	    	quote:"Always remember that you are absolutely unique. Just like everyone else.",
+  	    	name:"Margaret Mead"
+  	    },
+  	    {
+  	    	quote:"Do not take life too seriously. You will never get out of it alive.",
+  	    	name:"Elbert Hubbard"
+  	    },
+  	    {
+  	    	quote:"People who think they know everything are a great annoyance to those of us who do.",
+  	    	name:"Isaac Asimov"
+  	    },
+  	    {
+  	    	quote:"Procrastination is the art of keeping up with yesterday.",
+  	    	name:"Don Marquis"
+  	    },
+  	    {
+  	    	quote:"Get your facts first, then you can distort them as you please.",
+  	    	name:"Mark Twain"
+  	    },
+  	    {
+  	    	quote:"A day without sunshine is like, you know, night.",
+  	    	name:"Steve Martin"
+  	    },
+  	    {
+  	    	quote:"My grandmother started walking five miles a day when she was sixty. She's ninety-seven now, and we don't know where the hell she is.",
+  	    	name:"Ellen DeGeneres"
+  	    },
+  	    {
+  	    	quote:"Don't sweat the petty things and don't pet the sweaty things.",
+  	    	name:"George Carlin"
+  	    },
+  	    {
+  	    	quote:"Always do whatever's next.",
+  	    	name:"George Carlin"
+  	    },
+  	    {
+  	    	quote:"Atheism is a non-prophet organization.",
+  	    	name:"George Carlin"
+  	    },
+  	    {
+  	    	quote:"Hapiness is not something ready made. It comes from your own actions.",
+  	    	name:"Dalai Lama"
+  	    }
+
+  	];
+
+    // Function to display a random quote
+     function displayRandomQuote() {
+         var sourceLength = quoteSource.length;
+         var randomNumber = Math.floor(Math.random() * sourceLength);
+         var newQuoteText = quoteSource[randomNumber].quote;
+         var newQuoteGenius = quoteSource[randomNumber].name;
+
+         var timeAnimation = 500;
+         var quoteContainer = $('#quoteContainer');
+
+         // Fade out animation with callback
+         quoteContainer.fadeOut(timeAnimation, function(){
+             quoteContainer.html('');
+             quoteContainer.append('<p>' + newQuoteText + '</p>' + '<p id="quoteGenius">' + '- ' + newQuoteGenius + '</p>');
+             // Fade in animation
+             quoteContainer.fadeIn(timeAnimation);
+         });
+     }
+
+     // Bind click and touch events to the button
+     $('#quoteButton').on('click touchstart', function(evt) {
+         // Prevent the default action of the button
+         evt.preventDefault();
+
+         // Display a random quote
+         displayRandomQuote();
+     });
+ });
+
+
 </script>
 
-<p>
+  <h2>Get Your Daily Quote</h2>
+    <div id="quoteContainer">
+       <p> </p>
+      <p id="quoteGenius"></p>
+    </div><!--end quoteContainer-->
 
-
-  <q cite="http://www.w3.org/People/Berners-Lee/FAQ.html#Internet">
-    The most important thing is that you have to have the visual effects working for you, instead of you working for the visual effects.
-</p><h3><b> David Jonathan Heyman</b></h3>
-
-
-
+    <div id="buttonContainer">
+      <a href="#" id="quoteButton">Quote Me</a>
+  </div><!--end buttonContainer-->
+</div><!--end container-->
+<p></q>
     <div id="content">
 
       <!-- Demo Reel Comparison Section -->
@@ -1191,7 +1403,7 @@ margin-top: 0px;
         <!-- About Me Section -->
         <div class="gallery-section" id="aboutme-section">
             <h2 class="gallery-title">About Me</h2>
-           <div class="circle"> <img src="https://media.licdn.com/dms/image/D5603AQHBPRGpZCd3Cg/profile-displayphoto-shrink_400_400/0/1691299117440?e=1705536000&v=beta&t=xFwdHNsoiqzYLn5ByJp8XNNBevVCbQ3WX9vPBOrNlYQ" alt="Profile Image" class="about-me-img"></div>
+           <div class="circle"> <img src="me.jpg" alt="Profile Image" class="about-me-img"></div>
             <div class="about-me-hobbies">
 
                 <div class="about-me">
@@ -1380,7 +1592,7 @@ margin-top: 0px;
          <div class="experience-entry" data-company="Alux Media Studios">
              <h3>Alux Media Studios</h3>
              <div class="company-logo-container">
-                 <img src="" alt="Company Logo">
+                 <img src="alux.png" alt="Company Logo">
              </div>
          </div>
          <div class="experience-entry" data-company="Alux Media Studios">
@@ -1399,8 +1611,8 @@ margin-top: 0px;
     <!-- Coco School México (Jan 2017 - Dec 2017) -->
     <div class="experience-entry" >
         <h3>Coco School México</h3>
-        <div class="company-logo-container">
-            <img src="path/to/coco-school-logo.png" alt="Coco School México Logo">
+        <div class="company-logo-container_coco">
+            <img src="coco.png" alt="Coco School México Logo">
         </div></div>
         <div class="experience-entry" >
         <p>Master VFX, Visual Effects (MAYA, NUKE) | Mexico City Metropolitan Area</p>
@@ -1415,7 +1627,7 @@ margin-top: 0px;
     <div class="experience-entry">
         <h3>UPMH</h3>
         <div class="company-logo-container">
-            <img src="path/to/upmh-logo.png" alt="UPMH Logo">
+            <img src="upmh.jpg" alt="UPMH Logo">
         </div></div>
             <div class="experience-entry" >
         <p>Animation and Visual Effects (Bachelor degree) | Pachuca de Soto Area, Mexico</p>
@@ -1430,7 +1642,7 @@ margin-top: 0px;
     <div class="experience-entry">
         <h3>Instituto Cardan</h3>
         <div class="company-logo-container">
-            <img src="img.jpg" alt="Instituto Cardan Logo">
+            <img src="cardan.jpg" >
         </div></div>
             <div class="experience-entry" >
         <p>Nuke Compositing (Online)</p>
