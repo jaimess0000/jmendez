@@ -1800,165 +1800,113 @@ margin-top: 0px;
         }
 
         const videoContainer = document.getElementById('video-container');
-        const wipeDivider = document.getElementById('wipe-divider');
-        const video1 = document.getElementById('video1');
-        const video2 = document.getElementById('video2');
-        const label1 = document.getElementById('label1');
-        const label2 = document.getElementById('label2');
-        const fullscreenButton = document.getElementById('fullscreen-button');
-        const arrowRightButton = document.getElementById('arrow-right');
-        const arrowLeftButton = document.getElementById('arrow-left');
-        const legend = document.getElementById('legend');
-        let touchStartX = 0;
-        let isPaused = false;
-        let videoSet = 1;
-        const totalSets = 8;
+  const wipeDivider = document.getElementById('wipe-divider');
+  const video1 = document.getElementById('video1');
+  const video2 = document.getElementById('video2');
+  const label1 = document.getElementById('label1');
+  const label2 = document.getElementById('label2');
+  const fullscreenButton = document.getElementById('fullscreen-button');
+  const arrowRightButton = document.getElementById('arrow-right');
+  const arrowLeftButton = document.getElementById('arrow-left');
+  const legend = document.getElementById('legend');
+  let touchStartX = 0;
+  let isPaused = false;
+  let videoSet = 1;
+  const totalSets = 8;
 
-        // Toggle fullscreen mode
-        function toggleFullscreen() {
-            if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
-                if (videoContainer.requestFullscreen) {
-                    videoContainer.requestFullscreen();
-                } else if (videoContainer.webkitRequestFullscreen) {
-                    videoContainer.webkitRequestFullscreen();
-                } else if (videoContainer.mozRequestFullScreen) {
-                    videoContainer.mozRequestFullScreen();
-                } else if (videoContainer.msRequestFullscreen) {
-                    videoContainer.msRequestFullscreen();
-                }
-            } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                } else if (document.mozCancelFullScreen) {
-                    document.mozCancelFullScreen();
-                } else if (document.msExitFullscreen) {
-                    document.msExitFullscreen();
-                }
-            }
-        }
+  // Toggle fullscreen mode
+  function toggleFullscreen() {
+      if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
+          if (videoContainer.requestFullscreen) {
+              videoContainer.requestFullscreen();
+          } else if (videoContainer.webkitRequestFullscreen) {
+              videoContainer.webkitRequestFullscreen();
+          } else if (videoContainer.mozRequestFullScreen) {
+              videoContainer.mozRequestFullScreen();
+          } else if (videoContainer.msRequestFullscreen) {
+              videoContainer.msRequestFullscreen();
+          }
+      } else {
+          if (document.exitFullscreen) {
+              document.exitFullscreen();
+          } else if (document.webkitExitFullscreen) {
+              document.webkitExitFullscreen();
+          } else if (document.mozCancelFullScreen) {
+              document.mozCancelFullScreen();
+          } else if (document.msExitFullscreen) {
+              document.msExitFullscreen();
+          }
+      }
+  }
 
-        // Add touch event listener for fullscreen button
-        fullscreenButton.addEventListener('touchstart', function(event) {
-            event.preventDefault(); // Prevent default touch behavior
-            toggleFullscreen();
-        });
+  // Add touch event listeners
+  videoContainer.addEventListener('touchstart', handleTouchStart);
+  videoContainer.addEventListener('touchmove', handleTouchMove);
+  videoContainer.addEventListener('touchend', handleTouchEnd);
 
-        // Add click event listener for fullscreen button (fallback for non-touch devices)
-        fullscreenButton.addEventListener('click', toggleFullscreen);
+  // Handle touch start
+  function handleTouchStart(e) {
+      touchStartX = e.touches[0].clientX;
+      e.preventDefault();
+      isPaused = !isPaused;
+      if (isPaused) {
+          video1.pause();
+          video2.pause();
+      } else {
+          video1.play();
+          video2.play();
+      }
+  }
 
-        // Handle arrow button clicks
-        arrowRightButton.addEventListener('click', function() {
-            changeVideos(1);
-        });
+  // Handle touch move
+  function handleTouchMove(e) {
+      e.preventDefault();
 
-        arrowLeftButton.addEventListener('click', function() {
-            changeVideos(-1);
-        });
+      const containerRect = videoContainer.getBoundingClientRect();
+      const percentage = ((e.touches[0].clientX - containerRect.left) / videoContainer.offsetWidth) * 100;
+      video1.style.clipPath = `polygon(0 0, ${percentage}% 0, ${percentage}% 100%, 0 100%)`;
+      video2.style.clipPath = `polygon(${percentage}% 0, 100% 0, 100% 100%, ${percentage}% 100%)`;
+      wipeDivider.style.left = `${percentage}%`;
+  }
 
-        // Touch events
-        document.addEventListener('touchstart', handleTouchStart);
-        document.addEventListener('touchmove', handleTouchMove);
-        document.addEventListener('touchend', handleTouchEnd);
-        document.addEventListener('touchcancel', handleTouchCancel);
+  // Handle touch end
+  function handleTouchEnd() {
+      touchStartX = 0;
+  }
 
-        // Handle touch start
-        function handleTouchStart(e) {
-            touchStartX = e.touches[0].clientX;
-            isPaused = !isPaused;
-            if (isPaused) {
-                video1.pause();
-                video2.pause();
-            } else {
-                video1.play();
-                video2.play();
-            }
-        }
+  // Handle arrow button clicks
+  arrowRightButton.addEventListener('click', function() {
+      changeVideos(1);
+  });
 
-        // Handle touch move
-        function handleTouchMove(e) {
-            e.preventDefault();
+  arrowLeftButton.addEventListener('click', function() {
+      changeVideos(-1);
+  });
 
-            const containerRect = videoContainer.getBoundingClientRect();
-            const percentage = ((e.touches[0].clientX - containerRect.left) / videoContainer.offsetWidth) * 100;
-            video1.style.clipPath = `polygon(0 0, ${percentage}% 0, ${percentage}% 100%, 0 100%)`;
-            video2.style.clipPath = `polygon(${percentage}% 0, 100% 0, 100% 100%, ${percentage}% 100%)`;
-            wipeDivider.style.left = `${percentage}%`;
-        }
+  // Handle fullscreen button click
+  fullscreenButton.addEventListener('click', toggleFullscreen);
 
-        // Handle touch end
-        function handleTouchEnd() {
-            touchStartX = 0;
-        }
+  // Change videos
+  function changeVideos(direction) {
+      videoSet += direction;
 
-        // Handle touch cancel
-        function handleTouchCancel() {
-            touchStartX = 0;
-        }
+      if (videoSet > totalSets) {
+          videoSet = 1;
+      } else if (videoSet < 1) {
+          videoSet = totalSets;
+      }
 
-        // Mouse events
-        document.addEventListener('mousemove', handleMouseMove);
-        document.addEventListener('mouseleave', handleMouseLeave);
+      const videoNumber = (videoSet - 1) * 2 + 1;
+      video1.src = `video${videoNumber}.mp4`;
+      video2.src = `video${videoNumber + 1}.mp4`;
 
-        // Handle mouse move
-        function handleMouseMove(event) {
-            const containerRect = videoContainer.getBoundingClientRect();
-            const percentage = ((event.clientX - containerRect.left) / videoContainer.offsetWidth) * 100;
-            video1.style.clipPath = `polygon(0 0, ${percentage}% 0, ${percentage}% 100%, 0 100%)`;
-            video2.style.clipPath = `polygon(${percentage}% 0, 100% 0, 100% 100%, ${percentage}% 100%)`;
-            wipeDivider.style.left = `${percentage}%`;
-        }
+      wipeDivider.style.left = '50%';
 
-        // Handle mouse leave
-        function handleMouseLeave() {
-            if (isPaused) {
-                wipeDivider.style.left = '-10px';
-            }
-        }
-
-        // Keyboard events
-        document.addEventListener('keydown', handleKeyDown);
-
-        // Handle key down
-        function handleKeyDown(event) {
-            if (event.code === 'KeyP') {
-                isPaused = !isPaused;
-                if (isPaused) {
-                    video1.pause();
-                    video2.pause();
-                } else {
-                    video1.play();
-                    video2.play();
-                }
-            } else if (event.code === 'ArrowRight') {
-                changeVideos(1);
-            } else if (event.code === 'ArrowLeft') {
-                changeVideos(-1);
-            }
-        }
-
-        // Change videos
-        function changeVideos(direction) {
-            videoSet += direction;
-
-            if (videoSet > totalSets) {
-                videoSet = 1;
-            } else if (videoSet < 1) {
-                videoSet = totalSets;
-            }
-
-            const videoNumber = (videoSet - 1) * 2 + 1;
-            video1.src = `video${videoNumber}.mp4`;
-            video2.src = `video${videoNumber + 1}.mp4`;
-
-            wipeDivider.style.left = '50%';
-
-            if (isPaused) {
-                label1.classList.toggle('highlight', videoSet % 2 !== 0);
-                label2.classList.toggle('highlight', videoSet % 2 === 0);
-            }
-        }
+      if (isPaused) {
+          label1.classList.toggle('highlight', videoSet % 2 !== 0);
+          label2.classList.toggle('highlight', videoSet % 2 === 0);
+      }
+  }
 
     </script>
 
