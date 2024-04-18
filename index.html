@@ -13,7 +13,7 @@
     <script src="https://cdn.jsdelivr.net/npm/serpapi@1.0.0"></script>
 
 
-    <title>JAIME ALAN MENDEZ CASTRO</title>
+    <title>Human View Studio</title>
 
 <style>
 
@@ -1362,7 +1362,7 @@ margin-top: 0px;
     </div><!--end quoteContainer-->
 
     <div id="buttonContainer">
-      <a href="#" id="quoteButton">Quote Me</a>
+      <a href="#" id="quoteButton">Feeling lucky?</a>
   </div><!--end buttonContainer-->
 </div><!--end container-->
 <p></q>
@@ -1799,69 +1799,69 @@ margin-top: 0px;
             }, 500);
         }
 
-        // Your existing JavaScript code for the Demo Reel Comparison section
         const videoContainer = document.getElementById('video-container');
-        const wipeDivider = document.getElementById('wipe-divider');
-        const video1 = document.getElementById('video1');
-        const video2 = document.getElementById('video2');
-        const label1 = document.getElementById('label1');
-        const label2 = document.getElementById('label2');
-        const fullscreenButton = document.getElementById('fullscreen-button');
-        const legend = document.getElementById('legend');
-        let touchStartX = 0;
-        let isPaused = false;
-        let videoSet = 1;
-        const totalSets = 8;
+      const wipeDivider = document.getElementById('wipe-divider');
+      const video1 = document.getElementById('video1');
+      const video2 = document.getElementById('video2');
+      const label1 = document.getElementById('label1');
+      const label2 = document.getElementById('label2');
+      const fullscreenButton = document.getElementById('fullscreen-button');
+      const legend = document.getElementById('legend');
+      let touchStartX = 0;
+      let isPaused = false;
+      let videoSet = 1;
+      const totalSets = 8;
 
-        function toggleFullscreen() {
-      if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
-          // Browser is currently in fullscreen, so exit fullscreen
-          if (document.exitFullscreen) {
-              document.exitFullscreen();
-          } else if (document.webkitExitFullscreen) {
-              document.webkitExitFullscreen();
-          } else if (document.mozCancelFullScreen) {
-              document.mozCancelFullScreen();
-          } else if (document.msExitFullscreen) {
-              document.msExitFullscreen();
-          }
-      } else {
-          // Browser is not in fullscreen, so enter fullscreen
-          if (videoContainer.requestFullscreen) {
-              videoContainer.requestFullscreen();
-          } else if (videoContainer.webkitRequestFullscreen) {
-              videoContainer.webkitRequestFullscreen();
-          } else if (videoContainer.mozRequestFullScreen) {
-              videoContainer.mozRequestFullScreen();
-          } else if (videoContainer.msRequestFullscreen) {
-              videoContainer.msRequestFullscreen();
+      // Toggle fullscreen mode
+      function toggleFullscreen() {
+          if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
+              if (videoContainer.requestFullscreen) {
+                  videoContainer.requestFullscreen();
+              } else if (videoContainer.webkitRequestFullscreen) {
+                  videoContainer.webkitRequestFullscreen();
+              } else if (videoContainer.mozRequestFullScreen) {
+                  videoContainer.mozRequestFullScreen();
+              } else if (videoContainer.msRequestFullscreen) {
+                  videoContainer.msRequestFullscreen();
+              }
+          } else {
+              if (document.exitFullscreen) {
+                  document.exitFullscreen();
+              } else if (document.webkitExitFullscreen) {
+                  document.webkitExitFullscreen();
+              } else if (document.mozCancelFullScreen) {
+                  document.mozCancelFullScreen();
+              } else if (document.msExitFullscreen) {
+                  document.msExitFullscreen();
+              }
           }
       }
-  }
 
-  fullscreenButton.addEventListener('click', toggleFullscreen);
-  let lastTouchUpdateTimestamp = 0;
-  const touchThrottleInterval = 120; // Adjust this value to control the touch throttle interval
+      // Add event listener for fullscreen button
+      fullscreenButton.addEventListener('click', toggleFullscreen);
 
-  document.addEventListener('touchstart', function (e) {
-      touchStartX = e.touches[0].clientX;
-      isPaused = !isPaused;
-      if (isPaused) {
-          video1.pause();
-          video2.pause();
-      } else {
-          video1.play();
-          video2.play();
+      // Touch events
+      document.addEventListener('touchstart', handleTouchStart);
+      document.addEventListener('touchmove', handleTouchMove);
+      document.addEventListener('touchend', handleTouchEnd);
+      document.addEventListener('touchcancel', handleTouchCancel);
+
+      // Handle touch start
+      function handleTouchStart(e) {
+          touchStartX = e.touches[0].clientX;
+          isPaused = !isPaused;
+          if (isPaused) {
+              video1.pause();
+              video2.pause();
+          } else {
+              video1.play();
+              video2.play();
+          }
       }
-  });
 
-  document.addEventListener('touchmove', function (e) {
-      e.preventDefault(); // Prevent scrolling while moving the wiper
-
-      const currentTimestamp = Date.now();
-
-      if (currentTimestamp - lastTouchUpdateTimestamp > touchThrottleInterval) {
-          lastTouchUpdateTimestamp = currentTimestamp;
+      // Handle touch move
+      function handleTouchMove(e) {
+          e.preventDefault();
 
           const containerRect = videoContainer.getBoundingClientRect();
           const percentage = ((e.touches[0].clientX - containerRect.left) / videoContainer.offsetWidth) * 100;
@@ -1869,77 +1869,80 @@ margin-top: 0px;
           video2.style.clipPath = `polygon(${percentage}% 0, 100% 0, 100% 100%, ${percentage}% 100%)`;
           wipeDivider.style.left = `${percentage}%`;
       }
-  });
 
-  document.addEventListener('touchend', function () {
-      touchStartX = 0;
-  });
+      // Handle touch end
+      function handleTouchEnd() {
+          touchStartX = 0;
+      }
 
-  document.addEventListener('touchcancel', function () {
-      touchStartX = 0;
-  });
+      // Handle touch cancel
+      function handleTouchCancel() {
+          touchStartX = 0;
+      }
 
-let lastUpdateTimestamp = 0;
-const throttleInterval = 120; // Adjust this value to control the throttle interval
+      // Mouse events
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseleave', handleMouseLeave);
 
-document.addEventListener('mousemove', function (event) {
-    const currentTimestamp = Date.now();
+      // Handle mouse move
+      function handleMouseMove(event) {
+          const containerRect = videoContainer.getBoundingClientRect();
+          const percentage = ((event.clientX - containerRect.left) / videoContainer.offsetWidth) * 100;
+          video1.style.clipPath = `polygon(0 0, ${percentage}% 0, ${percentage}% 100%, 0 100%)`;
+          video2.style.clipPath = `polygon(${percentage}% 0, 100% 0, 100% 100%, ${percentage}% 100%)`;
+          wipeDivider.style.left = `${percentage}%`;
+      }
 
-    if (isPaused && currentTimestamp - lastUpdateTimestamp > throttleInterval) {
-        lastUpdateTimestamp = currentTimestamp;
+      // Handle mouse leave
+      function handleMouseLeave() {
+          if (isPaused) {
+              wipeDivider.style.left = '-10px';
+          }
+      }
 
-        const containerRect = videoContainer.getBoundingClientRect();
-        const percentage = ((event.clientX - containerRect.left) / videoContainer.offsetWidth) * 100;
-        video1.style.clipPath = `polygon(0 0, ${percentage}% 0, ${percentage}% 100%, 0 100%)`;
-        video2.style.clipPath = `polygon(${percentage}% 0, 100% 0, 100% 100%, ${percentage}% 100%)`;
-        wipeDivider.style.left = `${percentage}%`;
-    }
-});
+      // Keyboard events
+      document.addEventListener('keydown', handleKeyDown);
 
-document.addEventListener('mouseleave', () => {
-    if (isPaused) {
-        wipeDivider.style.left = '-10px';
-    }
-});
+      // Handle key down
+      function handleKeyDown(event) {
+          if (event.code === 'KeyP') {
+              isPaused = !isPaused;
+              if (isPaused) {
+                  video1.pause();
+                  video2.pause();
+              } else {
+                  video1.play();
+                  video2.play();
+              }
+          } else if (event.code === 'ArrowRight') {
+              changeVideos(1);
+          } else if (event.code === 'ArrowLeft') {
+              changeVideos(-1);
+          }
+      }
 
+      // Change videos
+      function changeVideos(direction) {
+          videoSet += direction;
 
-        document.addEventListener('keydown', (event) => {
-            if (event.code === 'KeyP') {
-                isPaused = !isPaused;
-                if (isPaused) {
-                    video1.pause();
-                    video2.pause();
-                } else {
-                    video1.play();
-                    video2.play();
-                }
-            } else if (event.code === 'ArrowRight') {
-                changeVideos(1);
-            } else if (event.code === 'ArrowLeft') {
-                changeVideos(-1);
-            }
-        });
+          if (videoSet > totalSets) {
+              videoSet = 1;
+          } else if (videoSet < 1) {
+              videoSet = totalSets;
+          }
 
-        function changeVideos(direction) {
-            videoSet += direction;
+          const videoNumber = (videoSet - 1) * 2 + 1;
+          video1.src = `video${videoNumber}.mp4`;
+          video2.src = `video${videoNumber + 1}.mp4`;
 
-            if (videoSet > totalSets) {
-                videoSet = 1;
-            } else if (videoSet < 1) {
-                videoSet = totalSets;
-            }
+          wipeDivider.style.left = '50%';
 
-            const videoNumber = (videoSet - 1) * 2 + 1;
-            video1.src = `video${videoNumber}.mp4`;
-            video2.src = `video${videoNumber + 1}.mp4`;
+          if (isPaused) {
+              label1.classList.toggle('highlight', videoSet % 2 !== 0);
+              label2.classList.toggle('highlight', videoSet % 2 === 0);
+          }
+      }
 
-            wipeDivider.style.left = '50%';
-
-            if (isPaused) {
-                label1.classList.toggle('highlight', videoSet % 2 !== 0);
-                label2.classList.toggle('highlight', videoSet % 2 === 0);
-            }
-        }
     </script>
 
 
