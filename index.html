@@ -495,14 +495,14 @@
 
               #legend {
                   position: absolute;
-  bottom: -8px;
-  left: 50%;
-  transform: translateX(-50%);
-  color: #000;
-  font-size: 22px;
-  font-weight: bold;
-  opacity: 0.5;
-  animation: blink 2s infinite;
+                  bottom: 20px;
+                  left: 50%;
+                  transform: translateX(-50%);
+                  color: #fff;
+                  font-size: 22px;
+                  font-weight: bold;
+                  opacity: 0.5;
+                  animation: blink 2s infinite;
               }
 
               @keyframes blink {
@@ -690,6 +690,9 @@
    }
 
    @media screen and (max-width: 1900px) {
+     #quoteContainer{
+    display: none;
+}
        .topnav {
            display: block;
        }
@@ -1351,9 +1354,9 @@ margin-top: 0px;
 
 
 </script>
-
+  <div id="quoteContainer">
   <h2>Get Your Daily Quote</h2>
-    <div id="quoteContainer">
+
        <p> </p>
       <p id="quoteGenius"></p>
     </div><!--end quoteContainer-->
@@ -1404,7 +1407,7 @@ margin-top: 0px;
         <!-- About Me Section -->
         <div class="gallery-section" id="aboutme-section">
             <h2 class="gallery-title">About Me</h2>
-           <div class="circle"> <img src="me.jpg" alt="Profile Image" class="about-me-img"></div>
+           <a href="https://www.linkedin.com/in/jaime-mendez-5a1063113/"><div class="circle"> <img src="me.jpg" alt="Profile Image" class="about-me-img"></div></a>
             <div class="about-me-hobbies">
 
                 <div class="about-me">
