@@ -1800,6 +1800,7 @@ margin-top: 0px;
         }
     
         // Your existing JavaScript code for the Demo Reel Comparison section
+       // Your existing JavaScript code for the Demo Reel Comparison section
         const videoContainer = document.getElementById('video-container');
         const wipeDivider = document.getElementById('wipe-divider');
         const video1 = document.getElementById('video1');
@@ -1941,7 +1942,7 @@ document.addEventListener('mouseleave', () => {
             }
         }
 
-        // Function to detect Safari on a mobile device
+// Function to detect Safari on a mobile device
 function isSafariMobile() {
     return navigator.userAgent.match(/(iPod|iPhone|iPad)/) && navigator.userAgent.match(/AppleWebKit/);
 }
@@ -1949,8 +1950,8 @@ function isSafariMobile() {
 // Function to change videos based on browser
 function changeVideos(direction) {
     if (isSafariMobile()) {
-        // Show a popup for limited functionality on iOS
-        alert("Full functionality is not available on iOS devices. Please use a different browser.");
+        // Show a more visible popup for limited functionality on iOS
+        alert("Unfortunately, full functionality is not available on iOS devices. Please try accessing this site from a desktop or non-iOS mobile browser.");
         return;
     }
 
