@@ -1941,32 +1941,38 @@ document.addEventListener('mouseleave', () => {
             }
         }
 
-            // Function to change videos based on browser
-        function changeVideos(direction) {
-            if (isSafariMobile()) {
-                // Set a single video source for Safari mobile
-                video1.src = 'demo.mp4';
-                video2.src = '';
-            } else {
-                // Change the source of videos for other browsers
-                videoSet += direction;
-                if (videoSet > totalSets) {
-                    videoSet = 1;
-                } else if (videoSet < 1) {
-                    videoSet = totalSets;
-                }
-                const videoNumber = (videoSet - 1) * 2 + 1;
-                video1.src = `video${videoNumber}.mp4`;
-                video2.src = `video${videoNumber + 1}.mp4`;
-            }
+        // Function to detect Safari on a mobile device
+function isSafariMobile() {
+    return navigator.userAgent.match(/(iPod|iPhone|iPad)/) && navigator.userAgent.match(/AppleWebKit/);
+}
 
-            wipeDivider.style.left = '50%';
+// Function to change videos based on browser
+function changeVideos(direction) {
+    if (isSafariMobile()) {
+        // Show a popup for limited functionality on iOS
+        alert("Full functionality is not available on iOS devices. Please use a different browser.");
+        return;
+    }
 
-            if (isPaused) {
-                label1.classList.toggle('highlight', videoSet % 2 !== 0);
-                label2.classList.toggle('highlight', videoSet % 2 === 0);
-            }
-        }
+    // Change the source of videos for other browsers
+    videoSet += direction;
+    if (videoSet > totalSets) {
+        videoSet = 1;
+    } else if (videoSet < 1) {
+        videoSet = totalSets;
+    }
+    const videoNumber = (videoSet - 1) * 2 + 1;
+    video1.src = `video${videoNumber}.mp4`;
+    video2.src = `video${videoNumber + 1}.mp4`;
+
+    wipeDivider.style.left = '50%';
+
+    if (isPaused) {
+        label1.classList.toggle('highlight', videoSet % 2 !== 0);
+        label2.classList.toggle('highlight', videoSet % 2 === 0);
+    }
+}
+
     </script>
 
 
