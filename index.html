@@ -1940,7 +1940,7 @@ document.addEventListener('mouseleave', () => {
                 label2.classList.toggle('highlight', videoSet % 2 === 0);
             }
         }
-        // Function to detect iOS devices
+// Function to detect iOS devices
 function isIOS() {
     return /iPad|iPhone|iPod/.test(navigator.platform);
 }
@@ -1960,12 +1960,14 @@ function changeVideos(direction) {
         // Use only one video on iOS devices
         video1.src = 'demo.mp4';
         video2.src = '';
+        // Hide the wipe divider
+        wipeDivider.style.display = 'none';
     } else {
         video1.src = `video${videoNumber}.mp4`;
         video2.src = `video${videoNumber + 1}.mp4`;
+        // Show the wipe divider
+        wipeDivider.style.display = 'block';
     }
-
-    wipeDivider.style.left = '50%';
 
     if (isPaused) {
         label1.classList.toggle('highlight', videoSet % 2 !== 0);
@@ -1975,12 +1977,11 @@ function changeVideos(direction) {
 
 // Check if the current browser is iOS and display a notification
 if (isIOS()) {
-    alert("Unfortunately, full functionality is not available on iOS devices. you can still watch the non interactive version of my demo reel, or you can change to any android or desktop device.");
+    alert("Unfortunately, full functionality is not available on iOS devices. Please try accessing this site from a desktop or non-iOS mobile browser.");
 }
 
 // Initialize the video sources
 changeVideos(0);
-    </script>
 
 
 
