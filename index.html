@@ -1372,10 +1372,10 @@ margin-top: 0px;
               <div class="gallery-section" id="demo-reel-section">
               <h2 class="gallery-title">Demo Reel</h2>
               <div id="video-container">
-
+   
                     <div id="wipe-divider"></div>
-                    <video class="video" id="video1" src="video1.mp4" autoplay="" muted="" loop=""></video>
-                    <video class="video" id="video2" src="video2.mp4" autoplay="" muted="" loop=""></video>
+                    <video class="video" id="video1" src="video1.mp4" controls autoplay="" muted="" loop=""></video>
+                    <video class="video" id="video2" src="video2.mp4" controls autoplay="" muted="" loop=""></video>
 
                     <button id="fullscreen-button" onclick="toggleFullscreen()">📺</button>
                     <button id="nav-left" onclick="changeVideos(-1)">◀</button>
@@ -1974,6 +1974,26 @@ function changeVideos(direction) {
         label2.classList.toggle('highlight', videoSet % 2 === 0);
     }
 }
+     
+    const video1 = document.getElementById('video1');
+    const video2 = document.getElementById('video2');
+
+    function syncVideos(video) {
+        if (video1.currentTime !== video2.currentTime) {
+            video1.currentTime = video2.currentTime = Math.min(video1.currentTime, video2.currentTime);
+        }
+    }
+
+    video1.addEventListener('play', () => video2.play());
+    video1.addEventListener('pause', () => video2.pause());
+    video1.addEventListener('seeked', () => syncVideos(video1));
+    video1.addEventListener('timeupdate', () => syncVideos(video1));
+
+    video2.addEventListener('play', () => video1.play());
+    video2.addEventListener('pause', () => video1.pause());
+    video2.addEventListener('seeked', () => syncVideos(video2));
+    video2.addEventListener('timeupdate', () => syncVideos(video2));
+
 
 // Check if the current browser is iOS and display a notification
 if (isIOS()) {
