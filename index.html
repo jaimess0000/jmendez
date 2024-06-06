@@ -1840,7 +1840,7 @@ margin-top: 0px;
   }
     
 
-    function syncVideos(video) {
+/*    function syncVideos(video) {
         if (video1.currentTime !== video2.currentTime) {
             video1.currentTime = video2.currentTime = Math.min(video1.currentTime, video2.currentTime);
         }
@@ -1855,6 +1855,27 @@ margin-top: 0px;
     video2.addEventListener('pause', () => video1.pause());
     video2.addEventListener('seeked', () => syncVideos(video2));
     video2.addEventListener('timeupdate', () => syncVideos(video2));
+        */
+      const syncThreshold = 0.3; // Synchronization threshold in seconds
+
+    function syncVideos(video) {
+        const otherVideo = video === video1 ? video2 : video1;
+        const timeDifference = Math.abs(video.currentTime - otherVideo.currentTime);
+
+        if (timeDifference > syncThreshold) {
+            otherVideo.currentTime = video.currentTime;
+        }
+    }
+
+    video1.addEventListener('play', () => video2.play());
+    video1.addEventListener('pause', () => video2.pause());
+    video1.addEventListener('seeked', () => syncVideos(video1));
+    video1.addEventListener('timeupdate', () => syncVideos(video1));
+
+    video2.addEventListener('play', () => video1.play());
+    video2.addEventListener('pause', () => video1.pause());
+    video2.addEventListener('seeked', () => syncVideos(video2));
+    video2.addEventListener('timeupdate', () => syncVideos(video2));      
   
   fullscreenButton.addEventListener('click', toggleFullscreen);
   let lastTouchUpdateTimestamp = 0;
