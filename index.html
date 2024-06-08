@@ -1978,6 +1978,36 @@ document.addEventListener('mouseleave', () => {
                 label2.classList.toggle('highlight', videoSet % 2 === 0);
             }
         }
+        
+    // Swipe detection
+    let touchstartX = 0;
+    let touchendX = 0;
+
+    const swipeThreshold = 50; // Minimum distance for a swipe
+
+    function handleGesture() {
+        if (touchendX < touchstartX - swipeThreshold) {
+            // Swipe left (next set)
+            changeVideos(1);
+        }
+        if (touchendX > touchstartX + swipeThreshold) {
+            // Swipe right (previous set)
+            changeVideos(-1);
+        }
+    }
+
+    document.getElementById('video-container').addEventListener('touchstart', (e) => {
+        touchstartX = e.changedTouches[0].screenX;
+    });
+
+    document.getElementById('video-container').addEventListener('touchend', (e) => {
+        touchendX = e.changedTouches[0].screenX;
+        handleGesture();
+    });
+
+
+
+
 // Function to detect iOS devices
 function isIOS() {
     return /iPad|iPhone|iPod/.test(navigator.platform);
