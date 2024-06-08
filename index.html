@@ -1979,33 +1979,72 @@ document.addEventListener('mouseleave', () => {
             }
         }
         
-    /* Swipe detection
-    let touchstartX = 0;
-    let touchendX = 0;
+    //  function fullscreen
+    
+    const video1 = document.getElementById('video1');
+    const video2 = document.getElementById('video2');
 
-    const swipeThreshold = 50; // Minimum distance for a swipe
-
-    function handleGesture() {
-        if (touchendX < touchstartX - swipeThreshold) {
-            // Swipe left (next set)
-            changeVideos(1);
-        }
-        if (touchendX > touchstartX + swipeThreshold) {
-            // Swipe right (previous set)
-            changeVideos(-1);
+    function enterFullscreen(video) {
+        if (video.requestFullscreen) {
+            video.requestFullscreen();
+        } else if (video.mozRequestFullScreen) { // Firefox
+            video.mozRequestFullScreen();
+        } else if (video.webkitRequestFullscreen) { // Chrome, Safari and Opera
+            video.webkitRequestFullscreen();
+        } else if (video.msRequestFullscreen) { // IE/Edge
+            video.msRequestFullscreen();
         }
     }
 
-    document.getElementById('video-container').addEventListener('touchstart', (e) => {
-        touchstartX = e.changedTouches[0].screenX;
+    function exitFullscreen() {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.mozCancelFullScreen) { // Firefox
+            document.mozCancelFullScreen();
+        } else if (document.webkitExitFullscreen) { // Chrome, Safari and Opera
+            document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) { // IE/Edge
+            document.msExitFullscreen();
+        }
+    }
+
+    function handleFullscreenChange() {
+        if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
+            // Video has entered fullscreen
+            document.body.style.setProperty('--video-orientation', 'portrait');
+        } else {
+            // Video has exited fullscreen
+            document.body.style.setProperty('--video-orientation', 'landscape');
+        }
+    }
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+    document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+
+    video1.addEventListener('dblclick', () => enterFullscreen(video1));
+    video2.addEventListener('dblclick', () => enterFullscreen(video2));
+
+    // Example to exit fullscreen on double click on video
+    video1.addEventListener('dblclick', () => {
+        if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
+            exitFullscreen();
+        } else {
+            enterFullscreen(video1);
+        }
     });
 
-    document.getElementById('video-container').addEventListener('touchend', (e) => {
-        touchendX = e.changedTouches[0].screenX;
-        handleGesture();
+    video2.addEventListener('dblclick', () => {
+        if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
+            exitFullscreen();
+        } else {
+            enterFullscreen(video2);
+        }
     });
 
-*/
+
+// Function swipe gestures 
 
     let touchstartX = 0;
     let touchendX = 0;
