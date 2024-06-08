@@ -17,7 +17,33 @@ uuuig9g9ii9i<"'^cob0 p6<html lang="en"><head>
 
 <style>
 
-              body {
+    :root {
+        --video-orientation: landscape;
+    }
+
+    video {
+        width: 100%;
+        height: auto;
+        aspect-ratio: var(--video-orientation);
+    }
+
+    @media (orientation: portrait) {
+        video {
+            width: 100%;
+            height: auto;
+            aspect-ratio: var(--video-orientation);
+        }
+    }
+
+    @media (orientation: landscape) {
+        video {
+            width: 100%;
+            height: auto;
+            aspect-ratio: var(--video-orientation);
+        }
+    }
+
+    body {
                   font-family: 'Helvetica Light', Arial, sans-serif;
                   margin: 0;
                   padding: 0;
