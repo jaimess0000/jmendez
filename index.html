@@ -1,4 +1,4 @@
-<html lang="en"><head>
+6<html lang="en"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -1979,7 +1979,7 @@ document.addEventListener('mouseleave', () => {
             }
         }
         
-    // Swipe detection
+    /* Swipe detection
     let touchstartX = 0;
     let touchendX = 0;
 
@@ -2005,7 +2005,42 @@ document.addEventListener('mouseleave', () => {
         handleGesture();
     });
 
+*/
 
+    let touchstartX = 0;
+    let touchendX = 0;
+    let touchstartTime = 0;
+    let touchendTime = 0;
+
+    const swipeThreshold = 50; // Minimum distance for a swipe
+    const swipeTimeThreshold = 200; // Maximum time in milliseconds for a quick swipe
+
+    function handleGesture() {
+        const timeDifference = touchendTime - touchstartTime;
+        const distance = touchendX - touchstartX;
+
+        if (timeDifference < swipeTimeThreshold) {
+            if (distance < -swipeThreshold) {
+                // Swipe left (next set)
+                changeVideos(1);
+            }
+            if (distance > swipeThreshold) {
+                // Swipe right (previous set)
+                changeVideos(-1);
+            }
+        }
+    }
+
+    document.getElementById('video-container').addEventListener('touchstart', (e) => {
+        touchstartX = e.changedTouches[0].screenX;
+        touchstartTime = new Date().getTime();
+    });
+
+    document.getElementById('video-container').addEventListener('touchend', (e) => {
+        touchendX = e.changedTouches[0].screenX;
+        touchendTime = new Date().getTime();
+        handleGesture();
+    });
 
 
 // Function to detect iOS devices
