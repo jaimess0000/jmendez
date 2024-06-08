@@ -1812,7 +1812,7 @@ margin-top: 0px;
         let isPaused = false;
         let videoSet = 1;
         const totalSets = 8;
-
+/*
         function toggleFullscreen() {
       if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
           // Browser is currently in fullscreen, so exit fullscreen
@@ -1839,23 +1839,8 @@ margin-top: 0px;
       }
   }
     
+*/
 
-/*    function syncVideos(video) {
-        if (video1.currentTime !== video2.currentTime) {
-            video1.currentTime = video2.currentTime = Math.min(video1.currentTime, video2.currentTime);
-        }
-    }
-
-    video1.addEventListener('play', () => video2.play());
-    video1.addEventListener('pause', () => video2.pause());
-    video1.addEventListener('seeked', () => syncVideos(video1));
-    video1.addEventListener('timeupdate', () => syncVideos(video1));
-
-    video2.addEventListener('play', () => video1.play());
-    video2.addEventListener('pause', () => video1.pause());
-    video2.addEventListener('seeked', () => syncVideos(video2));
-    video2.addEventListener('timeupdate', () => syncVideos(video2));
-        */
       const syncThreshold = 0.3; // Synchronization threshold in seconds
 
     function syncVideos(video) {
@@ -1982,27 +1967,32 @@ document.addEventListener('mouseleave', () => {
     //  function fullscreen
     
     
-    function enterFullscreen(video) {
-        if (video.requestFullscreen) {
-            video.requestFullscreen();
-        } else if (video.mozRequestFullScreen) { // Firefox
-            video.mozRequestFullScreen();
-        } else if (video.webkitRequestFullscreen) { // Chrome, Safari and Opera
-            video.webkitRequestFullscreen();
-        } else if (video.msRequestFullscreen) { // IE/Edge
-            video.msRequestFullscreen();
-        }
-    }
+    
+    const videoContainer = document.getElementById('video-container');
 
-    function exitFullscreen() {
-        if (document.exitFullscreen) {
-            document.exitFullscreen();
-        } else if (document.mozCancelFullScreen) { // Firefox
-            document.mozCancelFullScreen();
-        } else if (document.webkitExitFullscreen) { // Chrome, Safari and Opera
-            document.webkitExitFullscreen();
-        } else if (document.msExitFullscreen) { // IE/Edge
-            document.msExitFullscreen();
+    function toggleFullscreen() {
+        if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
+            // Browser is currently in fullscreen, so exit fullscreen
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+        } else {
+            // Browser is not in fullscreen, so enter fullscreen
+            if (videoContainer.requestFullscreen) {
+                videoContainer.requestFullscreen();
+            } else if (videoContainer.webkitRequestFullscreen) {
+                videoContainer.webkitRequestFullscreen();
+            } else if (videoContainer.mozRequestFullScreen) {
+                videoContainer.mozRequestFullScreen();
+            } else if (videoContainer.msRequestFullscreen) {
+                videoContainer.msRequestFullscreen();
+            }
         }
     }
 
@@ -2021,26 +2011,7 @@ document.addEventListener('mouseleave', () => {
     document.addEventListener('mozfullscreenchange', handleFullscreenChange);
     document.addEventListener('MSFullscreenChange', handleFullscreenChange);
 
-    video1.addEventListener('dblclick', () => enterFullscreen(video1));
-    video2.addEventListener('dblclick', () => enterFullscreen(video2));
-
-    // Example to exit fullscreen on double click on video
-    video1.addEventListener('dblclick', () => {
-        if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
-            exitFullscreen();
-        } else {
-            enterFullscreen(video1);
-        }
-    });
-
-    video2.addEventListener('dblclick', () => {
-        if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
-            exitFullscreen();
-        } else {
-            enterFullscreen(video2);
-        }
-    });
-
+    videoContainer.addEventListener('dblclick', toggleFullscreen);
 
 // Function swipe gestures 
 
