@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>J. Mendez - Demo Reel</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+    <style>
+        :root {
+            --system-blue: #007AFF;
+            --system-background: #F2F2F7;
+            --system-gray: #8E8E93;
+            --system-label: #000000;
+            --system-fill: #FFFFFF;
+            --system-separator: rgba(60, 60, 67, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --system-blue: #0A84FF;
+            --system-background: #000000;
+            --system-gray: #98989D;
+            --system-label: #FFFFFF;
+            --system-fill: #1C1C1E;
+            --system-separator: rgba(84, 84, 88, 0.6);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, 'Inter', sans-serif;
+            background-color: var(--system-background);
+            color: var(--system-label);
+            -webkit-font-smoothing: antialiased;
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .nav-bar {
+            position: sticky;
+            top: 0;
+            background-color: var(--system-fill);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--system-separator);
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .nav-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--system-blue);
+            font-size: 16px;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle:active {
+            opacity: 0.7;
+        }
+
+        .card {
+            background-color: var(--system-fill);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 20px auto;
+            max-width: 400px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .input-field {
+            position: relative;
+        }
+
+        input {
+            width: 100%;
+            padding: 16px;
+            border: 1px solid var(--system-separator);
+            border-radius: 10px;
+            background-color: var(--system-background);
+            color: var(--system-label);
+            font-size: 17px;
+            box-sizing: border-box;
+            transition: all 0.2s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--system-blue);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+        }
+
+        .button {
+            background-color: var(--system-blue);
+            color: white;
+            padding: 16px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .button:active {
+            transform: scale(0.98);
+            opacity: 0.9;
+        }
+
+        .video-container {
+            display: none;
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: var(--system-fill);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        video {
+            width: 100%;
+            display: block;
+            background-color: black;
+        }
+
+        .error-message {
+            color: #FF3B30;
+            font-size: 14px;
+            margin-top: 8px;
+            display: none;
+            animation: shake 0.4s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        @supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
+            .nav-bar {
+                background-color: rgba(var(--system-fill), 0.8);
+            }
+        }
+
+        ::placeholder {
+            color: var(--system-gray);
+        }
+
+        /* iOS-style smooth scroll */
+        html {
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-bar">
+        <h1 class="nav-title">Demo Reel</h1>
+        <button class="theme-toggle" aria-label="Toggle theme">
+            Change Theme
+        </button>
+    </div>
+
+    <div class="container">
+        <div id="loginCard" class="card">
+            <form class="login-form" id="loginForm">
+                <div class="input-field">
+                    <input type="password" id="password" placeholder="Enter password" required 
+                           autocomplete="current-password">
+                    <div id="errorMessage" class="error-message">Incorrect password</div>
+                </div>
+                <button type="submit" class="button">View Demo Reel</button>
+            </form>
+        </div>
+
+        <div id="videoContainer" class="video-container">
+            <video id="demoReel" controls playsinline>
+                <source src="demo.mp4" type="video/mp4">
+                Your browser does not support the video element.
+            </video>
+        </div>
+    </div>
+
+    <script>
+        const themeToggle = document.querySelector('.theme-toggle');
+        const loginForm = document.getElementById('loginForm');
+        const loginCard = document.getElementById('loginCard');
+        const videoContainer = document.getElementById('videoContainer');
+        const errorMessage = document.getElementById('errorMessage');
+
+        // Theme toggle with iOS-style transition
+        function setTheme(isDark) {
+            document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
+            themeToggle.textContent = isDark ? 'Light Theme' : 'Dark Theme';
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        }
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        setTheme(savedTheme === 'dark');
+
+        themeToggle.addEventListener('click', () => {
+            const isDark = document.body.getAttribute('data-theme') === 'dark';
+            setTheme(!isDark);
+        });
+
+        // Password protection with iOS-style animation
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const password = document.getElementById('password').value;
+            
+            if (password === 'root') {
+                loginCard.style.opacity = '0';
+                loginCard.style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                    loginCard.style.display = 'none';
+                    videoContainer.style.display = 'block';
+                    setTimeout(() => {
+                        videoContainer.style.opacity = '1';
+                        videoContainer.style.transform = 'translateY(0)';
+                    }, 50);
+                }, 300);
+                errorMessage.style.display = 'none';
+            } else {
+                errorMessage.style.display = 'block';
+                document.getElementById('password').value = '';
+            }
+        });
+
+        // Add iOS-style smooth transitions
+        videoContainer.style.opacity = '0';
+        videoContainer.style.transform = 'translateY(20px)';
+        videoContainer.style.transition = 'all 0.3s ease';
+    </script>
+</body>
+</html>
