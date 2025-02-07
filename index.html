@@ -353,9 +353,272 @@
             width: 100%;
             height: 100%;
             transform-style: preserve-3d;
+            -webkit-transform-style: preserve-3d;
             box-shadow: 0 8px 16px rgba(0,0,0,0.3);
             border-radius: 12px;
+            overflow: visible;
+            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+            -webkit-transition: -webkit-transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+            perspective: 2000px;
+            -webkit-perspective: 2000px;
+            transform-origin: center center;
+            -webkit-transform-origin: center center;
+        }
+
+        .coverflow-item-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            -webkit-transform-style: preserve-3d;
+            transition: transform 0.6s;
+            -webkit-transition: -webkit-transform 0.6s;
+            will-change: transform;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            border-radius: 12px;
+            overflow: visible;
+        }
+
+        @media (max-width: 768px) {
+            .coverflow-item {
+                overflow: visible !important;
+            }
+
+            .coverflow-item.active {
+                z-index: 20;
+            }
+
+            .coverflow-item-inner {
+                overflow: visible !important;
+                -webkit-transform-style: preserve-3d;
+                transform-style: preserve-3d;
+                transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+                -webkit-transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            @media (orientation: portrait) {
+                .coverflow-item.active {
+                    z-index: 20;
+                }
+
+                .coverflow-item-inner.flipped {
+                    -webkit-transform: rotateY(180deg);
+                    transform: rotateY(180deg);
+                    box-shadow: 0 16px 32px rgba(0,0,0,0.4);
+                }
+            }
+
+            @media (orientation: landscape) {
+                .coverflow-item.active {
+                    z-index: 20;
+                }
+
+                .coverflow-item-inner.flipped {
+                    -webkit-transform: rotateY(180deg);
+                    transform: rotateY(180deg);
+                    box-shadow: 0 16px 32px rgba(0,0,0,0.4);
+                }
+            }
+
+            .coverflow-item-inner.flipped ~ .reflection {
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+
+            .coverflow-item-front img {
+                border-radius: 12px;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .coverflow-item.active .coverflow-item-back {
+                box-shadow: 0 12px 24px rgba(0,0,0,0.3);
+            }
+        }
+
+        .coverflow-item-front,
+        .coverflow-item-back {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            -webkit-transform-style: preserve-3d;
+            transform-style: preserve-3d;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            background: var(--system-fill);
+        }
+
+        .coverflow-item-front {
+            z-index: 2;
+        }
+
+        .coverflow-item-back {
+            background: var(--system-fill);
+            -webkit-transform: rotateY(180deg);
+            transform: rotateY(180deg);
+            color: var(--system-label);
+            padding: 8px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
             overflow: hidden;
+            z-index: 2;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            text-align: center;
+            height: 100%;
+        }
+
+        .coverflow-item-back .content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            padding: 0;
+            margin: 0;
+        }
+
+        .coverflow-item-back .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .coverflow-item-back .movie-title {
+            font-size: 16px;
+            line-height: 1.3;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .coverflow-item-back .metadata {
+            font-size: 13px;
+            color: var(--system-gray);
+            margin-bottom: 8px;
+        }
+
+        .coverflow-item-back .overview {
+            font-size: 13px;
+            line-height: 1.4;
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+
+        .coverflow-item-back .stats {
+            display: flex;
+            gap: 8px;
+            padding-top: 8px;
+            border-top: 1px solid var(--system-separator);
+            margin-top: auto;
+        }
+
+        .coverflow-item-back * {
+            -webkit-transform-style: preserve-3d;
+            transform-style: preserve-3d;
+            -webkit-backface-visibility: visible;
+            backface-visibility: visible;
+        }
+
+        [data-theme="dark"] .coverflow-item-back {
+            background: #1C1C1E;
+            color: #FFFFFF;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+
+        .coverflow-item-back {
+            transform: rotateY(180deg);
+            -webkit-transform: rotateY(180deg);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            background: var(--system-fill);
+            color: var(--system-label);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+
+        .coverflow-item-back .movie-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.3;
+            color: inherit;
+        }
+
+        .coverflow-item-back .metadata {
+            color: #8E8E93;
+            font-size: 13px;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .coverflow-item-back .overview {
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 16px;
+            color: inherit;
+            opacity: 0.85;
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding-right: 4px;
+            min-height: 60px;
+        }
+
+        .coverflow-item-back .stats {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: auto;
+            padding-top: 12px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+
+        [data-theme="dark"] .coverflow-item-back .stats {
+            border-top-color: rgba(255,255,255,0.1);
+        }
+
+        .coverflow-item-back .stat {
+            flex: 1;
+            background: rgba(0,0,0,0.05);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        [data-theme="dark"] .coverflow-item-back .stat {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .coverflow-item-back .stat-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #007AFF;
+            margin-bottom: 4px;
+        }
+
+        [data-theme="dark"] .coverflow-item-back .stat-value {
+            color: #0A84FF;
+        }
+
+        .coverflow-item-back .stat-label {
+            font-size: 12px;
+            color: #8E8E93;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .coverflow-item img {
@@ -375,14 +638,21 @@
             transform: scaleY(-1);
             background-size: cover;
             background-position: center top;
-            opacity: 0.5;
-            -webkit-mask-image: linear-gradient(to bottom,
+            opacity: 0.1;
+            -webkit-mask-image: linear-gradient(to top,
                 rgba(0,0,0,0.6) 0%,
                 rgba(0,0,0,0) 100%);
-            mask-image: linear-gradient(to bottom,
-                rgba(0,0,0,0.6) 0%,
+            mask-image: linear-gradient(to top,
+                rgba(0,0,0,0.7) 0%,
+                rgba(0,0,0,0.5) 30%,
+                rgba(0,0,0,0) 100%);
+            -webkit-mask-image: linear-gradient(to top,
+                rgba(0,0,0,0.7) 0%,
+                rgba(0,0,0,0.5) 30%,
                 rgba(0,0,0,0) 100%);
             pointer-events: none;
+            filter: brightness(0.8) blur(1px);
+            transform: scaleY(-1) translateY(-1px);
         }
 
         .video-container {
@@ -1246,8 +1516,8 @@
                     item.style.transform = `
                        translateX(-50%)
                        translateY(-50%)
-                       scale(1.3)
-                       translateZ(150px)
+                       scale(1.6)
+                       translateZ(200px)
                        rotateY(0deg)
                    `;
                     item.classList.add('active');
@@ -1279,11 +1549,11 @@
             const SWIPE_THRESHOLD = 0.15; // 15% of screen width
 
             function onDragStart(e) {
-                isDragging = true;
                 startX = e.type === 'mousedown' ? e.pageX : e.touches[0].pageX;
                 startY = e.type === 'mousedown' ? e.pageY : e.touches[0].pageY;
                 lastDragPosition = startX;
                 isVerticalScroll = false;
+                isDragging = false; // Start as false, will be set to true on actual movement
                 
                 // Disable transitions during drag
                 coverflow.style.transition = 'none';
@@ -1293,19 +1563,26 @@
                 document.addEventListener('mouseup', onDragEnd);
                 document.addEventListener('touchend', onDragEnd);
 
-                e.preventDefault();
+                if (e.type === 'mousedown') {
+                    e.preventDefault();
+                }
             }
 
             function onDragMove(e) {
-                if (!isDragging) return;
-
                 const x = e.type === 'mousemove' ? e.pageX : e.touches[0].pageX;
                 const y = e.type === 'mousemove' ? e.pageY : e.touches[0].pageY;
                 
+                // Set isDragging if there's significant movement
+                const deltaX = Math.abs(x - startX);
+                const deltaY = Math.abs(y - startY);
+                if (deltaX > 5 || deltaY > 5) {
+                    isDragging = true;
+                }
+
+                if (!isDragging) return;
+                
                 // Check for vertical scrolling
                 if (!isVerticalScroll) {
-                    const deltaY = Math.abs(y - startY);
-                    const deltaX = Math.abs(x - lastDragPosition);
                     isVerticalScroll = deltaY > deltaX;
                 }
 
@@ -1323,6 +1600,11 @@
                         const targetIndex = Math.max(0, Math.min(items.length - 1, currentIndex + direction));
                         
                         if (targetIndex !== currentIndex) {
+                            // Unflip all cards when swiping
+                            document.querySelectorAll('.coverflow-item-inner').forEach(card => {
+                                card.classList.remove('flipped');
+                            });
+                            
                             currentIndex = targetIndex;
                             startX = x; // Reset start position for next movement
                             requestAnimationFrame(() => {
@@ -1338,7 +1620,7 @@
             }
 
             function onDragEnd(e) {
-                if (!isDragging) return;
+                const wasDragging = isDragging;
                 isDragging = false;
 
                 // Re-enable transitions
@@ -1354,6 +1636,13 @@
                 document.removeEventListener('touchmove', onDragMove);
                 document.removeEventListener('mouseup', onDragEnd);
                 document.removeEventListener('touchend', onDragEnd);
+
+                // If we were dragging, prevent immediate tap events
+                if (wasDragging) {
+                    setTimeout(() => {
+                        isDragging = false;
+                    }, 100);
+                }
             }
 
             // Touch and mouse event listeners
@@ -1457,6 +1746,10 @@
                     const inner = document.createElement('div');
                     inner.classList.add('coverflow-item-inner');
 
+                    // Create front face
+                    const front = document.createElement('div');
+                    front.classList.add('coverflow-item-front');
+
                     const poster = document.createElement('img');
                     poster.src = `https://image.tmdb.org/t/p/w500${item.poster_path}`;
                     poster.alt = item.title || item.name || "Title Not Available";
@@ -1475,19 +1768,100 @@
                     reflection.classList.add('reflection');
                     reflection.style.backgroundImage = `url(${poster.src})`;
 
-                    inner.appendChild(poster);
-                    inner.appendChild(reflection);
+                    front.appendChild(poster);
+                    front.appendChild(reflection);
+
+                    // Create back face
+                    const back = document.createElement('div');
+                    back.classList.add('coverflow-item-back');
+                    const mediaType = (item.media_type || 'MOVIE').toUpperCase();
+                    const year = (() => {
+                        try {
+                            if (item.release_date) {
+                                return new Date(item.release_date).getFullYear();
+                            }
+                            if (item.first_air_date) {
+                                return new Date(item.first_air_date).getFullYear();
+                            }
+                        } catch (e) {
+                            console.warn('Error parsing date:', e);
+                        }
+                        return 'N/A';
+                    })();
+                    const rating = (() => {
+                        if (typeof item.vote_average === 'number') {
+                            return `${(item.vote_average * 10).toFixed(0)}%`;
+                        }
+                        return 'N/A';
+                    })();
+                    
+                    back.innerHTML = `
+                        <div class="content">
+                            <div class="movie-title" style="font-size: 9px; line-height: 1.2; margin: 0 0 2px; font-weight: 600;">${item.title || item.name || "Title Not Available"}</div>
+                            <div class="metadata" style="color: var(--system-gray); font-size: 8px; margin-bottom: 2px;">${mediaType} • ${year}</div>
+                            <div class="overview" style="font-size: 8px; line-height: 1.3; color: var(--system-label); opacity: 0.85; height: 80px;">${item.overview || "No overview available"}</div>
+                            <div class="stats" style="display: flex; gap: 3px; margin-top: auto; padding-top: 3px; border-top: 1px solid var(--system-separator);">
+                                <div class="stat" style="flex: 1; padding: 2px; background: var(--system-background); border-radius: 3px;">
+                                    <div class="stat-value" style="font-size: 8px; font-weight: 600; color: var(--system-year);">${rating}</div>
+                                    <div class="stat-label" style="font-size: 7px; color: var(--system-gray); text-transform: uppercase; letter-spacing: 0.2px;">Rating</div>
+                                </div>
+                                <div class="stat" style="flex: 1; padding: 2px; background: var(--system-background); border-radius: 3px;">
+                                    <div class="stat-value" style="font-size: 8px; font-weight: 600; color: var(--system-year);">${year}</div>
+                                    <div class="stat-label" style="font-size: 7px; color: var(--system-gray); text-transform: uppercase; letter-spacing: 0.2px;">Year</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    inner.appendChild(front);
+                    inner.appendChild(back);
                     coverflowItem.appendChild(inner);
 
-                    coverflowItem.addEventListener('click', () => {
-                        if (!isDragging) {
-                            // Update movie info first
+                    // Add click handler for mobile
+                    let touchStartTime = 0;
+                    
+                    coverflowItem.addEventListener('touchstart', () => {
+                        touchStartTime = Date.now();
+                        isDragging = false;
+                    }, { passive: true });
+
+                    coverflowItem.addEventListener('touchend', (e) => {
+                        const touchDuration = Date.now() - touchStartTime;
+                        
+                        if (touchDuration < 200 && !isDragging && window.innerWidth <= 768) {
+                            e.preventDefault();
+                            const wasFlipped = inner.classList.contains('flipped');
+                            
+                            // First unflip all cards
+                            document.querySelectorAll('.coverflow-item-inner').forEach(card => {
+                                card.classList.remove('flipped');
+                            });
+
+                            if (currentIndex === index && !wasFlipped) {
+                                // If tapping the current card and it wasn't flipped, flip it
+                                setTimeout(() => {
+                                    inner.classList.add('flipped');
+                                }, 50);
+                            } else if (currentIndex !== index) {
+                                // If changing cards, update the active card
+                                currentIndex = index;
+                                updateCoverflow();
+                                updateMovieInfo(item);
+                            }
+                        }
+                    });
+
+                    // Keep click for desktop
+                    coverflowItem.addEventListener('click', (e) => {
+                        // Only handle click on desktop
+                        if (window.innerWidth > 768 && !isDragging) {
+                            e.preventDefault();
+                            // On desktop, navigate to YouTube
+                            window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(`${item.title || item.name} ${item.media_type}`)}`, '_blank');
+                            // Update the active item
                             currentIndex = index;
                             updateCoverflow();
                             updateMovieInfo(item);
-                            
-                            // Then open YouTube search
-                            window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(`${item.title || item.name} ${item.media_type}`)}`, '_blank');
                         }
                     });
 
