@@ -1179,34 +1179,57 @@
         let wheelTimeout;
 
         function updateMovieInfo(item) {
-            if (!item) return;
+            // Always ensure we have a valid item object
+            const safeItem = item || {};
             
-            // Debug log to check the data
-            console.log('Updating movie info:', item);
+            const year = (() => {
+                try {
+                    if (safeItem.release_date) {
+                        return new Date(safeItem.release_date).getFullYear();
+                    }
+                    if (safeItem.first_air_date) {
+                        return new Date(safeItem.first_air_date).getFullYear();
+                    }
+                } catch (e) {
+                    console.warn('Error parsing date:', e);
+                }
+                return 'N/A';
+            })();
             
-            const year = item.release_date ?
-                new Date(item.release_date).getFullYear() :
-                item.first_air_date ?
-                    new Date(item.first_air_date).getFullYear() :
-                    'N/A';
-                    
-            const rating = item.vote_average ?
-                (item.vote_average * 10).toFixed(0) :
-                'N/A';
+            const rating = (() => {
+                if (typeof safeItem.vote_average === 'number') {
+                    return `${(safeItem.vote_average * 10).toFixed(0)}%`;
+                }
+                return 'N/A';
+            })();
             
-            // Update the info panel content
-            infoPanel.querySelector('.movie-title').textContent = item.title || item.name || 'Title Not Available';
-            infoPanel.querySelector('.metadata').textContent = `${item.media_type ? item.media_type.toUpperCase() : 'MOVIE'} • ${year}`;
-            infoPanel.querySelector('.overview').textContent = item.overview || 'No overview available';
-            infoPanel.querySelector('.rating').textContent = rating === 'N/A' ? rating : `${rating}%`;
-            infoPanel.querySelector('.year').textContent = year;
+            // Get media type with fallback
+            const mediaType = (safeItem.media_type || 'MOVIE').toUpperCase();
             
-            // Make sure the panel is displayed
+            // Update the info panel content with safe values and clear transitions
+            const elements = {
+                title: infoPanel.querySelector('.movie-title'),
+                metadata: infoPanel.querySelector('.metadata'),
+                overview: infoPanel.querySelector('.overview'),
+                rating: infoPanel.querySelector('.rating'),
+                year: infoPanel.querySelector('.year')
+            };
+            
+            // Update content with fallbacks
+            elements.title.textContent = safeItem.title || safeItem.name || 'Title Not Available';
+            elements.metadata.textContent = `${mediaType} • ${year}`;
+            elements.overview.textContent = safeItem.overview || 'No overview available';
+            elements.rating.textContent = rating;
+            elements.year.textContent = year;
+            
+            // Ensure smooth display and transition
+            infoPanel.style.opacity = '0';
             infoPanel.style.display = 'block';
-            // Add visible class after a small delay to trigger transition
-            requestAnimationFrame(() => {
-                infoPanel.classList.add('visible');
-            });
+            
+            // Force reflow and trigger smooth transition
+            infoPanel.offsetHeight;
+            infoPanel.style.opacity = '1';
+            infoPanel.classList.add('visible');
         }
 
         function updateBackground(imageUrl) {
@@ -1285,8 +1308,11 @@
                 const deltaY = Math.abs(y - startY);
                 const deltaXAbs = Math.abs(deltaX);
 
+                // More sensitive threshold for mobile
+                const threshold = e.type === 'touchmove' ? 3 : DRAG_THRESHOLD;
+
                 // Determine scroll direction on first significant move
-                if (!isVerticalScroll && (deltaXAbs > DRAG_THRESHOLD || deltaY > DRAG_THRESHOLD)) {
+                if (!isVerticalScroll && (deltaXAbs > threshold || deltaY > threshold)) {
                     isVerticalScroll = deltaY > deltaXAbs;
                 }
 
@@ -1294,10 +1320,11 @@
                     const currentTime = Date.now();
                     const deltaTime = currentTime - lastDragTime;
                     
-                    velocity = deltaX / (deltaTime || 1); // Prevent division by zero
+                    // Enhanced velocity calculation for smoother mobile scrolling
+                    velocity = deltaX / (deltaTime || 1) * (e.type === 'touchmove' ? 1.5 : 1);
                     
                     const movement = x - startX;
-                    const movePercentage = movement / window.innerWidth;
+                    const movePercentage = movement / (window.innerWidth * (e.type === 'touchmove' ? 0.7 : 1));
                     const indexDelta = -movePercentage * 2;
                     
                     const newIndex = Math.max(0, Math.min(items.length - 1,
@@ -1305,8 +1332,10 @@
                         
                     if (newIndex !== currentIndex) {
                         currentIndex = newIndex;
-                        updateCoverflow();
-                        updateMovieInfo(items[currentIndex]);
+                        requestAnimationFrame(() => {
+                            updateCoverflow();
+                            updateMovieInfo(items[currentIndex]);
+                        });
                     }
                     
                     lastDragPosition = x;
@@ -1316,40 +1345,71 @@
                 }
             }
 
-            function onDragEnd() {
+            function onDragEnd(e) {
                 if (!isDragging) return;
                 isDragging = false;
                 scrollLeft = currentIndex;
-                
-                if (!isVerticalScroll && Math.abs(velocity) > 0.5) {
+
+                const isTouchEvent = e && e.type === 'touchend';
+                const velocityThreshold = isTouchEvent ? 0.3 : 0.5;
+                const frictionFactor = isTouchEvent ? 0.92 : 0.95;
+                let lastAnimTime = performance.now();
+
+                if (!isVerticalScroll && Math.abs(velocity) > velocityThreshold) {
                     const direction = velocity > 0 ? -1 : 1;
                     let targetIndex = currentIndex;
-                    let currentVelocity = Math.abs(velocity);
-                    
+                    let currentVelocity = Math.abs(velocity) * (isTouchEvent ? 1.2 : 1);
+
                     clearInterval(momentumInterval);
                     momentumInterval = setInterval(() => {
-                        currentVelocity *= 0.95; // Apply friction
-                        
-                        if (currentVelocity < 0.1) {
+                        const now = performance.now();
+                        const deltaTime = Math.min(now - lastAnimTime, 32); // Cap at ~30fps
+                        lastAnimTime = now;
+
+                        // Time-based velocity decay
+                        currentVelocity *= Math.pow(frictionFactor, deltaTime / 16);
+
+                        if (currentVelocity < 0.05) {
                             clearInterval(momentumInterval);
+                            // Snap to nearest whole index
+                            const finalIndex = Math.round(targetIndex);
+                            if (finalIndex !== currentIndex) {
+                                currentIndex = finalIndex;
+                                coverflow.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                                requestAnimationFrame(() => {
+                                    updateCoverflow();
+                                    updateMovieInfo(items[currentIndex]);
+                                });
+                            }
                             return;
                         }
-                        
-                        targetIndex = Math.max(0, Math.min(items.length - 1,
-                            targetIndex + direction * (currentVelocity > 1 ? 1 : 0)));
-                            
-                        if (targetIndex !== currentIndex) {
-                            currentIndex = targetIndex;
-                            coverflow.style.transition = 'transform 0.2s cubic-bezier(0.23, 1, 0.32, 1)';
-                            updateCoverflow();
-                            updateMovieInfo(items[currentIndex]);
+
+                        // Smoother index calculation based on velocity
+                        const indexChange = currentVelocity * direction * (deltaTime / 16);
+                        targetIndex = Math.max(0, Math.min(items.length - 1, targetIndex + indexChange));
+
+                        if (Math.abs(targetIndex - currentIndex) >= 0.5) {
+                            currentIndex = Math.round(targetIndex);
+                            coverflow.style.transition = 'transform 0.2s cubic-bezier(0.4, 0, 0.2, 1)';
+                            requestAnimationFrame(() => {
+                                updateCoverflow();
+                                updateMovieInfo(items[currentIndex]);
+                            });
                         }
                     }, 16);
+                } else {
+                    // Snap to nearest when velocity is low
+                    const finalIndex = Math.round(currentIndex);
+                    if (finalIndex !== currentIndex) {
+                        currentIndex = finalIndex;
+                        coverflow.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                        requestAnimationFrame(() => {
+                            updateCoverflow();
+                            updateMovieInfo(items[currentIndex]);
+                        });
+                    }
                 }
-                
-                coverflow.style.transition = 'transform 0.5s cubic-bezier(0.23, 1, 0.32, 1)';
-                updateCoverflow();
-                
+
                 document.removeEventListener('mousemove', onDragMove);
                 document.removeEventListener('touchmove', onDragMove);
                 document.removeEventListener('mouseup', onDragEnd);
