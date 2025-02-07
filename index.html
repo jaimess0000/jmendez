@@ -1274,21 +1274,18 @@
         }
 
         function setupDragInteraction() {
-            let momentumInterval;
             let startY;
             let isVerticalScroll = false;
-            const DRAG_THRESHOLD = 5;
+            const SWIPE_THRESHOLD = 0.15; // 15% of screen width
 
             function onDragStart(e) {
                 isDragging = true;
                 startX = e.type === 'mousedown' ? e.pageX : e.touches[0].pageX;
                 startY = e.type === 'mousedown' ? e.pageY : e.touches[0].pageY;
                 lastDragPosition = startX;
-                lastDragTime = Date.now();
-                velocity = 0;
                 isVerticalScroll = false;
                 
-                clearInterval(momentumInterval);
+                // Disable transitions during drag
                 coverflow.style.transition = 'none';
                 
                 document.addEventListener('mousemove', onDragMove, { passive: false });
@@ -1304,111 +1301,54 @@
 
                 const x = e.type === 'mousemove' ? e.pageX : e.touches[0].pageX;
                 const y = e.type === 'mousemove' ? e.pageY : e.touches[0].pageY;
-                const deltaX = x - lastDragPosition;
-                const deltaY = Math.abs(y - startY);
-                const deltaXAbs = Math.abs(deltaX);
-
-                // More sensitive threshold for mobile
-                const threshold = e.type === 'touchmove' ? 3 : DRAG_THRESHOLD;
-
-                // Determine scroll direction on first significant move
-                if (!isVerticalScroll && (deltaXAbs > threshold || deltaY > threshold)) {
-                    isVerticalScroll = deltaY > deltaXAbs;
+                
+                // Check for vertical scrolling
+                if (!isVerticalScroll) {
+                    const deltaY = Math.abs(y - startY);
+                    const deltaX = Math.abs(x - lastDragPosition);
+                    isVerticalScroll = deltaY > deltaX;
                 }
 
                 if (!isVerticalScroll) {
-                    const currentTime = Date.now();
-                    const deltaTime = currentTime - lastDragTime;
-                    
-                    // Enhanced velocity calculation for smoother mobile scrolling
-                    velocity = deltaX / (deltaTime || 1) * (e.type === 'touchmove' ? 1.5 : 1);
-                    
+                    // Calculate movement
                     const movement = x - startX;
-                    const movePercentage = movement / (window.innerWidth * (e.type === 'touchmove' ? 0.7 : 1));
-                    const indexDelta = -movePercentage * 2;
+                    const screenWidth = window.innerWidth;
                     
-                    const newIndex = Math.max(0, Math.min(items.length - 1,
-                        Math.round(scrollLeft + indexDelta)));
+                    // Calculate relative movement as percentage of screen width
+                    const movePercent = movement / screenWidth;
+                    
+                    // Determine if we should change index
+                    if (Math.abs(movePercent) >= SWIPE_THRESHOLD) {
+                        const direction = movePercent > 0 ? -1 : 1;
+                        const targetIndex = Math.max(0, Math.min(items.length - 1, currentIndex + direction));
                         
-                    if (newIndex !== currentIndex) {
-                        currentIndex = newIndex;
-                        requestAnimationFrame(() => {
-                            updateCoverflow();
-                            updateMovieInfo(items[currentIndex]);
-                        });
+                        if (targetIndex !== currentIndex) {
+                            currentIndex = targetIndex;
+                            startX = x; // Reset start position for next movement
+                            requestAnimationFrame(() => {
+                                updateCoverflow();
+                                updateMovieInfo(items[currentIndex]);
+                            });
+                        }
                     }
                     
-                    lastDragPosition = x;
-                    lastDragTime = currentTime;
-                    
                     e.preventDefault();
+                    lastDragPosition = x;
                 }
             }
 
             function onDragEnd(e) {
                 if (!isDragging) return;
                 isDragging = false;
-                scrollLeft = currentIndex;
 
-                const isTouchEvent = e && e.type === 'touchend';
-                const velocityThreshold = isTouchEvent ? 0.3 : 0.5;
-                const frictionFactor = isTouchEvent ? 0.92 : 0.95;
-                let lastAnimTime = performance.now();
-
-                if (!isVerticalScroll && Math.abs(velocity) > velocityThreshold) {
-                    const direction = velocity > 0 ? -1 : 1;
-                    let targetIndex = currentIndex;
-                    let currentVelocity = Math.abs(velocity) * (isTouchEvent ? 1.2 : 1);
-
-                    clearInterval(momentumInterval);
-                    momentumInterval = setInterval(() => {
-                        const now = performance.now();
-                        const deltaTime = Math.min(now - lastAnimTime, 32); // Cap at ~30fps
-                        lastAnimTime = now;
-
-                        // Time-based velocity decay
-                        currentVelocity *= Math.pow(frictionFactor, deltaTime / 16);
-
-                        if (currentVelocity < 0.05) {
-                            clearInterval(momentumInterval);
-                            // Snap to nearest whole index
-                            const finalIndex = Math.round(targetIndex);
-                            if (finalIndex !== currentIndex) {
-                                currentIndex = finalIndex;
-                                coverflow.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-                                requestAnimationFrame(() => {
-                                    updateCoverflow();
-                                    updateMovieInfo(items[currentIndex]);
-                                });
-                            }
-                            return;
-                        }
-
-                        // Smoother index calculation based on velocity
-                        const indexChange = currentVelocity * direction * (deltaTime / 16);
-                        targetIndex = Math.max(0, Math.min(items.length - 1, targetIndex + indexChange));
-
-                        if (Math.abs(targetIndex - currentIndex) >= 0.5) {
-                            currentIndex = Math.round(targetIndex);
-                            coverflow.style.transition = 'transform 0.2s cubic-bezier(0.4, 0, 0.2, 1)';
-                            requestAnimationFrame(() => {
-                                updateCoverflow();
-                                updateMovieInfo(items[currentIndex]);
-                            });
-                        }
-                    }, 16);
-                } else {
-                    // Snap to nearest when velocity is low
-                    const finalIndex = Math.round(currentIndex);
-                    if (finalIndex !== currentIndex) {
-                        currentIndex = finalIndex;
-                        coverflow.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-                        requestAnimationFrame(() => {
-                            updateCoverflow();
-                            updateMovieInfo(items[currentIndex]);
-                        });
-                    }
-                }
+                // Re-enable transitions
+                coverflow.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                
+                // Ensure we're showing the correct slide
+                requestAnimationFrame(() => {
+                    updateCoverflow();
+                    updateMovieInfo(items[currentIndex]);
+                });
 
                 document.removeEventListener('mousemove', onDragMove);
                 document.removeEventListener('touchmove', onDragMove);
@@ -1416,30 +1356,22 @@
                 document.removeEventListener('touchend', onDragEnd);
             }
 
+            // Touch and mouse event listeners
             coverflow.addEventListener('mousedown', onDragStart);
             coverflow.addEventListener('touchstart', onDragStart, { passive: false });
             
-            // Add enhanced wheel event support
+            // Simplified wheel support
             coverflow.addEventListener('wheel', (e) => {
                 e.preventDefault();
-                clearTimeout(wheelTimeout);
                 
-                // Determine scroll direction and speed
-                const deltaX = Math.abs(e.deltaX);
-                const deltaY = Math.abs(e.deltaY);
-                const direction = deltaX > deltaY ?
-                    (e.deltaX > 0 ? 1 : -1) :
-                    (e.deltaY > 0 ? 1 : -1);
+                const direction = e.deltaX > 0 || e.deltaY > 0 ? 1 : -1;
+                const newIndex = Math.max(0, Math.min(items.length - 1, currentIndex + direction));
                 
-                // Debounce rapid wheel events
-                wheelTimeout = setTimeout(() => {
-                    const newIndex = Math.max(0, Math.min(items.length - 1, currentIndex + direction));
-                    if (newIndex !== currentIndex) {
-                        currentIndex = newIndex;
-                        updateCoverflow();
-                        updateMovieInfo(items[currentIndex]);
-                    }
-                }, 50);
+                if (newIndex !== currentIndex) {
+                    currentIndex = newIndex;
+                    updateCoverflow();
+                    updateMovieInfo(items[currentIndex]);
+                }
             }, { passive: false });
         }
 
