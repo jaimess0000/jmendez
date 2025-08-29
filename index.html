@@ -1711,7 +1711,44 @@
             e.preventDefault();
             const password = document.getElementById('password').value;
             
-            if (password === 'root') {
+            if (password === 'root' || password === 'antagonist') {
+                const currentPassword = password;
+                let videoSource;
+                let isFirstVideo = true;
+
+                // Remove any existing event listeners
+                const oldPlayNextVideo = demoReel._playNextVideo;
+                if (oldPlayNextVideo) {
+                    demoReel.removeEventListener('ended', oldPlayNextVideo);
+                }
+
+                if (password === 'root') {
+                    videoSource = '2d demo.mov';
+                    
+                    // Create new event listener function
+                    const playNextVideo = function() {
+                        console.log('Video ended event triggered');
+                        if (currentPassword === 'root' && isFirstVideo) {
+                            console.log('Switching to second video');
+                            isFirstVideo = false;
+                            const videoElement = demoReel.querySelector('source');
+                            videoElement.src = 'demo.mp4';
+                            demoReel.load();
+                            demoReel.play().catch(error => console.error('Error playing second video:', error));
+                        }
+                    };
+                    
+                    // Store the function reference for future cleanup
+                    demoReel._playNextVideo = playNextVideo;
+                    demoReel.addEventListener('ended', playNextVideo);
+                } else {
+                    videoSource = 'antagonist_master_v4_alt.mp4';
+                }
+
+                const videoElement = demoReel.querySelector('source');
+                videoElement.src = videoSource;
+                demoReel.load();
+
                 // Hide other elements immediately
                 loginForm.style.display = 'none';
                 coverflowContainer.style.display = 'none';
@@ -1723,7 +1760,7 @@
                 videoContainer.classList.add('active');
                 
                 // Start video playback
-                demoReel.play();
+                demoReel.play().catch(error => console.error('Error playing video:', error));
                 
                 errorMessage.style.display = 'none';
             } else {
