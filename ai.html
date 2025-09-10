@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jaime Castro - Visual Artist & AI Specialist</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#10B981',
+                        accent: '#8B5CF6',
+                        dark: '#1F2937',
+                        light: '#F9FAFB'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F3F4F6;
+        }
+        
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 10mm auto;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 15mm;
+            position: relative;
+        }
+        
+        .section-title {
+            position: relative;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, #3B82F6, #8B5CF6);
+        }
+        
+        .skill-bar {
+            background-color: #E5E7EB;
+            border-radius: 10px;
+            overflow: hidden;
+            height: 8px;
+        }
+        
+        .skill-level {
+            height: 100%;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #3B82F6, #8B5CF6);
+        }
+        
+        .ai-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            background-color: #DBEAFE;
+            color: #1E40AF;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin: 0.25rem;
+        }
+        
+        @media print {
+            body {
+                background: white;
+            }
+            .page {
+                margin: 0;
+                box-shadow: none;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex flex-col items-center py-8">
+    <div class="no-print mb-6 flex gap-4">
+        <button onclick="window.print()" class="bg-primary hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg flex items-center">
+            <i class="fas fa-print mr-2"></i> Imprimir/Guardar PDF
+        </button>
+        <button onclick="location.href='#cover-letter'" class="bg-secondary hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg flex items-center">
+            <i class="fas fa-envelope mr-2"></i> Ver Cover Letter
+        </button>
+    </div>
+    
+    <!-- CV Document -->
+    <div class="page">
+        <!-- Header Section -->
+        <header class="mb-8">
+            <h1 class="text-4xl font-bold text-dark mb-2">Jaime Castro</h1>
+            <h2 class="text-2xl text-primary font-semibold mb-4">Visual Artist & AI Specialist</h2>
+            <div class="flex flex-wrap gap-4 text-gray-600">
+                <div class="flex items-center">
+                    <i class="fas fa-envelope mr-2 text-accent"></i>
+                    <span>jaime.castro@humanview.studio</span>
+                </div>
+                <div class="flex items-center">
+                    <i class="fas fa-globe mr-2 text-accent"></i>
+                    <span>humanview.studio</span>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Summary Section -->
+        <section class="mb-8">
+            <h3 class="text-xl font-semibold section-title">Resumen Profesional</h3>
+            <p class="text-gray-700 leading-relaxed">
+                Visual artist con amplia experiencia en la integración de herramientas de inteligencia artificial para la generación de contenido visual, modelos 3D, videos y código creativo. Especializado en optimización de workflows mediante AI, logrando aumentar la capacidad de iteración en un <span class="font-semibold text-secondary">500%</span> y reducir tiempos de renderizado y simulación de días a horas o minutos. Proactivo en la adopción de nuevas tecnologías para innovar en la creación de VFX y contenido digital.
+            </p>
+        </section>
+        
+        <!-- Skills Section -->
+        <section class="mb-8">
+            <h3 class="text-xl font-semibold section-title">Habilidades Técnicas</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h4 class="font-semibold text-gray-800 mb-3">Generación de Imágenes & Videos</h4>
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-gray-700">ComfyUI (Local)</span>
+                                <span class="text-gray-700">Avanzado</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-level w-4/5"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-gray-700">Veo 3 & Kling</span>
+                                <span class="text-gray-700">Avanzado</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-level w-4/5"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-gray-700">WAN 2.1 (Local)</span>
+                                <span class="text-gray-700">Intermedio-Avanzado</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-level w-3/4"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold text-gray-800 mb-3">Automatización & Desarrollo</h4>
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-gray-700">Rocode + VSCode</span>
+                                <span class="text-gray-700">Avanzado</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-level w-4/5"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-gray-700">GitHub Copilot</span>
+                                <span class="text-gray-700">Avanzado</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-level w-4/5"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-gray-700">Generación de modelos 3D con Hunyuan 3D</span>
+                                <span class="text-gray-700">Intermedio</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-level w-2/3"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-6">
+                <h4 class="font-semibold text-gray-800 mb-3">IA Tools & Platforms</h4>
+                <div class="flex flex-wrap">
+                    <span class="ai-badge">BlackboxAI</span>
+                    <span class="ai-badge">Gemini 2.5 Pro</span>
+                    <span class="ai-badge">ChatGPT 5</span>
+                    <span class="ai-badge">ComfyUI</span>
+                    <span class="ai-badge">Veo 3</span>
+                    <span class="ai-badge">Kling</span>
+                    <span class="ai-badge">WAN 2.1</span>
+                    <span class="ai-badge">Rocode</span>
+                    <span class="ai-badge">GitHub Copilot</span>
+                    <span class="ai-badge">Hunyuan 3D</span>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Experience Section -->
+        <section class="mb-8">
+            <h3 class="text-xl font-semibold section-title">Experiencia Profesional</h3>
+            
+            <div class="mb-6">
+                <div class="flex justify-between items-start mb-2">
+                    <h4 class="font-semibold text-gray-800">Visual Artist & AI Specialist</h4>
+                    <span class="text-gray-600">2021 - Presente</span>
+                </div>
+                <p class="text-gray-600 italic mb-2">Proyectos independientes y colaborativos</p>
+                <ul class="list-disc pl-5 text-gray-700 space-y-2">
+                    <li>Uso avanzado de BlackboxAI, Gemini 2.5 Pro, ChatGPT 5 y ComfyUI para generación local de imágenes conceptuales y modelos 3D a partir de imágenes.</li>
+                    <li>Generación de videos con servicios externos (Veo 3, Kling) y localmente con WAN 2.1.</li>
+                    <li>Desarrollo de herramientas de código para optimizar workflows usando Rocode, Visual Studio Code y GitHub Copilot.</li>
+                    <li>Creación de guiones y copys creativos con Gemini y ChatGPT para proyectos audiovisuales.</li>
+                    <li><span class="font-semibold text-secondary">Implementación de workflows AI que han permitido reducir tiempos de entrega y aumentar iteraciones en un 500%.</span></li>
+                    <li>Optimización de renders y simulaciones, reduciendo procesos de días a minutos, incluyendo generación de cleans en segundos.</li>
+                    <li>Colaboración en proyectos innovadores de VFX, con enfoque en la experimentación y adopción de nuevas tecnologías.</li>
+                </ul>
+            </div>
+            
+            <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-primary">
+                <h4 class="font-semibold text-gray-800 mb-2">Logros Destacados</h4>
+                <ul class="list-disc pl-5 text-gray-700">
+                    <li>Aumento de la capacidad de iteración en proyectos visuales en un <span class="font-semibold">500%</span> mediante implementación de herramientas AI</li>
+                    <li>Reducción de tiempos de renderizado y simulación de <span class="font-semibold">días a minutos</span></li>
+                    <li>Generación de cleans en <span class="font-semibold">segundos</span> en lugar de horas</li>
+                    <li>Desarrollo de herramientas personalizadas para optimización de workflows creativos</li>
+                </ul>
+            </div>
+        </section>
+        
+        <!-- Education Section -->
+        <section class="mb-8">
+            <h3 class="text-xl font-semibold section-title">Formación Académica</h3>
+            
+            <div class="mb-4">
+                <div class="flex justify-between items-start mb-1">
+                    <h4 class="font-semibold text-gray-800">Master VFX</h4>
+                    <span class="text-gray-600">2017</span>
+                </div>
+                <p class="text-gray-600">Coco School México</p>
+            </div>
+            
+            <div>
+                <div class="flex justify-between items-start mb-1">
+                    <h4 class="font-semibold text-gray-800">Animation & Visual Effects</h4>
+                    <span class="text-gray-600">2014 - 2017</span>
+                </div>
+                <p class="text-gray-600">UPMH</p>
+            </div>
+        </section>
+        
+        <!-- ATS Optimization Section -->
+        <section class="mb-8">
+            <h3 class="text-xl font-semibold section-title">Palabras Clave ATS</h3>
+            <div class="flex flex-wrap gap-2">
+                <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">Inteligencia Artificial</span>
+                <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">Generación de Video</span>
+                <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">Visual Effects (VFX)</span>
+                <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">Automatización</span>
+                <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">Workflow Optimization</span>
+                <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">Renderizado</span>
+                <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">Modelado 3D</span>
+                <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">Desarrollo de Herramientas</span>
+                <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">GitHub Copilot</span>
+                <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">Visual Studio Code</span>
+                <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">Innovación Tecnológica</span>
+            </div>
+        </section>
+        
+        <!-- Footer -->
+        <footer class="text-center text-gray-500 text-sm border-t pt-4">
+            <p>CV creado con herramientas de IA - Disponible para oportunidades colaborativas</p>
+        </footer>
+    </div>
+    
+    <!-- Cover Letter -->
+    <div id="cover-letter" class="page mt-10">
+        <header class="mb-8 text-center">
+            <h1 class="text-3xl font-bold text-dark mb-2">Carta de Presentación</h1>
+            <p class="text-gray-600">Para el equipo de reclutamiento de Mompozt</p>
+        </header>
+        
+        <div class="mb-6 text-right">
+            <p class="text-gray-600">Fecha: <span id="current-date"></span></p>
+        </div>
+        
+        <div class="text-gray-700 leading-relaxed space-y-4">
+            <p>Estimado equipo de reclutamiento de Mompozt,</p>
+            
+            <p>Me dirijo a ustedes con gran interés en formar parte del equipo de Mompozt como Visual Artist especializado en herramientas de inteligencia artificial. Mi experiencia integrando tecnologías avanzadas como BlackboxAI, Gemini 2.5 Pro y ChatGPT 5 en la creación de contenido visual, modelos 3D y videos me ha permitido optimizar procesos y potenciar la creatividad en proyectos de VFX y multimedia.</p>
+            
+            <p>Estoy convencido de que la innovación y la adopción de nuevas tecnologías son clave para transformar la industria audiovisual. En mis proyectos he logrado <span class="font-semibold text-secondary">aumentar la capacidad de iteración en un 500%</span> y reducir tiempos de renderizado y simulación de días a minutos, lo que demuestra mi compromiso con la eficiencia y la calidad.</p>
+            
+            <p>Mi experiencia específica incluye:</p>
+            
+            <ul class="list-disc pl-5">
+                <li>Generación de imágenes conceptuales mediante ComfyUI local</li>
+                <li>Producción de videos con Veo 3, Kling y WAN 2.1</li>
+                <li>Desarrollo de herramientas personalizadas con Rocode y GitHub Copilot para optimización de workflows</li>
+                <li>Generación de modelos 3D a partir de imágenes utilizando modelos locales de IA</li>
+                <li>Creación de copys creativos y guiones con Gemini y ChatGPT</li>
+            </ul>
+            
+            <p>Me entusiasma la posibilidad de colaborar con Mompozt, una empresa que valora la innovación y el trabajo en equipo. Estoy seguro de que mi experiencia y ganas de seguir aprendiendo y experimentando con nuevas herramientas serán un aporte valioso para sus proyectos.</p>
+            
+            <p>Quedo a su disposición para conversar y explorar cómo puedo contribuir al crecimiento y éxito de Mompozt. Agradezco su tiempo y consideración.</p>
+            
+            <p>Atentamente,</p>
+            
+            <div class="mt-8">
+                <p class="font-semibold">Jaime Castro</p>
+                <p>Visual Artist & AI Specialist</p>
+                <p>jaime.castro@humanview.studio</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set current date in cover letter
+        const now = new Date();
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('current-date').textContent = now.toLocaleDateString('es-ES', options);
+    </script>
+</body>
+</html>
