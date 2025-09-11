@@ -6,6 +6,51 @@
     <title>Jaime Castro - Visual Artist & AI Specialist</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Skill bars animation */
+        @keyframes fillBar {
+            from { width: 0; }
+            to { width: var(--target-width); }
+        }
+
+        .skill-bar {
+            height: 0.5rem;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 0.25rem;
+            overflow: hidden;
+        }
+
+        .skill-level {
+            position: relative;
+            height: 100%;
+            background: linear-gradient(90deg, #3B82F6, #8B5CF6);
+            border-radius: 0.25rem;
+            animation: fillBar 1.2s ease-out forwards;
+            width: 0;
+        }
+
+        /* Define skill level widths */
+        .skill-level.w-4\/5 { --target-width: 80%; }
+        .skill-level.w-3\/4 { --target-width: 75%; }
+        .skill-level.w-2\/3 { --target-width: 66%; }
+
+        /* Shimmer effect */
+        .skill-level::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: translateX(-100%);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            100% { transform: translateX(100%); }
+        }
+    </style>
     <script>
         // Theme toggle function
         function toggleTheme() {
@@ -61,10 +106,13 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
 
-        /* Glowing effects */
-        .skill-level {
-            position: relative;
-            overflow: hidden;
+        @keyframes fill {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        .animate-fill {
+            animation: fill 1s ease-out forwards;
         }
 
         .skill-level::after {
@@ -163,6 +211,14 @@
         }
 
         
+        /* Skill bar container */
+        .skill-bar {
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 0.25rem;
+            height: 0.5rem;
+            overflow: hidden;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-primary);
@@ -172,6 +228,7 @@
         /* Light mode colors */
         body { background-color: var(--bg-primary); }
         
+
         /* Base text colors with animations */
         h1, h2, h3, h4, h5, h6 {
             color: var(--text-primary);
@@ -827,8 +884,8 @@
                                 <span class="text-gray-600 dark:text-gray-300">ComfyUI (Local)</span>
                                 <span class="text-gray-600 dark:text-gray-300">Avanzado</span>
                             </div>
-                            <div class="skill-bar" style="animation: glowPulse 2s infinite">
-                                <div class="skill-level w-4/5" style="animation: slideIn 1s ease-out forwards"></div>
+                            <div class="skill-bar">
+                                <div class="skill-level w-4/5"></div>
                             </div>
                         </div>
                         <div>
