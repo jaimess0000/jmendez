@@ -1384,6 +1384,27 @@
         </div>
 
         <script>
+            // Password verification for AI page access
+            document.getElementById('loginForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const password = document.getElementById('password').value;
+                const errorMessage = document.getElementById('errorMessage');
+                
+                switch(password) {
+                    case 'ai':
+                        window.location.href = 'ai.html';
+                        break;
+                    case 'comp':
+                        window.location.href = 'comp.html';
+                        break;
+                    default:
+                        errorMessage.style.display = 'block';
+                        setTimeout(() => {
+                            errorMessage.style.display = 'none';
+                        }, 3000);
+                }
+            });
+
             document.getElementById('exitVideo').addEventListener('click', () => {
                 const videoContainer = document.getElementById('videoContainer');
                 const loginForm = document.getElementById('loginForm');

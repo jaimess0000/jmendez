@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jaime Castro - Visual Artist & AI Specialist</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        // Theme toggle function
+        function toggleTheme() {
+            const html = document.documentElement;
+            const isDark = html.getAttribute('data-theme') === 'dark';
+            html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            localStorage.setItem('theme', isDark ? 'light' : 'dark');
+            updateThemeIcon(isDark ? 'light' : 'dark');
+        }
+
+        function updateThemeIcon(theme) {
+            const icon = document.getElementById('themeIcon');
+            icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        // Initialize theme
+        function initTheme() {
+            const theme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', theme);
+            updateThemeIcon(theme);
+        }
+
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#10B981',
+                        accent: '#8B5CF6',
+                        dark: '#1F2937',
+                        light: '#F9FAFB'
+                    },
+                    animation: {
+                        'fadeIn': 'fadeIn 0.5s ease-in-out',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        /* Theme variables */
+        :root {
+            --text-primary: #1F2937;
+            --text-secondary: #4B5563;
+            --text-tertiary: #6B7280;
+            --bg-primary: #F3F4F6;
+            --bg-secondary: #FFFFFF;
+            --bg-tertiary: #E5E7EB;
+            --accent-primary: #3B82F6;
+            --accent-secondary: #60A5FA;
+        }
+
+        [data-theme="dark"] {
+            --text-primary: #F9FAFB;
+            --text-secondary: #D1D5DB;
+            --text-tertiary: #9CA3AF;
+            --bg-primary: #111827;
+            --bg-secondary: #1F2937;
+            --bg-tertiary: #374151;
+            --accent-primary: #3B82F6;
+            --accent-secondary: #60A5FA;
+            --border-color: rgba(75, 85, 99, 0.3);
+        }
+
+        /* Additional dark mode overrides */
+        [data-theme="dark"] .bg-gray-50,
+        [data-theme="dark"] .bg-gray-100,
+        [data-theme="dark"] .bg-white {
+            background-color: var(--bg-secondary) !important;
+        }
+
+        [data-theme="dark"] .border-gray-200 {
+            border-color: var(--border-color) !important;
+        }
+
+        [data-theme="dark"] .text-gray-600,
+        [data-theme="dark"] .text-gray-700,
+        [data-theme="dark"] .text-gray-800 {
+            color: var(--text-secondary) !important;
+        }
+
+        [data-theme="dark"] .shadow-sm {
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        [data-theme="dark"] .bg-gradient-to-r {
+            background: linear-gradient(to right,
+                rgba(59, 130, 246, 0.1),
+                rgba(139, 92, 246, 0.1)
+            ) !important;
+        }
+
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Text colors */
+        h1, h2, h3, h4, h5, h6 { color: var(--text-primary); }
+        p, span, li { color: var(--text-secondary); }
+        .text-gray-600, .text-gray-700, .text-gray-800 { color: var(--text-secondary) !important; }
+        
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 10mm auto;
+            background: var(--bg-secondary);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 15mm;
+            position: relative;
+        }
+        
+        .section-title {
+            position: relative;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, #3B82F6, #8B5CF6);
+        }
+
+        /* Skill bars base styles */
+        .skill-bar {
+            background-color: var(--bg-tertiary);
+            border-radius: 10px;
+            overflow: hidden;
+            height: 8px;
+            position: relative;
+            border: 1px solid rgba(75, 85, 99, 0.2);
+        }
+        
+        .skill-level {
+            position: absolute;
+            height: 100%;
+            left: 0;
+            top: 0;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #3B82F6, #8B5CF6);
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+        
+        /* Skill level widths - using !important to override any Tailwind classes */
+        .skill-full {
+            width: 100% !important;  /* Expert/Native */
+        }
+        .skill-advanced {
+            width: 75% !important;   /* Advanced */
+        }
+        .skill-intermediate {
+            width: 60% !important;   /* Professional */
+        }
+        
+        /* Hover effect */
+        .skill-bar:hover .skill-level {
+            filter: brightness(1.1);
+            transform: scaleX(1.02);
+        }
+        
+        .ai-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            background-color: rgba(59, 130, 246, 0.1);
+            color: var(--accent-secondary);
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin: 0.25rem;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        
+        @media print {
+            body {
+                background: var(--bg-secondary);
+            }
+            .page {
+                margin: 0;
+                box-shadow: none;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body onload="initTheme()" class="bg-gray-900 flex flex-col items-center py-8">
+    <div class="no-print mb-6 flex gap-4 items-center">
+        <button onclick="location.href='index.html'" class="bg-gray-800 text-white p-3 rounded-full hover:opacity-80 transition-opacity flex items-center gap-2">
+            <i class="fas fa-arrow-left"></i>
+            <span class="text-sm">Back to Main</span>
+        </button>
+        <button onclick="toggleTheme()" class="bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-800 p-2 rounded-full hover:opacity-80 transition-opacity">
+            <i id="themeIcon" class="fas fa-sun"></i>
+        </button>
+        <button onclick="window.print()" class="bg-primary hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg flex items-center">
+            <i class="fas fa-print mr-2"></i> Print/Save PDF
+        </button>
+        <button onclick="location.href='#cover-letter'" class="bg-secondary hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg flex items-center">
+            <i class="fas fa-envelope mr-2"></i> View Cover Letter
+        </button>
+    </div>
+    
+    <!-- CV Document -->
+    <div class="page">
+        <!-- Header Section -->
+        <header class="mb-8">
+            <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-2">Jaime Mendez</h1>
+            <h2 class="text-2xl text-blue-600 dark:text-blue-400 font-semibold mb-4">Compositing Artist</h2>
+            <div class="flex flex-wrap gap-4 text-gray-600 dark:text-gray-400">
+                <div class="flex items-center">
+                    <i class="fas fa-envelope mr-2 text-accent"></i>
+                    <span>jaimess0000@gmail.com</span>
+                </div>
+                <div class="flex items-center">
+                    <i class="fas fa-map-marker-alt mr-2 text-accent"></i>
+                    <span>Mexico City, Mexico</span>
+                </div>
+                <div class="flex items-center">
+                    <i class="fab fa-linkedin mr-2 text-accent"></i>
+                    <a href="https://linkedin.com/in/jaime-mendez-5a1063113" target="_blank" class="hover:text-blue-400">LinkedIn Profile</a>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Summary Section -->
+        <section class="mb-8">
+            <h3 class="text-xl font-semibold section-title">Professional Summary</h3>
+            <p class="text-gray-700 leading-relaxed">
+                Compositing Artist with 6+ years of experience in VFX for feature films, television, and commercials. Skilled in digital compositing, visual effects integration, and post-production workflows. Strong team player with proven leadership experience and the ability to meet tight deadlines. Continuously learning new tools and techniques to maintain high-quality output.
+            </p>
+        </section>
+        
+        <!-- Skills Section -->
+        <section class="mb-8">
+            <h3 class="text-xl font-semibold section-title">Technical Skills</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h4 class="font-semibold text-gray-800 mb-3">Compositing & VFX</h4>
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-gray-700">Nuke</span>
+                                <span class="text-gray-700">Expert</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-level skill-full"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-gray-700">After Effects</span>
+                                <span class="text-gray-700">Advanced</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-level skill-advanced"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-gray-700">Photoshop</span>
+                                <span class="text-gray-700">Advanced</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-level skill-advanced"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold text-gray-800 mb-3">VFX Specialties</h4>
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-gray-700">Digital Compositing</span>
+                                <span class="text-gray-700">Expert</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-level skill-full"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-gray-700">Rotoscoping & Keying</span>
+                                <span class="text-gray-700">Advanced</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-level skill-advanced"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-gray-700">Color Grading</span>
+                                <span class="text-gray-700">Advanced</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-level skill-advanced"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-6">
+                <h4 class="font-semibold text-gray-800 mb-3">Languages</h4>
+                <div class="space-y-3">
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-gray-700">Spanish</span>
+                            <span class="text-gray-700">Native</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-level skill-full"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-gray-700">English</span>
+                            <span class="text-gray-700">Professional</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-level skill-intermediate"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Professional Experience Page -->
+    <div class="page mt-8">
+        <section class="mb-8 animate-fadeIn">
+            <h3 class="text-xl font-semibold section-title text-center mb-6">Professional Experience</h3>
+            
+            <div class="space-y-6 p-6 rounded-lg shadow-sm border border-gray-700/30 bg-gray-900/10">
+                <div class="mb-6 bg-white p-5 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
+                    <div class="flex justify-between items-start mb-3 border-b pb-2">
+                        <h4 class="font-semibold text-gray-800">Freelance – Compositor</h4>
+                        <span class="text-gray-600">Jul 2024 - Present</span>
+                    </div>
+                    <p class="text-gray-600 italic mb-2">Mexico City</p>
+                    <ul class="list-disc pl-5 text-gray-700 space-y-2">
+                        <li>Worked on multiple short-term VFX projects for film and TV.</li>
+                        <li>Managed complete compositing workflows from start to finish.</li>
+                    </ul>
+                </div>
+
+                <div class="mb-6 bg-white p-5 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
+                    <div class="flex justify-between items-start mb-3 border-b pb-3">
+                        <h4 class="font-semibold text-gray-800 text-lg">Ingenuity Studios Inc.</h4>
+                        <span class="text-primary font-medium">May 2021 - Jul 2024</span>
+                    </div>
+                    <p class="text-gray-600 italic mb-3 flex items-center">
+                        <i class="fas fa-map-marker-alt mr-2"></i>
+                        Los Angeles, CA
+                    </p>
+                    <ul class="list-disc pl-5 text-gray-700 space-y-2 marker:text-primary">
+                        <li>Promoted to Lead Compositor (Dec 2022 - Jul 2024)</li>
+                        <li>Supervised compositing on high-profile sequences</li>
+                        <li>Integrated VFX into live-action footage with a focus on realism and detail</li>
+                        <li>Collaborated with international teams under tight production schedules</li>
+                    </ul>
+                </div>
+
+                <div class="mb-6 bg-white p-5 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
+                    <div class="flex justify-between items-start mb-3 border-b pb-3">
+                        <h4 class="font-semibold text-gray-800 text-lg">Previous Experience</h4>
+                        <span class="text-primary font-medium">2015 - 2021</span>
+                    </div>
+                    <ul class="list-disc pl-5 text-gray-700 space-y-2 marker:text-primary">
+                        <li>Cinema Maquina - Compositor, Mexico City (Apr 2021 - Oct 2021)</li>
+                        <li>Argos Comunicación - Compositor, Mexico City (Feb 2021 - Apr 2021)</li>
+                        <li>Ollin VFX - Various Roles (Jul 2017 - Jan 2021)</li>
+                        <li>Mighty Studio - Compositor, Guadalajara (Oct 2020 - Dec 2020)</li>
+                        <li>The Mill - Compositor, Montreal (Sep 2019 - Dec 2019)</li>
+                        <li>Labodigital - VFX Compositor, Mexico City (Mar 2019 - Sep 2019)</li>
+                        <li>Flipbook Studio - Digital Compositor, Ensenada (Feb 2018 - Oct 2018)</li>
+                        <li>Alux Media Studios - 3D & Motion Graphics, Pachuca (Jul 2015 - Oct 2016)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="bg-gradient-to-r from-blue-900/20 to-purple-900/20 p-6 rounded-lg border-l-4 border-blue-500 mt-8 shadow-sm">
+                <h4 class="font-semibold text-gray-800 mb-2">Key Achievements</h4>
+                <ul class="list-disc pl-5 text-gray-700">
+                    <li>Successfully delivered high-profile VFX sequences for major film and television projects</li>
+                    <li>Led and mentored teams of compositors on complex visual effects projects</li>
+                    <li>Optimized workflow processes to improve efficiency and quality</li>
+                    <li>Collaborated effectively with international teams across multiple time zones</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+
+    <!-- Education and Skills Page -->
+    <div class="page mt-8">
+        <section class="mb-8">
+            <h3 class="text-xl font-semibold section-title">Education</h3>
+            
+            <div class="grid gap-4 p-6 rounded-lg shadow-sm border border-gray-700/30 bg-gray-900/10">
+                <div class="bg-gray-800/50 p-5 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-700/30">
+                    <div class="flex justify-between items-start mb-3 border-b pb-3">
+                        <h4 class="font-semibold text-gray-800 text-lg">Master VFX</h4>
+                        <span class="text-primary font-medium">2017</span>
+                    </div>
+                    <p class="text-gray-600 flex items-center">
+                        <i class="fas fa-graduation-cap mr-2 text-accent"></i>
+                        Coco School México
+                    </p>
+                </div>
+                
+                <div class="bg-white p-5 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
+                    <div class="flex justify-between items-start mb-3 border-b pb-3">
+                        <h4 class="font-semibold text-gray-800 text-lg">Animation & Visual Effects</h4>
+                        <span class="text-primary font-medium">2014 - 2017</span>
+                    </div>
+                    <p class="text-gray-600 flex items-center">
+                        <i class="fas fa-graduation-cap mr-2 text-accent"></i>
+                        Universidad Politécnica Metropolitana de Hidalgo
+                    </p>
+                </div>
+
+                <div class="bg-white p-5 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
+                    <div class="flex justify-between items-start mb-3 border-b pb-3">
+                        <h4 class="font-semibold text-gray-800 text-lg">Nuke Compositing</h4>
+                        <span class="text-primary font-medium">2015 - 2016</span>
+                    </div>
+                    <p class="text-gray-600 flex items-center">
+                        <i class="fas fa-graduation-cap mr-2 text-accent"></i>
+                        Instituto Cardan
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ATS Optimization Section -->
+        <section class="mb-8">
+            <h3 class="text-xl font-semibold section-title">Keywords (ATS Optimization)</h3>
+            <div class="p-6 rounded-lg shadow-sm border border-gray-700/30 bg-gray-900/10">
+                <div class="flex flex-wrap gap-3 justify-center">
+                    <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">VFX Compositing</span>
+                    <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">Digital Compositing</span>
+                    <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">Nuke</span>
+                    <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">After Effects</span>
+                    <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">Photoshop</span>
+                    <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">Rotoscoping</span>
+                    <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">Keying</span>
+                    <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">Color Grading</span>
+                    <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">Post-Production</span>
+                    <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">Motion Graphics</span>
+                    <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">Visual Effects</span>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Cover Letter -->
+    <div id="cover-letter" class="page mt-10">
+        <header class="mb-8 text-center">
+            <h1 class="text-3xl font-bold text-dark mb-2">Cover Letter</h1>
+            <p class="text-gray-600">Professional Compositing Artist</p>
+        </header>
+        
+        <div class="mb-6 text-right">
+            <p class="text-gray-600">Date: <span id="current-date"></span></p>
+        </div>
+        
+        <div class="text-gray-300 leading-relaxed space-y-4 bg-gray-800/50 p-6 rounded-lg shadow-sm border border-gray-700/30">
+            <p>Dear Hiring Manager,</p>
+            
+            <p>I am writing to express my strong interest in contributing my expertise as a Compositing Artist to your team. With over 6 years of experience in VFX for feature films, television, and commercials, I have developed a comprehensive skill set in digital compositing and visual effects integration.</p>
+            
+            <p>Throughout my career at leading studios like Ingenuity Studios Inc., The Mill, and Ollin VFX, I have consistently delivered high-quality work while meeting demanding deadlines. My experience includes supervising compositing teams on high-profile sequences and collaborating effectively with international teams.</p>
+            
+            <p>Key highlights of my experience include:</p>
+            
+            <ul class="list-disc pl-5">
+                <li>Expert in Nuke, After Effects, and Photoshop</li>
+                <li>Specialized in digital compositing, rotoscoping, and keying</li>
+                <li>Strong background in color grading and post-production</li>
+                <li>Proven leadership experience as Lead Compositor</li>
+                <li>Skilled in managing complete compositing workflows</li>
+            </ul>
+            
+            <p>I am particularly drawn to opportunities that allow me to combine my technical expertise with creative problem-solving. I am confident that my experience in delivering high-quality VFX work and my commitment to excellence would make me a valuable addition to your team.</p>
+            
+            <p>I would welcome the opportunity to discuss how my skills and experience align with your team's needs. Thank you for considering my application.</p>
+            
+            <p>Best regards,</p>
+            
+            <div class="mt-8 flex flex-col items-start space-y-1 border-t border-gray-700/30 pt-4">
+                <p class="font-semibold text-lg text-gray-800">Jaime Mendez</p>
+                <p class="text-primary">Compositing Artist</p>
+                <p class="flex items-center text-gray-300">
+                    <i class="fas fa-envelope mr-2 text-accent"></i>
+                    jaimess0000@gmail.com
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Format and set the current date in the cover letter
+        function setCurrentDate() {
+            const now = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', options);
+        }
+        
+        // Initial call
+        setCurrentDate();
+    </script>
+</body>
+</html>
