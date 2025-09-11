@@ -123,7 +123,7 @@
         /* Light theme */
         :root {
             --text-primary: #111827;
-            --text-secondary: #006aff;
+            --text-secondary: #5a2fb3;
             --text-tertiary: #374151;
             --bg-primary: #F9FAFB;
             --bg-secondary: #F3F4F6;
@@ -238,6 +238,7 @@
         /* Borders and separators */
         .border-t { border-color: var(--bg-tertiary); }
         
+        /* Responsive page layout */
         .page {
             width: 210mm;
             min-height: 297mm;
@@ -246,6 +247,63 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             padding: 15mm;
             position: relative;
+        }
+
+        /* Mobile responsiveness */
+        @media screen and (max-width: 768px) {
+            .page {
+                width: 100%;
+                margin: 0;
+                padding: 20px;
+                min-height: auto;
+                box-shadow: none;
+            }
+
+            /* Adjust text sizes for mobile */
+            h1 { font-size: 1.8rem !important; }
+            h2 { font-size: 1.5rem !important; }
+            h3 { font-size: 1.2rem !important; }
+            p, li { font-size: 0.95rem !important; }
+
+            /* Optimize spacing for mobile */
+            section { margin-bottom: 2rem !important; }
+            .mb-8 { margin-bottom: 1.5rem !important; }
+            .space-y-3 > * { margin-top: 0.5rem !important; }
+            
+            /* Adjust grid layout for mobile */
+            .grid { grid-template-columns: 1fr !important; }
+            .gap-6 { gap: 1rem !important; }
+
+            /* Optimize badges for mobile */
+            .ats-badge, .ai-badge {
+                margin: 0.25rem !important;
+                padding: 0.35rem 0.75rem !important;
+                font-size: 0.8rem !important;
+            }
+
+            /* Touch-friendly hover effects */
+            .text-secondary:active {
+                background: linear-gradient(90deg,
+                    #0ea875,
+                    #22e6ac,
+                    #0ea875
+                );
+                background-size: 200% auto;
+                -webkit-background-clip: text;
+                background-clip: text;
+                color: transparent !important;
+                animation: gradientMove 2s linear infinite, pulseScale 1.5s infinite;
+            }
+
+            /* Optimize animations for mobile */
+            @media (prefers-reduced-motion: reduce) {
+                * {
+                    animation-duration: 0.01ms !important;
+                    animation-iteration-count: 1 !important;
+                    transition-duration: 0.01ms !important;
+                    scroll-behavior: auto !important;
+                }
+            }
         }
         
         .section-title {
@@ -478,6 +536,64 @@
             transform: translateY(0);
         }
 
+        /* Enhanced gradient text effect */
+        .text-secondary {
+            position: relative;
+            transition: all 0.3s ease;
+            color: #0ea875 !important;
+            text-shadow: 0 0 8px rgba(14, 168, 117, 0.2);
+        }
+
+        .text-secondary:hover {
+            background: linear-gradient(90deg,
+                #0ea875,
+                #22e6ac,
+                #0ea875
+            );
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent !important;
+            animation: gradientMove 2s linear infinite, pulseScale 1.5s infinite;
+            text-shadow: 0 0 12px rgba(34, 230, 172, 0.7);
+            letter-spacing: 0.5px;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        @keyframes pulseScale {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Add glow behind the text */
+        .text-secondary::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0ea875;
+            filter: blur(8px);
+            opacity: 0;
+            z-index: -1;
+            transition: all 0.3s ease;
+        }
+
+        .text-secondary:hover::after {
+            background: linear-gradient(90deg,
+                rgba(14, 168, 117, 0.3),
+                rgba(34, 230, 172, 0.3),
+                rgba(14, 168, 117, 0.3)
+            );
+            opacity: 0.6;
+            animation: gradientMove 2s linear infinite;
+        }
+
         /* Enhanced section title animation */
         .section-title::after {
             transition: width 0.8s ease-out;
@@ -654,33 +770,35 @@
     </style>
 </head>
 <body onload="initTheme()" class="bg-gray-50 dark:bg-gray-900 flex flex-col items-center py-8">
-    <div class="no-print mb-6 flex gap-4 items-center">
-        <button onclick="location.href='index.html'" class="bg-gray-800 text-white p-3 rounded-full hover:opacity-80 transition-opacity flex items-center gap-2 dark:text-white">
+    <div class="no-print mb-6 flex flex-wrap justify-center sm:justify-start gap-2 sm:gap-4 items-center px-4 sm:px-0">
+        <button onclick="location.href='index.html'" class="bg-gray-800 text-white p-3 rounded-full hover:opacity-80 active:opacity-70 active:scale-95 transition-all flex items-center gap-2 dark:text-white min-w-[44px] sm:min-w-auto">
             <i class="fas fa-arrow-left"></i>
-            <span class="text-sm">Back to Main</span>
+            <span class="text-sm hidden sm:inline">Back to Main</span>
         </button>
-        <button onclick="toggleTheme()" class="bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-800 p-2 rounded-full hover:opacity-80 transition-opacity">
+        <button onclick="toggleTheme()" class="bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-800 p-3 rounded-full hover:opacity-80 active:opacity-70 active:scale-95 transition-all min-w-[44px] flex justify-center">
             <i id="themeIcon" class="fas fa-sun"></i>
         </button>
-        <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg flex items-center">
-            <i class="fas fa-print mr-2"></i> Imprimir/Guardar PDF
+        <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold py-3 px-4 rounded-lg flex items-center justify-center gap-2 min-w-[44px] w-full sm:w-auto active:scale-95 transition-all">
+            <i class="fas fa-print"></i>
+            <span class="sm:inline">Save PDF</span>
         </button>
         <button onclick="document.getElementById('cover-letter').scrollIntoView({behavior: 'smooth', block: 'start'})"
-                class="bg-secondary hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg flex items-center">
-            <i class="fas fa-envelope mr-2"></i> Ver Cover Letter
+                class="bg-secondary hover:bg-green-600 active:bg-green-700 text-white font-semibold py-3 px-4 rounded-lg flex items-center justify-center gap-2 min-w-[44px] w-full sm:w-auto active:scale-95 transition-all">
+            <i class="fas fa-envelope"></i>
+            <span class="sm:inline">Cover Letter</span>
         </button>
     </div>
     
     <!-- CV Document -->
     <div class="page" style="animation: fadeIn 1s ease-out">
         <!-- Header Section -->
-        <header class="mb-8">
-            <h1 class="text-4xl font-bold text-gray-800 dark:text-white mb-2 dynamic-header glow-effect">Jaime Castro</h1>
-            <h2 class="text-2xl text-blue-700 dark:text-blue-400 font-semibold mb-4">Visual Artist & AI Specialist</h2>
-            <div class="flex flex-wrap gap-4 text-gray-700 dark:text-gray-300">
+        <header class="mb-8 px-4 sm:px-0">
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-white mb-2 dynamic-header glow-effect">Jaime Castro</h1>
+            <h2 class="text-xl sm:text-2xl text-blue-700 dark:text-blue-400 font-semibold mb-4">Visual Artist & AI Specialist</h2>
+            <div class="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 text-gray-700 dark:text-gray-300">
                 <div class="flex items-center">
-                    <i class="fas fa-envelope mr-2 text-accent"></i>
-                    <span>jaime.castro@humanview.studio</span>
+                    <i class="fas fa-envelope mr-2 text-accent w-5 text-center"></i>
+                    <span class="text-sm sm:text-base break-all">jaime.castro@humanview.studio</span>
                 </div>
                 <div class="flex items-center">
                     <i class="fas fa-globe mr-2 text-accent"></i>
@@ -693,7 +811,7 @@
         <section class="mb-8">
             <h3 class="text-xl font-semibold section-title">Resumen Profesional</h3>
             <p class="text-gray-300 leading-relaxed">
-                Visual artist con amplia experiencia en la integración de herramientas de inteligencia artificial para la generación de contenido visual, modelos 3D, videos y código creativo. Especializado en optimización de workflows mediante AI, logrando aumentar la capacidad de iteración en un <span class="font-semibold text-secondary">500%</span> y reducir tiempos de renderizado y simulación de días a horas o minutos. Proactivo en la adopción de nuevas tecnologías para innovar en la creación de VFX y contenido digital.
+                Visual artist con amplia experiencia en la integración de herramientas de inteligencia artificial para la generación de contenido visual, modelos 3D, videos y código creativo. Especializado en optimización de workflows mediante AI, logrando  <span class="font-semibold text-secondary">aumentar la capacidad de iteración en un <span class="highlight-number" data-value="500">0</span>%</span> y reducir tiempos de renderizado y simulación de días a horas o minutos. Proactivo en la adopción de nuevas tecnologías para innovar en la creación de VFX y contenido digital.
             </p>
         </section>
         
@@ -800,7 +918,7 @@
                     <li>Generación de videos con servicios externos (Veo 3, Kling) y localmente con WAN 2.1.</li>
                     <li>Desarrollo de herramientas de código para optimizar workflows usando Rocode, Visual Studio Code y GitHub Copilot.</li>
                     <li>Creación de guiones y copys creativos con Gemini y ChatGPT para proyectos audiovisuales.</li>
-                    <li><span class="font-semibold text-secondary">Implementación de workflows AI que han permitido reducir tiempos de entrega y aumentar iteraciones en un 500%.</span></li>
+                    <li><span class="font-semibold text-secondary">Implementación de workflows AI que han permitido reducir tiempos de entrega y aumentar iteraciones en un <span class="font-semibold highlight-number" data-value="500">0</span>%.</span></li>
                     <li>Optimización de renders y simulaciones, reduciendo procesos de días a minutos, incluyendo generación de cleans en segundos.</li>
                     <li>Colaboración en proyectos innovadores de VFX, con enfoque en la experimentación y adopción de nuevas tecnologías.</li>
                 </ul>
@@ -960,7 +1078,7 @@
             
             <p>Me dirijo a ustedes con gran interés en formar parte del equipo de Mompozt como Visual Artist especializado en herramientas de inteligencia artificial. Mi experiencia integrando tecnologías avanzadas como BlackboxAI, Gemini 2.5 Pro y ChatGPT 5 en la creación de contenido visual, modelos 3D y videos me ha permitido optimizar procesos y potenciar la creatividad en proyectos de VFX y multimedia.</p>
             
-            <p>Estoy convencido de que la innovación y la adopción de nuevas tecnologías son clave para transformar la industria audiovisual. En mis proyectos he logrado <span class="font-semibold text-secondary">aumentar la capacidad de iteración en un 500%</span> y reducir tiempos de renderizado y simulación de días a minutos, lo que demuestra mi compromiso con la eficiencia y la calidad.</p>
+            <p>Estoy convencido de que la innovación y la adopción de nuevas tecnologías son clave para transformar la industria audiovisual. En mis proyectos he logrado <span class="font-semibold text-secondary">aumentar la capacidad de iteración en un <span class="highlight-number" data-value="500">500</span>% y reducir tiempos de renderizado y simulación</span> de días a minutos, lo que demuestra mi compromiso con la eficiencia y la calidad.</p>
             
             <p>Mi experiencia específica incluye:</p>
             
