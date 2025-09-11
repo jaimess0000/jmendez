@@ -44,6 +44,69 @@
     </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        /* Smooth transitions for theme changes */
+        * {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Hover animations for sections */
+        section {
+            transform: translateZ(0);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Glowing effects */
+        .skill-level {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-level::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: translateX(-100%);
+        }
+
+        .skill-level:hover::after {
+            transform: translateX(100%);
+            transition: transform 0.6s ease;
+        }
+
+        /* Floating animation for badges */
+        .ai-badge {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .ai-badge:hover {
+            transform: translateY(-3px) scale(1.1);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(139, 92, 246, 0.3));
+        }
+
+        /* Button hover effects */
+        button {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
 
         /* Light theme variables */
         :root {
@@ -109,9 +172,49 @@
         /* Light mode colors */
         body { background-color: var(--bg-primary); }
         
-        /* Base text colors */
+        /* Base text colors with animations */
         h1, h2, h3, h4, h5, h6 {
             color: var(--text-primary);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        h1:hover, h2:hover {
+            transform: scale(1.02);
+            text-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+        }
+
+        /* Enhanced section animations */
+        section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Skill bar animations */
+        .skill-level {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-level::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: translateX(-100%);
+            animation: shine 2s infinite;
+        }
+
+        @keyframes shine {
+            100% { transform: translateX(100%); }
         }
         p, span, li {
             color: var(--text-secondary);
@@ -182,6 +285,209 @@
         [data-theme="dark"] .bg-gray-100 {
             background-color: #1F2937 !important;
         }
+
+        /* Performance optimizations */
+        .hardware-accelerated {
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            perspective: 1000px;
+        }
+
+        /* Shimmering effect */
+        @keyframes shimmer {
+            0% { background-position: -100% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .shimmer-effect {
+            background: linear-gradient(
+                90deg,
+                rgba(59, 130, 246, 0) 0%,
+                rgba(59, 130, 246, 0.2) 50%,
+                rgba(59, 130, 246, 0) 100%
+            );
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+        }
+
+        /* Floating animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Enhanced hover effects */
+        .hover-transform {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hover-transform:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Section entrance animations */
+        @keyframes slideInFromLeft {
+            0% {
+                transform: translate3d(-50px, 20px, -30px) rotate3d(1, 1, 0, -5deg);
+                opacity: 0;
+            }
+            100% {
+                transform: translate3d(0, 0, 0) rotate3d(0, 0, 0, 0);
+                opacity: 1;
+            }
+        }
+
+        /* Parallax effect for sections */
+        .parallax-section {
+            transform-style: preserve-3d;
+            transform: translateZ(0);
+        }
+
+        .parallax-section > * {
+            transform: translateZ(50px);
+            transition: transform 0.3s ease;
+        }
+
+        /* Enhanced hover effects for elements */
+        .section-title, h1, h2, h3, h4 {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .section-title:hover, h1:hover, h2:hover, h3:hover, h4:hover {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+            letter-spacing: 0.5px;
+        }
+
+        /* Glowing effect for important elements */
+        .glow-effect {
+            position: relative;
+        }
+
+        .glow-effect::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            background: linear-gradient(45deg, #3B82F6, #8B5CF6);
+            filter: blur(15px);
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.3s ease;
+        }
+
+        .glow-effect:hover::after {
+            opacity: 0.15;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes glowingBar {
+            0% { box-shadow: 0 0 5px rgba(59, 130, 246, 0.5); }
+            50% { box-shadow: 0 0 15px rgba(59, 130, 246, 0.8); }
+            100% { box-shadow: 0 0 5px rgba(59, 130, 246, 0.5); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* Apply animations to elements */
+        .page section {
+            opacity: 0;
+            transform: translateZ(0);
+            animation: slideInFromLeft 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Morphing background effect */
+        .page section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg,
+                rgba(59, 130, 246, 0.03),
+                rgba(139, 92, 246, 0.03),
+                rgba(59, 130, 246, 0.03));
+            background-size: 400% 400%;
+            z-index: -1;
+            transition: all 0.5s ease;
+            opacity: 0;
+        }
+
+        .page section:hover::before {
+            opacity: 1;
+            animation: gradientBg 3s ease infinite;
+        }
+
+        /* 3D hover effect for sections */
+        .page section {
+            transition: transform 0.3s ease;
+            transform-style: preserve-3d;
+        }
+
+        .page section:hover {
+            transform: translateZ(10px) scale(1.01);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .page section:nth-child(1) { animation-delay: 0.2s; }
+        .page section:nth-child(2) { animation-delay: 0.4s; }
+        .page section:nth-child(3) { animation-delay: 0.6s; }
+        .page section:nth-child(4) { animation-delay: 0.8s; }
+        .page section:nth-child(5) { animation-delay: 1s; }
+
+        .skill-level {
+            animation: glowingBar 2s infinite;
+            transition: width 1s ease-out;
+        }
+
+        .ai-badge {
+            animation: float 3s ease-in-out infinite;
+            transition: all 0.3s ease;
+        }
+
+        .ai-badge:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Enhanced button animations */
+        button {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        /* Enhanced section title animation */
+        .section-title::after {
+            transition: width 0.8s ease-out;
+            width: 0;
+        }
+
+        .section-title.animate::after {
+            width: 50px;
+        }
+
         
         .skill-bar {
             background-color: rgba(55, 65, 81, 0.5);
@@ -189,6 +495,34 @@
             overflow: hidden;
             height: 8px;
             border: 1px solid rgba(75, 85, 99, 0.4);
+            transform: translateZ(0);
+            position: relative;
+        }
+
+        .skill-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent);
+            transform: translateX(-100%);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        .skill-bar:hover .skill-level {
+            filter: brightness(1.2);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.6);
         }
         
         .skill-level {
@@ -198,16 +532,60 @@
             box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
         }
         
+        @keyframes gradientBg {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.95);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Enhanced header animations */
+        .page header {
+            animation: scaleIn 1s ease-out forwards;
+        }
+
+        /* Highlighted text animation */
+        .text-secondary {
+            background: linear-gradient(90deg, #3B82F6, #8B5CF6, #3B82F6);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: gradientBg 3s linear infinite;
+        }
+
+        /* Enhanced AI badge styling */
         .ai-badge {
             display: inline-block;
             padding: 0.25rem 0.75rem;
             border-radius: 15px;
-            background-color: rgba(59, 130, 246, 0.2);
+            background: linear-gradient(45deg, rgba(59, 130, 246, 0.2), rgba(139, 92, 246, 0.2));
+            background-size: 200% 200%;
             color: #93C5FD;
             font-size: 0.75rem;
             font-weight: 500;
             margin: 0.25rem;
             border: 1px solid rgba(59, 130, 246, 0.3);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(4px);
+            animation: gradientBg 3s ease infinite;
+            transition: all 0.3s ease;
+        }
+
+        .ai-badge:hover {
+            background: linear-gradient(45deg, rgba(59, 130, 246, 0.3), rgba(139, 92, 246, 0.3));
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
         }
         
         @media print {
@@ -221,6 +599,57 @@
             .no-print {
                 display: none;
             }
+        }
+        /* Interactive AI badges */
+        .ai-badge {
+            position: relative;
+            transform-style: preserve-3d;
+            transform: perspective(1000px);
+        }
+
+        .ai-badge::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(45deg, #3B82F6, #8B5CF6, #3B82F6);
+            background-size: 200% 200%;
+            animation: gradientBg 3s linear infinite;
+            border-radius: inherit;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .ai-badge:hover::before {
+            opacity: 1;
+        }
+
+        .ai-badge:hover {
+            transform: perspective(1000px) rotateX(10deg) rotateY(10deg) translateZ(10px);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        /* Mouse follow effect for headers */
+        .dynamic-header {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dynamic-header::after {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .dynamic-header:hover::after {
+            opacity: 1;
         }
     </style>
 </head>
@@ -236,16 +665,17 @@
         <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg flex items-center">
             <i class="fas fa-print mr-2"></i> Imprimir/Guardar PDF
         </button>
-        <button onclick="location.href='#cover-letter'" class="bg-secondary hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg flex items-center">
+        <button onclick="document.getElementById('cover-letter').scrollIntoView({behavior: 'smooth', block: 'start'})"
+                class="bg-secondary hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg flex items-center">
             <i class="fas fa-envelope mr-2"></i> Ver Cover Letter
         </button>
     </div>
     
     <!-- CV Document -->
-    <div class="page">
+    <div class="page" style="animation: fadeIn 1s ease-out">
         <!-- Header Section -->
         <header class="mb-8">
-            <h1 class="text-4xl font-bold text-gray-800 dark:text-white mb-2">Jaime Castro</h1>
+            <h1 class="text-4xl font-bold text-gray-800 dark:text-white mb-2 dynamic-header glow-effect">Jaime Castro</h1>
             <h2 class="text-2xl text-blue-700 dark:text-blue-400 font-semibold mb-4">Visual Artist & AI Specialist</h2>
             <div class="flex flex-wrap gap-4 text-gray-700 dark:text-gray-300">
                 <div class="flex items-center">
@@ -279,8 +709,8 @@
                                 <span class="text-gray-600 dark:text-gray-300">ComfyUI (Local)</span>
                                 <span class="text-gray-600 dark:text-gray-300">Avanzado</span>
                             </div>
-                            <div class="skill-bar">
-                                <div class="skill-level w-4/5"></div>
+                            <div class="skill-bar" style="animation: glowPulse 2s infinite">
+                                <div class="skill-level w-4/5" style="animation: slideIn 1s ease-out forwards"></div>
                             </div>
                         </div>
                         <div>
@@ -338,8 +768,8 @@
                 </div>
             </div>
             
-            <div class="mt-6">
-                <h4 class="font-semibold text-gray-200 mb-3">IA Tools & Platforms</h4>
+            <div class="mt-6" style="animation: slideIn 1s ease-out forwards">
+                <h4 class="font-semibold text-gray-200 mb-3" style="animation: slideIn 0.8s ease-out forwards">IA Tools & Platforms</h4>
                 <div class="flex flex-wrap">
                     <span class="ai-badge">BlackboxAI</span>
                     <span class="ai-badge">Gemini 2.5 Pro</span>
@@ -376,15 +806,97 @@
                 </ul>
             </div>
             
-            <div class="bg-blue-900 bg-opacity-20 p-4 rounded-lg border-l-4 border-blue-500">
-                <h4 class="font-semibold text-gray-200 mb-2">Logros Destacados</h4>
-                <ul class="list-disc pl-5 text-gray-300">
-                    <li>Aumento de la capacidad de iteración en proyectos visuales en un <span class="font-semibold">500%</span> mediante implementación de herramientas AI</li>
-                    <li>Reducción de tiempos de renderizado y simulación de <span class="font-semibold">días a minutos</span></li>
-                    <li>Generación de cleans en <span class="font-semibold">segundos</span> en lugar de horas</li>
-                    <li>Desarrollo de herramientas personalizadas para optimización de workflows creativos</li>
+            <div class="achievements-card bg-gradient-to-br from-blue-900/20 to-purple-900/20 p-6 rounded-lg border-l-4 border-blue-500 backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-lg">
+                <h4 class="font-semibold text-gray-200 mb-4 transform transition-all">Logros Destacados</h4>
+                <ul class="list-disc pl-5 text-gray-300 space-y-3">
+                    <li class="achievement-item">Aumento de la capacidad de iteración en proyectos visuales en un
+                        <span class="font-semibold highlight-number" data-value="500">0</span>% mediante implementación de herramientas AI</li>
+                    <li class="achievement-item">Reducción de tiempos de renderizado y simulación de
+                        <span class="font-semibold gradient-text">días a minutos</span></li>
+                    <li class="achievement-item">Generación de cleans en
+                        <span class="font-semibold gradient-text">segundos</span> en lugar de horas</li>
+                    <li class="achievement-item">Desarrollo de herramientas personalizadas para optimización de workflows creativos</li>
                 </ul>
             </div>
+
+            <style>
+                .achievements-card {
+                    transform-style: preserve-3d;
+                    animation: fadeInUp 0.8s ease-out forwards;
+                }
+                
+                .achievement-item {
+                    opacity: 0;
+                    animation: slideInRight 0.6s ease-out forwards;
+                }
+                
+                .achievement-item:nth-child(1) { animation-delay: 0.2s; }
+                .achievement-item:nth-child(2) { animation-delay: 0.4s; }
+                .achievement-item:nth-child(3) { animation-delay: 0.6s; }
+                .achievement-item:nth-child(4) { animation-delay: 0.8s; }
+
+                .gradient-text {
+                    background: linear-gradient(90deg, #3B82F6, #8B5CF6);
+                    -webkit-background-clip: text;
+                    background-clip: text;
+                    color: transparent;
+                    animation: gradientBg 3s linear infinite;
+                }
+
+                @keyframes fadeInUp {
+                    from {
+                        opacity: 0;
+                        transform: translateY(20px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                @keyframes slideInRight {
+                    from {
+                        opacity: 0;
+                        transform: translateX(-20px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateX(0);
+                    }
+                }
+            </style>
+
+            <script>
+                // Animate numbers
+                function animateNumber(element, target) {
+                    let current = 0;
+                    const increment = target / 50; // Adjust speed
+                    const timer = setInterval(() => {
+                        current += increment;
+                        if (current >= target) {
+                            current = target;
+                            clearInterval(timer);
+                        }
+                        element.textContent = Math.round(current);
+                    }, 30);
+                }
+
+                // Start number animation when element is in view
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const numberElement = entry.target;
+                            const targetValue = parseInt(numberElement.dataset.value);
+                            animateNumber(numberElement, targetValue);
+                            observer.unobserve(numberElement);
+                        }
+                    });
+                }, { threshold: 0.5 });
+
+                document.querySelectorAll('.highlight-number').forEach(number => {
+                    observer.observe(number);
+                });
+            </script>
         </section>
         
         <!-- Education Section -->
@@ -475,10 +987,147 @@
     </div>
 
     <script>
+        // Enhanced section animations with Intersection Observer
+        function animateSections() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        const title = entry.target.querySelector('.section-title');
+                        if (title) {
+                            title.classList.add('animate');
+                        }
+                    }
+                });
+            }, { threshold: 0.2 });
+
+            document.querySelectorAll('.page section').forEach(section => {
+                section.style.opacity = '0';
+                observer.observe(section);
+            });
+        }
+
+        // Animate skill bars
+        function animateSkillBars() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const bars = entry.target.querySelectorAll('.skill-level');
+                        bars.forEach(bar => {
+                            const width = bar.style.width;
+                            bar.style.width = '0';
+                            setTimeout(() => {
+                                bar.style.width = width;
+                            }, 200);
+                        });
+                    }
+                });
+            }, { threshold: 0.2 });
+
+            document.querySelectorAll('.skill-bar').forEach(bar => {
+                observer.observe(bar);
+            });
+        }
+
+        // Initialize animations
+        window.addEventListener('load', () => {
+            animateSections();
+            animateSkillBars();
+        });
+
         // Set current date in cover letter
-        const now = new Date();
-        const options = { year: 'numeric', month: 'long', day: 'numeric' };
-        document.getElementById('current-date').textContent = now.toLocaleDateString('es-ES', options);
+        // Initialize animations
+        function initAnimations() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        
+                        // Animate skill bars
+                        const skillBars = entry.target.querySelectorAll('.skill-level');
+                        skillBars.forEach(bar => {
+                            const width = bar.style.width;
+                            bar.style.width = '0';
+                            setTimeout(() => bar.style.width = width, 100);
+                        });
+                    }
+                });
+            }, { threshold: 0.2 });
+
+            document.querySelectorAll('section').forEach(section => observer.observe(section));
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            initAnimations();
+            
+            // Set current date
+            const now = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('current-date').textContent = now.toLocaleDateString('es-ES', options);
+        });
+
+        // Enhanced theme toggle with smooth transitions
+        document.documentElement.style.setProperty('--transition-speed', '0.3s');
+        document.body.style.transition = 'background-color var(--transition-speed) ease';
+    </script>
+
+    <!-- Animation System -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize animations for sections
+            const sections = document.querySelectorAll('section');
+            sections.forEach((section, index) => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(30px)';
+                section.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+                setTimeout(() => {
+                    section.style.opacity = '1';
+                    section.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+
+            // Animate skill bars
+            const skillBars = document.querySelectorAll('.skill-level');
+            skillBars.forEach((bar, index) => {
+                const width = bar.style.width;
+                bar.style.width = '0';
+                setTimeout(() => {
+                    bar.style.width = width;
+                    bar.style.transition = 'width 1.5s cubic-bezier(0.4, 0, 0.2, 1)';
+                }, 1000 + index * 200);
+            });
+
+            // Add hover effects to badges
+            const badges = document.querySelectorAll('.ai-badge');
+            badges.forEach(badge => {
+                badge.addEventListener('mouseover', () => {
+                    badge.style.transform = 'translateY(-5px) scale(1.1)';
+                    badge.style.boxShadow = '0 10px 20px rgba(59, 130, 246, 0.3)';
+                    badge.style.background = 'linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(139, 92, 246, 0.3))';
+                });
+                
+                badge.addEventListener('mouseout', () => {
+                    badge.style.transform = 'translateY(0) scale(1)';
+                    badge.style.boxShadow = 'none';
+                    badge.style.background = 'rgba(59, 130, 246, 0.2)';
+                });
+            });
+
+            // Add hover effects to headers
+            const headers = document.querySelectorAll('h1, h2, h3');
+            headers.forEach(header => {
+                header.addEventListener('mouseover', () => {
+                    header.style.transform = 'scale(1.02)';
+                    header.style.textShadow = '0 0 10px rgba(59, 130, 246, 0.3)';
+                });
+                
+                header.addEventListener('mouseout', () => {
+                    header.style.transform = 'scale(1)';
+                    header.style.textShadow = 'none';
+                });
+            });
+        });
     </script>
 </body>
 </html>
