@@ -3,9 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jaime Castro - Visual Artist & AI Specialist</title>
+    <title>Jaime Mendez - Compositing Artist</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Skill bars animation */
+        @keyframes fillBar {
+            from { width: 0; }
+            to { width: var(--target-width); }
+        }
+
+        .skill-bar {
+            height: 0.5rem;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 0.25rem;
+            overflow: hidden;
+        }
+
+        .skill-level {
+            position: relative;
+            height: 100%;
+            background: linear-gradient(90deg, #3B82F6, #8B5CF6);
+            border-radius: 0.25rem;
+            animation: fillBar 1.2s ease-out forwards;
+            width: 0;
+        }
+
+        /* Define skill level widths */
+        .skill-level.w-full { --target-width: 100%; }
+        .skill-level.w-4\/5 { --target-width: 80%; }
+        .skill-level.w-3\/4 { --target-width: 75%; }
+        .skill-level.w-2\/3 { --target-width: 66%; }
+
+        /* Shimmer effect */
+        .skill-level::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: translateX(-100%);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            100% { transform: translateX(100%); }
+        }
+    </style>
     <script>
         // Theme toggle function
         function toggleTheme() {
@@ -37,15 +83,6 @@
                         accent: '#8B5CF6',
                         dark: '#1F2937',
                         light: '#F9FAFB'
-                    },
-                    animation: {
-                        'fadeIn': 'fadeIn 0.5s ease-in-out',
-                    },
-                    keyframes: {
-                        fadeIn: {
-                            '0%': { opacity: '0', transform: 'translateY(10px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' }
-                        }
                     }
                 }
             }
@@ -54,71 +91,212 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         
-        /* Theme variables */
-        :root {
-            --text-primary: #1F2937;
-            --text-secondary: #4B5563;
-            --text-tertiary: #6B7280;
-            --bg-primary: #F3F4F6;
-            --bg-secondary: #FFFFFF;
-            --bg-tertiary: #E5E7EB;
-            --accent-primary: #3B82F6;
-            --accent-secondary: #60A5FA;
+        /* Smooth transitions for theme changes */
+        * {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
+        /* Hover animations for sections */
+        section {
+            transform: translateZ(0);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        @keyframes fill {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        .animate-fill {
+            animation: fill 1s ease-out forwards;
+        }
+
+        .skill-level::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: translateX(-100%);
+        }
+
+        .skill-level:hover::after {
+            transform: translateX(100%);
+            transition: transform 0.6s ease;
+        }
+
+        /* Floating animation for badges */
+        .ai-badge {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .ai-badge:hover {
+            transform: translateY(-3px) scale(1.1);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(139, 92, 246, 0.3));
+        }
+
+        /* Button hover effects */
+        button {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        /* Light theme variables */
+        :root {
+            --text-primary: #111827;
+            --text-secondary: #006aff;
+            --text-tertiary: #374151;
+            --bg-primary: #F9FAFB;
+            --bg-secondary: #F3F4F6;
+            --bg-tertiary: #E5E7EB;
+            --accent-primary: #1D4ED8;
+            --accent-secondary: #2563EB;
+        }
+
+        /* Light theme */
+        :root {
+            --text-primary: #111827;
+            --text-secondary: #5a2fb3;
+            --text-tertiary: #374151;
+            --bg-primary: #F9FAFB;
+            --bg-secondary: #F3F4F6;
+            --bg-tertiary: #E5E7EB;
+            --accent-primary: #1D4ED8;
+            --accent-secondary: #2563EB;
+        }
+
+        /* Dark theme overrides */
         [data-theme="dark"] {
             --text-primary: #F9FAFB;
-            --text-secondary: #D1D5DB;
-            --text-tertiary: #9CA3AF;
+            --text-secondary: #E5E7EB;
+            --text-tertiary: #D1D5DB;
             --bg-primary: #111827;
             --bg-secondary: #1F2937;
             --bg-tertiary: #374151;
             --accent-primary: #3B82F6;
             --accent-secondary: #60A5FA;
-            --border-color: rgba(75, 85, 99, 0.3);
         }
 
-        /* Additional dark mode overrides */
-        [data-theme="dark"] .bg-gray-50,
-        [data-theme="dark"] .bg-gray-100,
-        [data-theme="dark"] .bg-white {
-            background-color: var(--bg-secondary) !important;
+        /* Text color overrides */
+        .text-gray-200, .text-gray-300 {
+            color: #111827 !important;
         }
-
-        [data-theme="dark"] .border-gray-200 {
-            border-color: var(--border-color) !important;
-        }
-
-        [data-theme="dark"] .text-gray-600,
-        [data-theme="dark"] .text-gray-700,
-        [data-theme="dark"] .text-gray-800 {
+        .text-gray-600, .text-gray-700, .text-gray-800, .text-gray-900 {
             color: var(--text-secondary) !important;
         }
-
-        [data-theme="dark"] .shadow-sm {
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+        [data-theme="dark"] .text-gray-200,
+        [data-theme="dark"] .text-gray-300 {
+            color: #E5E7EB !important;
         }
-
-        [data-theme="dark"] .bg-gradient-to-r {
-            background: linear-gradient(to right,
-                rgba(59, 130, 246, 0.1),
-                rgba(139, 92, 246, 0.1)
-            ) !important;
+        [data-theme="dark"] .text-gray-600,
+        [data-theme="dark"] .text-gray-700,
+        [data-theme="dark"] .text-gray-800,
+        [data-theme="dark"] .text-gray-900 {
+            color: var(--text-tertiary) !important;
         }
 
         
+        /* Skill bar container */
+        .skill-bar {
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 0.25rem;
+            height: 0.5rem;
+            overflow: hidden;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-primary);
             color: var(--text-primary);
-            transition: background-color 0.3s, color 0.3s;
         }
 
-        /* Text colors */
-        h1, h2, h3, h4, h5, h6 { color: var(--text-primary); }
-        p, span, li { color: var(--text-secondary); }
-        .text-gray-600, .text-gray-700, .text-gray-800 { color: var(--text-secondary) !important; }
+        /* Light mode colors */
+        body { background-color: var(--bg-primary); }
         
+
+        /* Base text colors with animations */
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--text-primary);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        h1:hover, h2:hover {
+            transform: scale(1.02);
+            text-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+        }
+
+        /* Enhanced section animations */
+        section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Skill bar animations */
+        .skill-level {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-level::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: translateX(-100%);
+            animation: shine 2s infinite;
+        }
+
+        @keyframes shine {
+            100% { transform: translateX(100%); }
+        }
+        p, span, li {
+            color: var(--text-secondary);
+        }
+        
+        /* Background colors */
+        .bg-gray-100 { background-color: var(--bg-tertiary); }
+        .page {
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        [data-theme="dark"] .page {
+            background-color: var(--bg-secondary);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Buttons and interactive elements */
+        .bg-primary { background-color: var(--accent-primary); }
+        .text-primary { color: var(--accent-secondary); }
+        
+        /* Borders and separators */
+        .border-t { border-color: var(--bg-tertiary); }
+        
+        /* Responsive page layout */
         .page {
             width: 210mm;
             min-height: 297mm;
@@ -127,6 +305,63 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             padding: 15mm;
             position: relative;
+        }
+
+        /* Mobile responsiveness */
+        @media screen and (max-width: 768px) {
+            .page {
+                width: 100%;
+                margin: 0;
+                padding: 20px;
+                min-height: auto;
+                box-shadow: none;
+            }
+
+            /* Adjust text sizes for mobile */
+            h1 { font-size: 1.8rem !important; }
+            h2 { font-size: 1.5rem !important; }
+            h3 { font-size: 1.2rem !important; }
+            p, li { font-size: 0.95rem !important; }
+
+            /* Optimize spacing for mobile */
+            section { margin-bottom: 2rem !important; }
+            .mb-8 { margin-bottom: 1.5rem !important; }
+            .space-y-3 > * { margin-top: 0.5rem !important; }
+            
+            /* Adjust grid layout for mobile */
+            .grid { grid-template-columns: 1fr !important; }
+            .gap-6 { gap: 1rem !important; }
+
+            /* Optimize badges for mobile */
+            .ats-badge, .ai-badge {
+                margin: 0.25rem !important;
+                padding: 0.35rem 0.75rem !important;
+                font-size: 0.8rem !important;
+            }
+
+            /* Touch-friendly hover effects */
+            .text-secondary:active {
+                background: linear-gradient(90deg,
+                    #0ea875,
+                    #22e6ac,
+                    #0ea875
+                );
+                background-size: 200% auto;
+                -webkit-background-clip: text;
+                background-clip: text;
+                color: transparent !important;
+                animation: gradientMove 2s linear infinite, pulseScale 1.5s infinite;
+            }
+
+            /* Optimize animations for mobile */
+            @media (prefers-reduced-motion: reduce) {
+                * {
+                    animation-duration: 0.01ms !important;
+                    animation-iteration-count: 1 !important;
+                    transition-duration: 0.01ms !important;
+                    scroll-behavior: auto !important;
+                }
+            }
         }
         
         .section-title {
@@ -143,60 +378,393 @@
             width: 50px;
             height: 3px;
             background: linear-gradient(90deg, #3B82F6, #8B5CF6);
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.3);
         }
 
-        /* Skill bars base styles */
+        /* Theme specific overrides for text */
+        .text-gray-600 {
+            color: #4B5563 !important;
+        }
+        .text-gray-700, .text-gray-800 {
+            color: #374151 !important;
+        }
+        [data-theme="dark"] .text-gray-600,
+        [data-theme="dark"] .text-gray-700,
+        [data-theme="dark"] .text-gray-800 {
+            color: #D1D5DB !important;
+        }
+        
+        /* Theme specific overrides for backgrounds */
+        .bg-gray-100 {
+            background-color: #F3F4F6 !important;
+        }
+        [data-theme="dark"] .bg-gray-100 {
+            background-color: #1F2937 !important;
+        }
+
+        /* Performance optimizations */
+        .hardware-accelerated {
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            perspective: 1000px;
+        }
+
+        /* Shimmering effect */
+        @keyframes shimmer {
+            0% { background-position: -100% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .shimmer-effect {
+            background: linear-gradient(
+                90deg,
+                rgba(59, 130, 246, 0) 0%,
+                rgba(59, 130, 246, 0.2) 50%,
+                rgba(59, 130, 246, 0) 100%
+            );
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+        }
+
+        /* Floating animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Enhanced hover effects */
+        .hover-transform {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hover-transform:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Section entrance animations */
+        @keyframes slideInFromLeft {
+            0% {
+                transform: translate3d(-50px, 20px, -30px) rotate3d(1, 1, 0, -5deg);
+                opacity: 0;
+            }
+            100% {
+                transform: translate3d(0, 0, 0) rotate3d(0, 0, 0, 0);
+                opacity: 1;
+            }
+        }
+
+        /* Parallax effect for sections */
+        .parallax-section {
+            transform-style: preserve-3d;
+            transform: translateZ(0);
+        }
+
+        .parallax-section > * {
+            transform: translateZ(50px);
+            transition: transform 0.3s ease;
+        }
+
+        /* Enhanced hover effects for elements */
+        .section-title, h1, h2, h3, h4 {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .section-title:hover, h1:hover, h2:hover, h3:hover, h4:hover {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+            letter-spacing: 0.5px;
+        }
+
+        /* Glowing effect for important elements */
+        .glow-effect {
+            position: relative;
+        }
+
+        .glow-effect::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            background: linear-gradient(45deg, #3B82F6, #8B5CF6);
+            filter: blur(15px);
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.3s ease;
+        }
+
+        .glow-effect:hover::after {
+            opacity: 0.15;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes glowingBar {
+            0% { box-shadow: 0 0 5px rgba(59, 130, 246, 0.5); }
+            50% { box-shadow: 0 0 15px rgba(59, 130, 246, 0.8); }
+            100% { box-shadow: 0 0 5px rgba(59, 130, 246, 0.5); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* Apply animations to elements */
+        .page section {
+            opacity: 0;
+            transform: translateZ(0);
+            animation: slideInFromLeft 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Morphing background effect */
+        .page section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg,
+                rgba(59, 130, 246, 0.03),
+                rgba(139, 92, 246, 0.03),
+                rgba(59, 130, 246, 0.03));
+            background-size: 400% 400%;
+            z-index: -1;
+            transition: all 0.5s ease;
+            opacity: 0;
+        }
+
+        .page section:hover::before {
+            opacity: 1;
+            animation: gradientBg 3s ease infinite;
+        }
+
+        /* 3D hover effect for sections */
+        .page section {
+            transition: transform 0.3s ease;
+            transform-style: preserve-3d;
+        }
+
+        .page section:hover {
+            transform: translateZ(10px) scale(1.01);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .page section:nth-child(1) { animation-delay: 0.2s; }
+        .page section:nth-child(2) { animation-delay: 0.4s; }
+        .page section:nth-child(3) { animation-delay: 0.6s; }
+        .page section:nth-child(4) { animation-delay: 0.8s; }
+        .page section:nth-child(5) { animation-delay: 1s; }
+
+        .skill-level {
+            animation: glowingBar 2s infinite;
+            transition: width 1s ease-out;
+        }
+
+        .ai-badge {
+            animation: float 3s ease-in-out infinite;
+            transition: all 0.3s ease;
+        }
+
+        .ai-badge:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Enhanced button animations */
+        button {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        /* Enhanced gradient text effect */
+        .text-secondary {
+            position: relative;
+            transition: all 0.3s ease;
+            color: #0ea875 !important;
+            text-shadow: 0 0 8px rgba(14, 168, 117, 0.2);
+        }
+
+        .text-secondary:hover {
+            background: linear-gradient(90deg,
+                #0ea875,
+                #22e6ac,
+                #0ea875
+            );
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent !important;
+            animation: gradientMove 2s linear infinite, pulseScale 1.5s infinite;
+            text-shadow: 0 0 12px rgba(34, 230, 172, 0.7);
+            letter-spacing: 0.5px;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        @keyframes pulseScale {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Add glow behind the text */
+        .text-secondary::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0ea875;
+            filter: blur(8px);
+            opacity: 0;
+            z-index: -1;
+            transition: all 0.3s ease;
+        }
+
+        .text-secondary:hover::after {
+            background: linear-gradient(90deg,
+                rgba(14, 168, 117, 0.3),
+                rgba(34, 230, 172, 0.3),
+                rgba(14, 168, 117, 0.3)
+            );
+            opacity: 0.6;
+            animation: gradientMove 2s linear infinite;
+        }
+
+        /* Enhanced section title animation */
+        .section-title::after {
+            transition: width 0.8s ease-out;
+            width: 0;
+        }
+
+        .section-title.animate::after {
+            width: 50px;
+        }
+
+        
         .skill-bar {
-            background-color: var(--bg-tertiary);
+            background-color: rgba(55, 65, 81, 0.5);
             border-radius: 10px;
             overflow: hidden;
             height: 8px;
+            border: 1px solid rgba(75, 85, 99, 0.4);
+            transform: translateZ(0);
             position: relative;
-            border: 1px solid rgba(75, 85, 99, 0.2);
+        }
+
+        .skill-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent);
+            transform: translateX(-100%);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        .skill-bar:hover .skill-level {
+            filter: brightness(1.2);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.6);
         }
         
         .skill-level {
-            position: absolute;
             height: 100%;
-            left: 0;
-            top: 0;
             border-radius: 10px;
             background: linear-gradient(90deg, #3B82F6, #8B5CF6);
-            transition: transform 0.3s ease, filter 0.3s ease;
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
         }
         
-        /* Skill level widths - using !important to override any Tailwind classes */
-        .skill-full {
-            width: 100% !important;  /* Expert/Native */
+        @keyframes gradientBg {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
-        .skill-advanced {
-            width: 75% !important;   /* Advanced */
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.95);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
-        .skill-intermediate {
-            width: 60% !important;   /* Professional */
+
+        /* Enhanced header animations */
+        .page header {
+            animation: scaleIn 1s ease-out forwards;
         }
-        
-        /* Hover effect */
-        .skill-bar:hover .skill-level {
-            filter: brightness(1.1);
-            transform: scaleX(1.02);
+
+        /* Highlighted text animation */
+        .text-secondary {
+            background: linear-gradient(90deg, #3B82F6, #8B5CF6, #3B82F6);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: gradientBg 3s linear infinite;
         }
-        
+
+        /* Enhanced AI badge styling */
         .ai-badge {
             display: inline-block;
             padding: 0.25rem 0.75rem;
             border-radius: 15px;
-            background-color: rgba(59, 130, 246, 0.1);
-            color: var(--accent-secondary);
+            background: linear-gradient(45deg, rgba(59, 130, 246, 0.2), rgba(139, 92, 246, 0.2));
+            background-size: 200% 200%;
+            color: #93C5FD;
             font-size: 0.75rem;
             font-weight: 500;
             margin: 0.25rem;
-            border: 1px solid rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(4px);
+            animation: gradientBg 3s ease infinite;
+            transition: all 0.3s ease;
+        }
+
+        .ai-badge:hover {
+            background: linear-gradient(45deg, rgba(59, 130, 246, 0.3), rgba(139, 92, 246, 0.3));
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
         }
         
         @media print {
             body {
-                background: var(--bg-secondary);
+                background: #111827;
             }
             .page {
                 margin: 0;
@@ -206,35 +774,89 @@
                 display: none;
             }
         }
+        /* Interactive AI badges */
+        .ai-badge {
+            position: relative;
+            transform-style: preserve-3d;
+            transform: perspective(1000px);
+        }
+
+        .ai-badge::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(45deg, #3B82F6, #8B5CF6, #3B82F6);
+            background-size: 200% 200%;
+            animation: gradientBg 3s linear infinite;
+            border-radius: inherit;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .ai-badge:hover::before {
+            opacity: 1;
+        }
+
+        .ai-badge:hover {
+            transform: perspective(1000px) rotateX(10deg) rotateY(10deg) translateZ(10px);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        /* Mouse follow effect for headers */
+        .dynamic-header {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dynamic-header::after {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .dynamic-header:hover::after {
+            opacity: 1;
+        }
     </style>
 </head>
-<body onload="initTheme()" class="bg-gray-900 flex flex-col items-center py-8">
-    <div class="no-print mb-6 flex gap-4 items-center">
-        <button onclick="location.href='index.html'" class="bg-gray-800 text-white p-3 rounded-full hover:opacity-80 transition-opacity flex items-center gap-2">
+<body onload="initTheme()" class="bg-gray-50 dark:bg-gray-900 flex flex-col items-center py-8">
+    <div class="no-print mb-6 flex flex-wrap justify-center sm:justify-start gap-2 sm:gap-4 items-center px-4 sm:px-0">
+        <button onclick="location.href='index.html'" class="bg-gray-800 text-white p-3 rounded-full hover:opacity-80 active:opacity-70 active:scale-95 transition-all flex items-center gap-2 dark:text-white min-w-[44px] sm:min-w-auto">
             <i class="fas fa-arrow-left"></i>
-            <span class="text-sm">Back to Main</span>
+            <span class="text-sm hidden sm:inline">Back to Main</span>
         </button>
-        <button onclick="toggleTheme()" class="bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-800 p-2 rounded-full hover:opacity-80 transition-opacity">
+        <button onclick="toggleTheme()" class="bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-800 p-3 rounded-full hover:opacity-80 active:opacity-70 active:scale-95 transition-all min-w-[44px] flex justify-center">
             <i id="themeIcon" class="fas fa-sun"></i>
         </button>
-        <button onclick="window.print()" class="bg-primary hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg flex items-center">
-            <i class="fas fa-print mr-2"></i> Print/Save PDF
+        <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold py-3 px-4 rounded-lg flex items-center justify-center gap-2 min-w-[44px] w-full sm:w-auto active:scale-95 transition-all">
+            <i class="fas fa-print"></i>
+            <span class="sm:inline">Save PDF</span>
         </button>
-        <button onclick="location.href='#cover-letter'" class="bg-secondary hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg flex items-center">
-            <i class="fas fa-envelope mr-2"></i> View Cover Letter
+        <button onclick="document.getElementById('cover-letter').scrollIntoView({behavior: 'smooth', block: 'start'})"
+                class="bg-secondary hover:bg-green-600 active:bg-green-700 text-white font-semibold py-3 px-4 rounded-lg flex items-center justify-center gap-2 min-w-[44px] w-full sm:w-auto active:scale-95 transition-all">
+            <i class="fas fa-envelope"></i>
+            <span class="sm:inline">Cover Letter</span>
         </button>
     </div>
     
     <!-- CV Document -->
-    <div class="page">
+    <div class="page" style="animation: fadeIn 1s ease-out">
         <!-- Header Section -->
-        <header class="mb-8">
-            <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-2">Jaime Mendez</h1>
-            <h2 class="text-2xl text-blue-600 dark:text-blue-400 font-semibold mb-4">Compositing Artist</h2>
-            <div class="flex flex-wrap gap-4 text-gray-600 dark:text-gray-400">
+        <header class="mb-8 px-4 sm:px-0">
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-white mb-2 dynamic-header glow-effect">Jaime Mendez</h1>
+            <h2 class="text-xl sm:text-2xl text-blue-700 dark:text-blue-400 font-semibold mb-4">Compositing Artist</h2>
+            <div class="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 text-gray-700 dark:text-gray-300">
                 <div class="flex items-center">
-                    <i class="fas fa-envelope mr-2 text-accent"></i>
-                    <span>jaimess0000@gmail.com</span>
+                    <i class="fas fa-envelope mr-2 text-accent w-5 text-center"></i>
+                    <span class="text-sm sm:text-base break-all">jaimess0000@gmail.com</span>
                 </div>
                 <div class="flex items-center">
                     <i class="fas fa-map-marker-alt mr-2 text-accent"></i>
@@ -250,7 +872,7 @@
         <!-- Summary Section -->
         <section class="mb-8">
             <h3 class="text-xl font-semibold section-title">Professional Summary</h3>
-            <p class="text-gray-700 leading-relaxed">
+            <p class="text-gray-300 leading-relaxed">
                 Compositing Artist with 6+ years of experience in VFX for feature films, television, and commercials. Skilled in digital compositing, visual effects integration, and post-production workflows. Strong team player with proven leadership experience and the ability to meet tight deadlines. Continuously learning new tools and techniques to maintain high-quality output.
             </p>
         </section>
@@ -260,40 +882,40 @@
             <h3 class="text-xl font-semibold section-title">Technical Skills</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <h4 class="font-semibold text-gray-800 mb-3">Compositing & VFX</h4>
+                    <h4 class="font-semibold text-gray-900 dark:text-gray-200 mb-3">Compositing & VFX</h4>
                     <div class="space-y-3">
                         <div>
                             <div class="flex justify-between mb-1">
-                                <span class="text-gray-700">Nuke</span>
-                                <span class="text-gray-700">Expert</span>
+                                <span class="text-gray-600 dark:text-gray-300">Nuke</span>
+                                <span class="text-gray-600 dark:text-gray-300">Expert</span>
                             </div>
                             <div class="skill-bar">
-                                <div class="skill-level skill-full"></div>
+                                <div class="skill-level w-full"></div>
                             </div>
                         </div>
                         <div>
                             <div class="flex justify-between mb-1">
-                                <span class="text-gray-700">After Effects</span>
-                                <span class="text-gray-700">Advanced</span>
+                                <span class="text-gray-600 dark:text-gray-300">After Effects</span>
+                                <span class="text-gray-600 dark:text-gray-300">Advanced</span>
                             </div>
                             <div class="skill-bar">
-                                <div class="skill-level skill-advanced"></div>
+                                <div class="skill-level w-3/4"></div>
                             </div>
                         </div>
                         <div>
                             <div class="flex justify-between mb-1">
-                                <span class="text-gray-700">Photoshop</span>
-                                <span class="text-gray-700">Advanced</span>
+                                <span class="text-gray-600 dark:text-gray-300">Photoshop</span>
+                                <span class="text-gray-600 dark:text-gray-300">Advanced</span>
                             </div>
                             <div class="skill-bar">
-                                <div class="skill-level skill-advanced"></div>
+                                <div class="skill-level w-3/4"></div>
                             </div>
                         </div>
                     </div>
                 </div>
                 
                 <div>
-                    <h4 class="font-semibold text-gray-800 mb-3">VFX Specialties</h4>
+                    <h4 class="font-semibold text-gray-900 dark:text-gray-200 mb-3">VFX Specialties</h4>
                     <div class="space-y-3">
                         <div>
                             <div class="flex justify-between mb-1">
@@ -301,7 +923,7 @@
                                 <span class="text-gray-700">Expert</span>
                             </div>
                             <div class="skill-bar">
-                                <div class="skill-level skill-full"></div>
+                                <div class="skill-level w-full"></div>
                             </div>
                         </div>
                         <div>
@@ -310,7 +932,7 @@
                                 <span class="text-gray-700">Advanced</span>
                             </div>
                             <div class="skill-bar">
-                                <div class="skill-level skill-advanced"></div>
+                                <div class="skill-level w-3/4"></div>
                             </div>
                         </div>
                         <div>
@@ -319,7 +941,7 @@
                                 <span class="text-gray-700">Advanced</span>
                             </div>
                             <div class="skill-bar">
-                                <div class="skill-level skill-advanced"></div>
+                                <div class="skill-level w-3/4"></div>
                             </div>
                         </div>
                     </div>
@@ -335,7 +957,7 @@
                             <span class="text-gray-700">Native</span>
                         </div>
                         <div class="skill-bar">
-                            <div class="skill-level skill-full"></div>
+                            <div class="skill-level w-full"></div>
                         </div>
                     </div>
                     <div>
@@ -344,141 +966,114 @@
                             <span class="text-gray-700">Professional</span>
                         </div>
                         <div class="skill-bar">
-                            <div class="skill-level skill-intermediate"></div>
+                            <div class="skill-level w-2/3"></div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-    </div>
 
-    <!-- Professional Experience Page -->
-    <div class="page mt-8">
-        <section class="mb-8 animate-fadeIn">
-            <h3 class="text-xl font-semibold section-title text-center mb-6">Professional Experience</h3>
+        <!-- Experience Section -->
+        <section class="mb-8">
+            <h3 class="text-xl font-semibold section-title">Professional Experience</h3>
             
-            <div class="space-y-6 p-6 rounded-lg shadow-sm border border-gray-700/30 bg-gray-900/10">
-                <div class="mb-6 bg-white p-5 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
-                    <div class="flex justify-between items-start mb-3 border-b pb-2">
-                        <h4 class="font-semibold text-gray-800">Freelance – Compositor</h4>
-                        <span class="text-gray-600">Jul 2024 - Present</span>
-                    </div>
-                    <p class="text-gray-600 italic mb-2">Mexico City</p>
-                    <ul class="list-disc pl-5 text-gray-700 space-y-2">
-                        <li>Worked on multiple short-term VFX projects for film and TV.</li>
-                        <li>Managed complete compositing workflows from start to finish.</li>
-                    </ul>
+            <div class="mb-6">
+                <div class="flex justify-between items-start mb-2">
+                    <h4 class="font-semibold text-gray-900 dark:text-gray-200">Freelance – Compositor</h4>
+                    <span class="text-gray-600 dark:text-gray-300">Jul 2024 - Present</span>
                 </div>
-
-                <div class="mb-6 bg-white p-5 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
-                    <div class="flex justify-between items-start mb-3 border-b pb-3">
-                        <h4 class="font-semibold text-gray-800 text-lg">Ingenuity Studios Inc.</h4>
-                        <span class="text-primary font-medium">May 2021 - Jul 2024</span>
-                    </div>
-                    <p class="text-gray-600 italic mb-3 flex items-center">
-                        <i class="fas fa-map-marker-alt mr-2"></i>
-                        Los Angeles, CA
-                    </p>
-                    <ul class="list-disc pl-5 text-gray-700 space-y-2 marker:text-primary">
-                        <li>Promoted to Lead Compositor (Dec 2022 - Jul 2024)</li>
-                        <li>Supervised compositing on high-profile sequences</li>
-                        <li>Integrated VFX into live-action footage with a focus on realism and detail</li>
-                        <li>Collaborated with international teams under tight production schedules</li>
-                    </ul>
-                </div>
-
-                <div class="mb-6 bg-white p-5 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
-                    <div class="flex justify-between items-start mb-3 border-b pb-3">
-                        <h4 class="font-semibold text-gray-800 text-lg">Previous Experience</h4>
-                        <span class="text-primary font-medium">2015 - 2021</span>
-                    </div>
-                    <ul class="list-disc pl-5 text-gray-700 space-y-2 marker:text-primary">
-                        <li>Cinema Maquina - Compositor, Mexico City (Apr 2021 - Oct 2021)</li>
-                        <li>Argos Comunicación - Compositor, Mexico City (Feb 2021 - Apr 2021)</li>
-                        <li>Ollin VFX - Various Roles (Jul 2017 - Jan 2021)</li>
-                        <li>Mighty Studio - Compositor, Guadalajara (Oct 2020 - Dec 2020)</li>
-                        <li>The Mill - Compositor, Montreal (Sep 2019 - Dec 2019)</li>
-                        <li>Labodigital - VFX Compositor, Mexico City (Mar 2019 - Sep 2019)</li>
-                        <li>Flipbook Studio - Digital Compositor, Ensenada (Feb 2018 - Oct 2018)</li>
-                        <li>Alux Media Studios - 3D & Motion Graphics, Pachuca (Jul 2015 - Oct 2016)</li>
-                    </ul>
-                </div>
+                <p class="text-gray-600 dark:text-gray-300 italic mb-2">Mexico City</p>
+                <ul class="list-disc pl-5 text-gray-600 dark:text-gray-300 space-y-2">
+                    <li>Worked on multiple short-term VFX projects for film and TV.</li>
+                    <li>Managed complete compositing workflows from start to finish.</li>
+                </ul>
             </div>
             
-            <div class="bg-gradient-to-r from-blue-900/20 to-purple-900/20 p-6 rounded-lg border-l-4 border-blue-500 mt-8 shadow-sm">
-                <h4 class="font-semibold text-gray-800 mb-2">Key Achievements</h4>
-                <ul class="list-disc pl-5 text-gray-700">
-                    <li>Successfully delivered high-profile VFX sequences for major film and television projects</li>
-                    <li>Led and mentored teams of compositors on complex visual effects projects</li>
-                    <li>Optimized workflow processes to improve efficiency and quality</li>
-                    <li>Collaborated effectively with international teams across multiple time zones</li>
+            <div class="mb-6">
+                <div class="flex justify-between items-start mb-2">
+                    <h4 class="font-semibold text-gray-900 dark:text-gray-200">Ingenuity Studios Inc.</h4>
+                    <span class="text-gray-600 dark:text-gray-300">May 2021 - Jul 2024</span>
+                </div>
+                <p class="text-gray-600 dark:text-gray-300 italic mb-2">Los Angeles, CA</p>
+                <ul class="list-disc pl-5 text-gray-600 dark:text-gray-300 space-y-2">
+                    <li>Promoted to Lead Compositor (Dec 2022 - Jul 2024)</li>
+                    <li>Supervised compositing on high-profile sequences</li>
+                    <li>Integrated VFX into live-action footage with a focus on realism and detail</li>
+                    <li>Collaborated with international teams under tight production schedules</li>
+                </ul>
+            </div>
+
+            <div class="mb-6">
+                <div class="flex justify-between items-start mb-2">
+                    <h4 class="font-semibold text-gray-900 dark:text-gray-200">Previous Experience</h4>
+                    <span class="text-gray-600 dark:text-gray-300">2015 - 2021</span>
+                </div>
+                <ul class="list-disc pl-5 text-gray-600 dark:text-gray-300 space-y-2">
+                    <li>Cinema Maquina - Compositor, Mexico City (Apr 2021 - Oct 2021)</li>
+                    <li>Argos Comunicación - Compositor, Mexico City (Feb 2021 - Apr 2021)</li>
+                    <li>Ollin VFX - Various Roles (Jul 2017 - Jan 2021)</li>
+                    <li>Mighty Studio - Compositor, Guadalajara (Oct 2020 - Dec 2020)</li>
+                    <li>The Mill - Compositor, Montreal (Sep 2019 - Dec 2019)</li>
+                    <li>Labodigital - VFX Compositor, Mexico City (Mar 2019 - Sep 2019)</li>
+                    <li>Flipbook Studio - Digital Compositor, Ensenada (Feb 2018 - Oct 2018)</li>
+                    <li>Alux Media Studios - 3D & Motion Graphics, Pachuca (Jul 2015 - Oct 2016)</li>
                 </ul>
             </div>
         </section>
-    </div>
 
-    <!-- Education and Skills Page -->
-    <div class="page mt-8">
+        <!-- Education Section -->
         <section class="mb-8">
             <h3 class="text-xl font-semibold section-title">Education</h3>
             
-            <div class="grid gap-4 p-6 rounded-lg shadow-sm border border-gray-700/30 bg-gray-900/10">
-                <div class="bg-gray-800/50 p-5 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-700/30">
-                    <div class="flex justify-between items-start mb-3 border-b pb-3">
-                        <h4 class="font-semibold text-gray-800 text-lg">Master VFX</h4>
-                        <span class="text-primary font-medium">2017</span>
-                    </div>
-                    <p class="text-gray-600 flex items-center">
-                        <i class="fas fa-graduation-cap mr-2 text-accent"></i>
-                        Coco School México
-                    </p>
+            <div class="mb-4">
+                <div class="flex justify-between items-start mb-1">
+                    <h4 class="font-semibold text-gray-900 dark:text-gray-200">Master VFX</h4>
+                    <span class="text-gray-600 dark:text-gray-300">2017</span>
                 </div>
-                
-                <div class="bg-white p-5 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
-                    <div class="flex justify-between items-start mb-3 border-b pb-3">
-                        <h4 class="font-semibold text-gray-800 text-lg">Animation & Visual Effects</h4>
-                        <span class="text-primary font-medium">2014 - 2017</span>
-                    </div>
-                    <p class="text-gray-600 flex items-center">
-                        <i class="fas fa-graduation-cap mr-2 text-accent"></i>
-                        Universidad Politécnica Metropolitana de Hidalgo
-                    </p>
+                <p class="text-gray-600 dark:text-gray-300">Coco School México</p>
+            </div>
+            
+            <div class="mb-4">
+                <div class="flex justify-between items-start mb-1">
+                    <h4 class="font-semibold text-gray-900 dark:text-gray-200">Animation & Visual Effects</h4>
+                    <span class="text-gray-600 dark:text-gray-300">2014 - 2017</span>
                 </div>
+                <p class="text-gray-600 dark:text-gray-300">Universidad Politécnica Metropolitana de Hidalgo</p>
+            </div>
 
-                <div class="bg-white p-5 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
-                    <div class="flex justify-between items-start mb-3 border-b pb-3">
-                        <h4 class="font-semibold text-gray-800 text-lg">Nuke Compositing</h4>
-                        <span class="text-primary font-medium">2015 - 2016</span>
-                    </div>
-                    <p class="text-gray-600 flex items-center">
-                        <i class="fas fa-graduation-cap mr-2 text-accent"></i>
-                        Instituto Cardan
-                    </p>
+            <div>
+                <div class="flex justify-between items-start mb-1">
+                    <h4 class="font-semibold text-gray-900 dark:text-gray-200">Nuke Compositing</h4>
+                    <span class="text-gray-600 dark:text-gray-300">2015 - 2016</span>
                 </div>
+                <p class="text-gray-600 dark:text-gray-300">Instituto Cardan</p>
             </div>
         </section>
-
+        
         <!-- ATS Optimization Section -->
         <section class="mb-8">
             <h3 class="text-xl font-semibold section-title">Keywords (ATS Optimization)</h3>
-            <div class="p-6 rounded-lg shadow-sm border border-gray-700/30 bg-gray-900/10">
-                <div class="flex flex-wrap gap-3 justify-center">
-                    <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">VFX Compositing</span>
-                    <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">Digital Compositing</span>
-                    <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">Nuke</span>
-                    <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">After Effects</span>
-                    <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">Photoshop</span>
-                    <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">Rotoscoping</span>
-                    <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">Keying</span>
-                    <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">Color Grading</span>
-                    <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">Post-Production</span>
-                    <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">Motion Graphics</span>
-                    <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">Visual Effects</span>
-                </div>
+            <div class="flex flex-wrap gap-2">
+                <span class="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 rounded-full text-sm">VFX Compositing</span>
+                <span class="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 rounded-full text-sm">Digital Compositing</span>
+                <span class="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 rounded-full text-sm">Nuke</span>
+                <span class="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 rounded-full text-sm">After Effects</span>
+                <span class="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 rounded-full text-sm">Photoshop</span>
+                <span class="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 rounded-full text-sm">Rotoscoping</span>
+                <span class="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 rounded-full text-sm">Keying</span>
+                <span class="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 rounded-full text-sm">Color Grading</span>
+                <span class="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 rounded-full text-sm">Post-Production</span>
+                <span class="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 rounded-full text-sm">Motion Graphics</span>
+                <span class="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 rounded-full text-sm">Visual Effects</span>
             </div>
         </section>
+        
+        <!-- Footer -->
+        <footer class="text-center text-gray-400 text-sm border-t border-gray-700 pt-4">
+            <p>CV created with tools of AI</p>
+        </footer>
     </div>
-
+    
     <!-- Cover Letter -->
     <div id="cover-letter" class="page mt-10">
         <header class="mb-8 text-center">
@@ -525,15 +1120,147 @@
     </div>
 
     <script>
-        // Format and set the current date in the cover letter
-        function setCurrentDate() {
+        // Enhanced section animations with Intersection Observer
+        function animateSections() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        const title = entry.target.querySelector('.section-title');
+                        if (title) {
+                            title.classList.add('animate');
+                        }
+                    }
+                });
+            }, { threshold: 0.2 });
+
+            document.querySelectorAll('.page section').forEach(section => {
+                section.style.opacity = '0';
+                observer.observe(section);
+            });
+        }
+
+        // Animate skill bars
+        function animateSkillBars() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const bars = entry.target.querySelectorAll('.skill-level');
+                        bars.forEach(bar => {
+                            const width = bar.style.width;
+                            bar.style.width = '0';
+                            setTimeout(() => {
+                                bar.style.width = width;
+                            }, 200);
+                        });
+                    }
+                });
+            }, { threshold: 0.2 });
+
+            document.querySelectorAll('.skill-bar').forEach(bar => {
+                observer.observe(bar);
+            });
+        }
+
+        // Initialize animations
+        window.addEventListener('load', () => {
+            animateSections();
+            animateSkillBars();
+        });
+
+        // Set current date in cover letter
+        // Initialize animations
+        function initAnimations() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        
+                        // Animate skill bars
+                        const skillBars = entry.target.querySelectorAll('.skill-level');
+                        skillBars.forEach(bar => {
+                            const width = bar.style.width;
+                            bar.style.width = '0';
+                            setTimeout(() => bar.style.width = width, 100);
+                        });
+                    }
+                });
+            }, { threshold: 0.2 });
+
+            document.querySelectorAll('section').forEach(section => observer.observe(section));
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            initAnimations();
+            
+            // Set current date
             const now = new Date();
             const options = { year: 'numeric', month: 'long', day: 'numeric' };
             document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', options);
-        }
-        
-        // Initial call
-        setCurrentDate();
+        });
+
+        // Enhanced theme toggle with smooth transitions
+        document.documentElement.style.setProperty('--transition-speed', '0.3s');
+        document.body.style.transition = 'background-color var(--transition-speed) ease';
+    </script>
+
+    <!-- Animation System -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize animations for sections
+            const sections = document.querySelectorAll('section');
+            sections.forEach((section, index) => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(30px)';
+                section.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+                setTimeout(() => {
+                    section.style.opacity = '1';
+                    section.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+
+            // Animate skill bars
+            const skillBars = document.querySelectorAll('.skill-level');
+            skillBars.forEach((bar, index) => {
+                const width = bar.style.width;
+                bar.style.width = '0';
+                setTimeout(() => {
+                    bar.style.width = width;
+                    bar.style.transition = 'width 1.5s cubic-bezier(0.4, 0, 0.2, 1)';
+                }, 1000 + index * 200);
+            });
+
+            // Add hover effects to badges
+            const badges = document.querySelectorAll('.ai-badge');
+            badges.forEach(badge => {
+                badge.addEventListener('mouseover', () => {
+                    badge.style.transform = 'translateY(-5px) scale(1.1)';
+                    badge.style.boxShadow = '0 10px 20px rgba(59, 130, 246, 0.3)';
+                    badge.style.background = 'linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(139, 92, 246, 0.3))';
+                });
+                
+                badge.addEventListener('mouseout', () => {
+                    badge.style.transform = 'translateY(0) scale(1)';
+                    badge.style.boxShadow = 'none';
+                    badge.style.background = 'rgba(59, 130, 246, 0.2)';
+                });
+            });
+
+            // Add hover effects to headers
+            const headers = document.querySelectorAll('h1, h2, h3');
+            headers.forEach(header => {
+                header.addEventListener('mouseover', () => {
+                    header.style.transform = 'scale(1.02)';
+                    header.style.textShadow = '0 0 10px rgba(59, 130, 246, 0.3)';
+                });
+                
+                header.addEventListener('mouseout', () => {
+                    header.style.transform = 'scale(1)';
+                    header.style.textShadow = 'none';
+                });
+            });
+        });
     </script>
 </body>
 </html>
