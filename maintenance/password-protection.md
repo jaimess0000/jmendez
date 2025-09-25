@@ -1,43 +1,23 @@
-# Password Protection Documentation
+# Password Protection for Video Loading
 
 ## Overview
-The website implements password protection for accessing different portfolio pages. Different passwords redirect to different pages when entered in the login form on the main page.
+This site uses simple password protection to load specific demo videos:
 
-## Implementation Details
+- **Password:** `animation`  
+  **Loads:** `demo2.mp4` (Animation)
 
-### Location
-- Password verification is implemented in `index.html`
-- Protected content is in:
-  - `ai.html` (accessed with password: "ai")
-  - `comp.html` (accessed with password: "comp")
+- **Password:** `liveaction`  
+  **Loads:** `demo.mp4` (Live Action)
 
-### How it Works
-1. User enters password in the login form on the main page
-2. JavaScript validates the password
-3. If matches "ai": Redirects to ai.html
-4. If matches "comp": Redirects to comp.html
-5. If incorrect: Shows error message
+## How It Works
+- On the main page, enter the password in the input field and click "View".
+- If the password matches, the corresponding video will be displayed.
+- If the password is incorrect, an error message appears.
 
-### Maintenance Notes
-- The password verification is done client-side for simplicity
-- Error message is shown via the existing error-message div
-- Passwords are set directly in the JavaScript code
-- Consider implementing server-side validation for stronger security in production
+## Maintenance
+- To change passwords or video files, edit the password logic in [`index.html`](index.html:1730).
+- Keep passwords simple for demo purposes.
+- For more security, consider server-side protection.
 
-## Code Structure
-```javascript
-// Password verification happens on form submit
-loginForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const password = document.getElementById('password').value;
-    switch(password) {
-        case 'ai':
-            window.location.href = 'ai.html';
-            break;
-        case 'comp':
-            window.location.href = 'comp.html';
-            break;
-        default:
-            // Show error message
-    }
-});
+## Location in Code
+See the password logic in [`index.html`](index.html:1730).
