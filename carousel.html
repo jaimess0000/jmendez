@@ -206,6 +206,7 @@
       }
       .carousel-controls {
         bottom: 18px;
+        display: none !important; /* Hide nav arrows on mobile */
       }
     }
   </style>
@@ -378,6 +379,43 @@
     }
     window.addEventListener('resize', resizeBg);
     resizeBg();
+
+    // --- Swipe navigation for mobile devices ---
+    // Simple touch event listeners for left/right swipe
+    // Documented for maintainability: see /maintenance/carousel-doc.md
+    let touchStartX = null;
+    let touchEndX = null;
+    function handleGesture() {
+      if (touchStartX !== null && touchEndX !== null) {
+        const dx = touchEndX - touchStartX;
+        if (Math.abs(dx) > 50) { // Minimum swipe distance
+          if (dx < 0) {
+            // Swipe left: next video
+            current = (current + 1) % sources.length;
+            setBgVideo(current);
+            renderFixedCarousel();
+          } else {
+            // Swipe right: previous video
+            current = (current - 1 + sources.length) % sources.length;
+            setBgVideo(current);
+            renderFixedCarousel();
+          }
+        }
+      }
+      touchStartX = null;
+      touchEndX = null;
+    }
+    document.querySelector('.carousel-fixed').addEventListener('touchstart', function(e) {
+      if (e.touches.length === 1) {
+        touchStartX = e.touches[0].clientX;
+      }
+    });
+    document.querySelector('.carousel-fixed').addEventListener('touchend', function(e) {
+      if (e.changedTouches.length === 1) {
+        touchEndX = e.changedTouches[0].clientX;
+        handleGesture();
+      }
+    });
   </script>
 </body>
 </html>
