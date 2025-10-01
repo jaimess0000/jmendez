@@ -396,11 +396,11 @@
       function renderSide(divId, vidIdx) {
         const div = document.getElementById(divId);
         div.innerHTML = '';
-        // If index is out of bounds, show a placeholder (missing video)
-        if (vidIdx < 0 || vidIdx >= sources.length) {
-          div.style.opacity = '0.2';
-          div.style.background = '#333';
-          div.innerHTML = '<span style="color:#fff;font-size:1.2em;">No Video</span>';
+        // Only show side video if there are at least 5 videos
+        if (sources.length < 5 || vidIdx < 0 || vidIdx >= sources.length) {
+          div.style.opacity = '0';
+          div.style.background = 'transparent';
+          div.innerHTML = '';
           div.onclick = null;
           return;
         }
@@ -431,8 +431,8 @@
       const right2Idx = (current + 2) % sources.length;
 
       // Render sides
-      if (window.innerWidth <= 600) {
-        // Only show one side video on mobile
+      if (window.innerWidth <= 600 || window.innerHeight < window.innerWidth) {
+        // Only show one side video on mobile or horizontal view
         renderSide('carouselLeft2', -1); // Hide
         renderSide('carouselLeft1', left1Idx);
         renderSide('carouselRight1', right1Idx);
