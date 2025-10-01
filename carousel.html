@@ -430,6 +430,9 @@
       const right1Idx = (current + 1) % sources.length;
       const right2Idx = (current + 2) % sources.length;
 
+      // User agent detection for iPhone/Android
+      const isMobileDevice = /iphone|ipad|ipod|android/i.test(navigator.userAgent);
+
       // Render sides
       if (window.innerWidth <= 600 || window.innerHeight < window.innerWidth) {
         // Only show one side video on mobile or horizontal view
@@ -437,7 +440,23 @@
         renderSide('carouselLeft1', left1Idx);
         renderSide('carouselRight1', right1Idx);
         renderSide('carouselRight2', -1); // Hide
+
+        // Make side videos much smaller on iPhone/Android
+        if (isMobileDevice) {
+          document.getElementById('carouselLeft1').style.width = '28px';
+          document.getElementById('carouselLeft1').style.height = '36px';
+          document.getElementById('carouselRight1').style.width = '28px';
+          document.getElementById('carouselRight1').style.height = '36px';
+          document.getElementById('carouselLeft2').style.width = '18px';
+          document.getElementById('carouselLeft2').style.height = '24px';
+          document.getElementById('carouselRight2').style.width = '18px';
+          document.getElementById('carouselRight2').style.height = '24px';
+        }
       } else {
+        document.getElementById('carouselLeft1').style.width = '';
+        document.getElementById('carouselLeft1').style.height = '';
+        document.getElementById('carouselRight1').style.width = '';
+        document.getElementById('carouselRight1').style.height = '';
         renderSide('carouselLeft2', left2Idx);
         renderSide('carouselLeft1', left1Idx);
         renderSide('carouselRight1', right1Idx);
@@ -461,6 +480,15 @@
         centerMedia.muted = false; // Enable audio on desktop
       }
       centerDiv.appendChild(centerMedia);
+
+      // iOS: Enable audio after first user gesture
+      if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
+        document.body.addEventListener('touchend', function enableAudioOnce() {
+          centerMedia.muted = false;
+          centerMedia.play();
+          document.body.removeEventListener('touchend', enableAudioOnce);
+        }, { once: true });
+      }
 
       // Double tap to fullscreen and hide side video on mobile
       let lastTap = 0;
