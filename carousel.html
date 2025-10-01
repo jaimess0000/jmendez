@@ -476,11 +476,12 @@
       });
 
       // Reload video on click
-      centerMedia.onclick = () => {
-        centerMedia.pause();
-        centerMedia.currentTime = 0;
-        centerMedia.play();
-      };
+      // Disabled to prevent video moving from its position
+      // centerMedia.onclick = () => {
+      //   centerMedia.pause();
+      //   centerMedia.currentTime = 0;
+      //   centerMedia.play();
+      // };
 
       // TikTok icons (SVG, animated, transparent)
       const iconsDiv = document.createElement('div');
