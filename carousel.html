@@ -280,6 +280,8 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        /* Prevent layout shift when video is played */
+        transition: all 0.3s;
       }
       .carousel-center video {
         width: 100%;
