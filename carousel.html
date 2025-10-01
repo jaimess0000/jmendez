@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TikTok Style Fixed Carousel Experiment</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!--
+    TikTok-like fixed carousel UI/UX
+    - Main video always centered
+    - Left/right videos fixed at screen sides
+    - Hover highlight animation on main video
+    - Blurry floating video background
+    - TikTok icons for highlighted video (SVG, transparent, animated)
+    - Heart pop animation on like
+    - Loads all videos from carousel folder
+    - Simple, maintainable code
+  -->
+  <style>
+    body {
+      margin: 0;
+      background: #181818;
+      min-height: 100vh;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      overflow: hidden;
+    }
+    .bg-blur {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      filter: blur(32px) brightness(0.7) saturate(1.2);
+      object-fit: cover;
+      pointer-events: none;
+      transition: opacity 0.5s;
+    }
+    .carousel-fixed {
+      position: relative;
+      z-index: 1;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .carousel-side {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 180px;
+      height: 320px;
+      border-radius: 18px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+      background: #222;
+      overflow: hidden;
+      opacity: 0.6;
+      transition: opacity 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .carousel-side video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background: #000;
+      border-radius: 18px;
+      display: block;
+    }
+    /* Positioning for 5 videos */
+    .carousel-left-2 { left: 8px; z-index: 1; width: 120px; height: 220px; opacity: 0.3; }
+    .carousel-left-1 { left: 260px; z-index: 2; width: 220px; height: 380px; opacity: 0.85; }
+    .carousel-right-1 { right: 260px; z-index: 2; width: 220px; height: 380px; opacity: 0.85; }
+    .carousel-right-2 { right: 8px; z-index: 1; width: 120px; height: 220px; opacity: 0.3; }
+    .carousel-center { z-index: 3; }
+    /* Coverflow effect: larger side videos next to center, smaller at edges */
+    .carousel-center {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 320px;
+      height: 570px;
+      border-radius: 24px;
+      box-shadow: 0 8px 48px rgba(0,0,0,0.5);
+      background: #222;
+      overflow: hidden;
+      opacity: 1;
+      z-index: 2;
+      border: 3px solid #ff2d55;
+      transition: border 0.3s, box-shadow 0.3s, transform 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .carousel-center video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background: #000;
+      border-radius: 24px;
+      display: block;
+    }
+    .carousel-center.hovered {
+      box-shadow: 0 0 64px #ff2d55, 0 8px 48px rgba(0,0,0,0.5);
+      border-color: #fff;
+      transform: translate(-50%, -50%) scale(1.07);
+    }
+    .tiktok-icons {
+      position: absolute;
+      right: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      z-index: 3;
+      align-items: center;
+    }
+    .tiktok-icon {
+      width: 54px;
+      height: 54px;
+      background: rgba(30,30,30,0.45);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+      border: none;
+      backdrop-filter: blur(4px);
+      opacity: 0.95;
+      position: relative;
+      overflow: visible;
+    }
+    .tiktok-icon svg {
+      width: 28px;
+      height: 28px;
+      display: block;
+    }
+    .tiktok-icon.heart-pop {
+      animation: heartPop 0.4s cubic-bezier(.4,0,.2,1);
+    }
+    @keyframes heartPop {
+      0% { transform: scale(1); }
+      60% { transform: scale(1.4); }
+      100% { transform: scale(1); }
+    }
+    .tiktok-icon:hover {
+      background: #ff2d55cc;
+      opacity: 1;
+    }
+    .carousel-controls {
+      position: absolute;
+      bottom: 48px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 18px;
+      z-index: 3;
+    }
+    .carousel-btn {
+      background: #222;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      font-size: 2rem;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      transition: background 0.2s;
+    }
+    .carousel-btn:hover {
+      background: #ff2d55;
+      color: #fff;
+    }
+    @media (max-width: 600px) {
+      .carousel-side {
+        width: 90px;
+        height: 160px;
+        left: 8px;
+        right: 8px;
+      }
+      .carousel-center {
+        width: 180px;
+        height: 320px;
+      }
+      .tiktok-icons {
+        right: 8px;
+        gap: 18px;
+      }
+      .tiktok-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 1.2rem;
+      }
+      .tiktok-icon svg {
+        width: 18px;
+        height: 18px;
+      }
+      .carousel-controls {
+        bottom: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Blurry floating video background -->
+  <video id="bgVideo" class="bg-blur" autoplay loop muted playsinline></video>
+  <div class="carousel-fixed">
+    <!-- Five video containers: two left, one center, two right -->
+    <div class="carousel-side carousel-left-2" id="carouselLeft2"></div>
+    <div class="carousel-side carousel-left-1" id="carouselLeft1"></div>
+    <div class="carousel-center" id="carouselCenter"></div>
+    <div class="carousel-side carousel-right-1" id="carouselRight1"></div>
+    <div class="carousel-side carousel-right-2" id="carouselRight2"></div>
+    <div class="carousel-controls">
+      <button class="carousel-btn" id="prevBtn">&#8592;</button>
+      <button class="carousel-btn" id="nextBtn">&#8594;</button>
+    </div>
+  </div>
+  <script>
+    // --- Use only current video files from carousel folder ---
+    // Dynamically load all .mp4 files from carousel folder
+    // (Update this list if new videos are added)
+    const fileList = [
+      "carousel/1001.mp4",
+      "carousel/Add_epic_transitions_202509302112_uj59r.mp4",
+      "carousel/airbnb.mp4",
+      "carousel/AQPjohqTjPINXD4JwRQMiqueuUjeufnyKlQZXaKxjl3LYJS6deZRizSaBGsQ0mZ6HD1hLE-vP8BUv38L7Wr4JAc8ziSZPaq8FvcVmYpwZfkt_A.mp4",
+      "carousel/Begin_with_a_202508192136_8lehq.mp4",
+      "carousel/envato_video_gen_Jul_02_2025_23_01_47.mp4",
+      "carousel/envato_video_gen_Jul_04_2025_16_50_36.mp4",
+      "carousel/Forward_camera_movement_202508192133_upz2p.mp4",
+      "carousel/Hi_everyone_really_202510010140_qjkwj.mp4",
+      "carousel/Make_a_video_202508192132_z7nnp.mp4",
+      "carousel/test-3pyn77.mp4"
+    ];
+    const sources = fileList.map(f => ({ type: 'video', src: f }));
+
+    let current = 0;
+
+    // Set background video (first video found)
+    const bgVideo = document.getElementById('bgVideo');
+    function setBgVideo(idx) {
+      const vidSrc = sources[idx].src;
+      if (vidSrc) {
+        bgVideo.src = vidSrc;
+        bgVideo.load();
+      }
+    }
+    setBgVideo(current);
+
+    // Render fixed carousel with 5 videos (2 left, 2 right, 1 center)
+    function renderFixedCarousel() {
+      // Helper to render a side video
+      function renderSide(divId, vidIdx) {
+        const div = document.getElementById(divId);
+        div.innerHTML = '';
+        // If index is out of bounds, show a placeholder (missing video)
+        if (vidIdx < 0 || vidIdx >= sources.length) {
+          div.style.opacity = '0.2';
+          div.style.background = '#333';
+          div.innerHTML = '<span style="color:#fff;font-size:1.2em;">No Video</span>';
+          div.onclick = null;
+          return;
+        }
+        div.style.opacity = '0.6';
+        div.style.background = '#222';
+        const vid = document.createElement('video');
+        vid.src = sources[vidIdx].src;
+        vid.loop = true;
+        vid.muted = true;
+        vid.playsInline = true;
+        vid.autoplay = true;
+        div.appendChild(vid);
+        div.onclick = () => {
+          current = vidIdx;
+          setBgVideo(current);
+          renderFixedCarousel();
+        };
+      }
+
+      // Indices for 5 videos
+      const left2Idx = (current - 2 + sources.length) % sources.length;
+      const left1Idx = (current - 1 + sources.length) % sources.length;
+      const right1Idx = (current + 1) % sources.length;
+      const right2Idx = (current + 2) % sources.length;
+
+      // Render sides
+      renderSide('carouselLeft2', left2Idx);
+      renderSide('carouselLeft1', left1Idx);
+
+      // Center media (current)
+      const centerDiv = document.getElementById('carouselCenter');
+      centerDiv.innerHTML = '';
+      const centerMedia = document.createElement('video');
+      centerMedia.src = sources[current].src;
+      centerMedia.loop = true;
+      centerMedia.muted = false; // Enable audio playback
+      centerMedia.playsInline = true;
+      centerMedia.autoplay = true;
+      centerMedia.controls = true;
+      centerDiv.appendChild(centerMedia);
+
+      // Reload video on click
+      centerMedia.onclick = () => {
+        centerMedia.pause();
+        centerMedia.currentTime = 0;
+        centerMedia.play();
+      };
+
+      // TikTok icons (SVG, animated, transparent)
+      const iconsDiv = document.createElement('div');
+      iconsDiv.className = 'tiktok-icons';
+      iconsDiv.innerHTML = `
+        <button class="tiktok-icon" id="likeBtn" title="Like">
+          <svg viewBox="0 0 48 48" fill="none">
+            <path d="M24 42s-1.5-1.3-7.2-6.2C7.7 30.1 4 25.7 4 20.5 4 14.7 8.7 10 14.5 10c3.1 0 6.1 1.5 7.5 4.1C23.4 11.5 26.4 10 29.5 10 35.3 10 40 14.7 40 20.5c0 5.2-3.7 9.6-12.8 15.3C25.5 40.7 24 42 24 42z" stroke="#fff" stroke-width="3" fill="#ff2d55"/>
+          </svg>
+        </button>
+        <button class="tiktok-icon" title="Comment">
+          <svg viewBox="0 0 48 48" fill="none">
+            <path d="M8 38V12a4 4 0 0 1 4-4h24a4 4 0 0 1 4 4v16a4 4 0 0 1-4 4H16l-8 6z" stroke="#fff" stroke-width="3" fill="#222"/>
+          </svg>
+        </button>
+        <button class="tiktok-icon" title="Bookmark">
+          <svg viewBox="0 0 48 48" fill="none">
+            <path d="M12 8a4 4 0 0 1 4-4h16a4 4 0 0 1 4 4v32l-12-8-12 8V8z" stroke="#fff" stroke-width="3" fill="#222"/>
+          </svg>
+        </button>
+      `;
+      centerDiv.appendChild(iconsDiv);
+
+      // Heart pop animation on like
+      const likeBtn = iconsDiv.querySelector('#likeBtn');
+      likeBtn.onclick = () => {
+        likeBtn.classList.add('heart-pop');
+        setTimeout(() => likeBtn.classList.remove('heart-pop'), 400);
+      };
+
+      // Highlight animation on hover for main video
+      centerDiv.onmouseenter = () => {
+        centerDiv.classList.add('hovered');
+      };
+      centerDiv.onmouseleave = () => {
+        centerDiv.classList.remove('hovered');
+      };
+
+      // Render right sides
+      renderSide('carouselRight1', right1Idx);
+      renderSide('carouselRight2', right2Idx);
+    }
+    renderFixedCarousel();
+
+    // Carousel controls
+    document.getElementById('prevBtn').onclick = () => {
+      current = (current - 1 + sources.length) % sources.length;
+      setBgVideo(current);
+      renderFixedCarousel();
+    };
+    document.getElementById('nextBtn').onclick = () => {
+      current = (current + 1) % sources.length;
+      setBgVideo(current);
+      renderFixedCarousel();
+    };
+
+    // Responsive background video sizing
+    function resizeBg() {
+      bgVideo.style.width = window.innerWidth + 'px';
+      bgVideo.style.height = window.innerHeight + 'px';
+    }
+    window.addEventListener('resize', resizeBg);
+    resizeBg();
+  </script>
+</body>
+</html>
