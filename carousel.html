@@ -393,10 +393,16 @@
     const bgVideo = document.getElementById('bgVideo');
     function setBgVideo(idx) {
       const vidSrc = sources[idx].src;
-      if (vidSrc) {
-        bgVideo.src = vidSrc;
-        bgVideo.load();
-      }
+      const fallbackSrc = sources[idx].fallback;
+      // Try webm first, fallback to mp4 if webm fails
+      bgVideo.src = vidSrc;
+      bgVideo.onerror = function() {
+        if (bgVideo.src !== fallbackSrc) {
+          bgVideo.src = fallbackSrc;
+          bgVideo.load();
+        }
+      };
+      bgVideo.load();
     }
     setBgVideo(current);
 
@@ -479,7 +485,6 @@
       const centerDiv = document.getElementById('carouselCenter');
       centerDiv.innerHTML = '';
       const centerMedia = document.createElement('video');
-      centerMedia.src = sources[current].src;
       centerMedia.loop = true;
       centerMedia.playsInline = true;
       centerMedia.setAttribute('webkit-playsinline', 'true'); // Prevent iOS fullscreen popup
@@ -491,6 +496,14 @@
         centerMedia.controls = true;
         centerMedia.muted = false; // Enable audio on desktop
       }
+      // Prefer webm, fallback to mp4
+      centerMedia.src = sources[current].src;
+      centerMedia.onerror = function() {
+        if (centerMedia.src !== sources[current].fallback) {
+          centerMedia.src = sources[current].fallback;
+          centerMedia.load();
+        }
+      };
       centerDiv.appendChild(centerMedia);
 
       // iOS: Enable audio after first user gesture
