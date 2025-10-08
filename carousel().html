@@ -1,6 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Preload all carousel videos for faster playback -->
+<link rel="preload" as="video" href="carousel/1001.webm">
+<link rel="preload" as="video" href="carousel/Add_epic_transitions_202509302112_uj59r.webm">
+<link rel="preload" as="video" href="carousel/Airbnb.webm">
+<link rel="preload" as="video" href="carousel/AQPjohqTjPINXD4JwRQMiqueuUjeufnyKlQZXaKxjl3LYJS6deZRizSaBGsQ0mZ6HD1hLE-vP8BUv38L7Wr4JAc8ziSZPaq8FvcVmYpwZfkt_A.webm">
+<link rel="preload" as="video" href="carousel/Begin_with_a_202508192136_8lehq.webm">
+<link rel="preload" as="video" href="carousel/envato_video_gen_Jul_02_2025_23_01_47.webm">
+<link rel="preload" as="video" href="carousel/envato_video_gen_Jul_04_2025_16_50_36.webm">
+<link rel="preload" as="video" href="carousel/Forward_camera_movement_202508192133_upz2p.webm">
+<link rel="preload" as="video" href="carousel/Hi_everyone_really_202510010140_qjkwj.webm">
+<link rel="preload" as="video" href="carousel/Make_a_video_202508192132_z7nnp.webm">
+<link rel="preload" as="video" href="carousel/Test-3Pyn77.webm">
+<link rel="preload" as="video" href="carousel/19700121_0249_68e469f9c43081919eef992933f46370.webm">
+<link rel="preload" as="video" href="carousel/19700121_0250_68e4b1a3c7108191b5b007bb5cf9ddef.webm">
+<link rel="preload" as="video" href="carousel/20251007_1520_01k6y3szv1fhqtjwb02r402ek0.webm">
+<link rel="preload" as="video" href="carousel/20251007_1521_01k6y3gjyte2wss1r85tz2qvcf.webm">
+<link rel="preload" as="video" href="carousel/20251007_1521_01k6y41fkwfctv1x5j4tht9vqp.webm">
+<link rel="preload" as="video" href="carousel/20251007_1524_01k6x3kd4rer79678edabymtvb.webm">
+<link rel="preload" as="video" href="carousel/20251007_1525_01k6sd3wbceebbrdc2j5qjge00.webm">
+<link rel="preload" as="video" href="carousel/20251007_1525_01k6wxsszgfcbvdvr2gtctvb2q.webm">
+<link rel="preload" as="video" href="carousel/19700121 0251 68E5f27c3bb08191b7384edbea978715.webm">
   <meta charset="UTF-8">
   <title>TikTok Style Fixed Carousel Experiment</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -383,7 +404,6 @@
     const sources = fileList.map(f => ({ type: 'video', src: f }));
 
     let current = 0;
-    const videoCache = {};
 
     // Set background video (first video found)
     const bgVideo = document.getElementById('bgVideo');
@@ -402,40 +422,10 @@
     }
     setBgVideo(current);
 
-    // Preload adjacent videos for smoother navigation
-    function preloadNeighborVideos() {
-      const indicesToPreload = [
-        (current - 2 + sources.length) % sources.length,
-        (current - 1 + sources.length) % sources.length,
-        (current + 1) % sources.length,
-        (current + 2) % sources.length
-      ];
-      for (const idx of indicesToPreload) {
-        if (sources[idx] && !videoCache[idx]) {
-          const vid = document.createElement('video');
-          vid.src = sources[idx].src;
-          vid.loop = true;
-          vid.muted = true;
-          vid.playsInline = true;
-          vid.preload = 'auto';
-          vid.load(); // Start loading the video data
-          videoCache[idx] = vid;
-        }
-      }
-    }
-
     // Render fixed carousel with 5 videos (2 left, 2 right, 1 center)
     function renderFixedCarousel() {
-      // Pause all cached videos first
-      for (const key in videoCache) {
-        if (videoCache.hasOwnProperty(key)) {
-          const vid = videoCache[key];
-          if (vid && typeof vid.pause === 'function') {
-            vid.pause();
-          }
-        }
-      }
-
+      // --- Video element cache for performance ---
+      const videoCache = {};
       // Helper to render a side video
       function renderSide(divId, vidIdx) {
         const div = document.getElementById(divId);
@@ -457,6 +447,7 @@
           vid.loop = true;
           vid.muted = true;
           vid.playsInline = true;
+          vid.autoplay = true;
           videoCache[vidIdx] = vid;
         }
         div.appendChild(vid);
@@ -472,8 +463,6 @@
       const left1Idx = (current - 1 + sources.length) % sources.length;
       const right1Idx = (current + 1) % sources.length;
       const right2Idx = (current + 2) % sources.length;
-
-      preloadNeighborVideos();
 
       // User agent detection for iPhone/Android
       const isMobileDevice = /iphone|ipad|ipod|android/i.test(navigator.userAgent);
@@ -511,11 +500,7 @@
       // Center media (current)
       const centerDiv = document.getElementById('carouselCenter');
       centerDiv.innerHTML = '';
-      let centerMedia = videoCache[current];
-      if (!centerMedia) {
-        centerMedia = document.createElement('video');
-        videoCache[current] = centerMedia;
-      }
+      const centerMedia = document.createElement('video');
       centerMedia.loop = true;
       centerMedia.playsInline = true;
       centerMedia.setAttribute('webkit-playsinline', 'true'); // Prevent iOS fullscreen popup
@@ -536,7 +521,6 @@
         }
       };
       centerDiv.appendChild(centerMedia);
-      centerMedia.play();
 
       // iOS: Enable audio after first user gesture
       if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
