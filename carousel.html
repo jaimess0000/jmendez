@@ -1,667 +1,1320 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <title>TikTok Style Fixed Carousel Experiment</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!--
-    TikTok-like fixed carousel UI/UX
-    - Main video always centered
-    - Left/right videos fixed at screen sides
-    - Hover highlight animation on main video
-    - Blurry floating video background
-    - TikTok icons for highlighted video (SVG, transparent, animated)
-    - Heart pop animation on like
-    - Loads all videos from carousel folder
-    - Simple, maintainable code
-  -->
-  <style>
-    body {
-      margin: 0;
-      background: #181818;
-      min-height: 100vh;
-      font-family: 'Segoe UI', Arial, sans-serif;
-      overflow: hidden;
-    }
-    .bg-blur {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 0;
-      filter: blur(32px) brightness(0.7) saturate(1.2);
-      object-fit: cover;
-      pointer-events: none;
-      transition: opacity 0.5s;
-    }
-    .carousel-fixed {
-      position: relative;
-      z-index: 1;
-      width: 100vw;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .carousel-side {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 180px;
-      height: 320px;
-      border-radius: 18px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.3);
-      background: #222;
-      overflow: hidden;
-      opacity: 0.6;
-      transition: opacity 0.3s, box-shadow 0.3s;
-      cursor: pointer;
-      z-index: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .carousel-side video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      background: #000;
-      border-radius: 18px;
-      display: block;
-    }
-    /* Positioning for 5 videos */
-    .carousel-left-2 { left: 8px; z-index: 1; width: 120px; height: 220px; opacity: 0.3; }
-    .carousel-left-1 { left: 260px; z-index: 2; width: 220px; height: 380px; opacity: 0.85; }
-    .carousel-right-1 { right: 260px; z-index: 2; width: 220px; height: 380px; opacity: 0.85; }
-    .carousel-right-2 { right: 8px; z-index: 1; width: 120px; height: 220px; opacity: 0.3; }
-    .carousel-center { z-index: 3; }
-    /* Coverflow effect: larger side videos next to center, smaller at edges */
-    .carousel-center {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      width: 320px;
-      height: 570px;
-      border-radius: 24px;
-      box-shadow: 0 8px 48px rgba(0,0,0,0.5);
-      background: #222;
-      overflow: hidden;
-      opacity: 1;
-      z-index: 2;
-      border: 3px solid #ff2d55;
-      transition: border 0.3s, box-shadow 0.3s, transform 0.3s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .carousel-center video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      background: #000;
-      border-radius: 24px;
-      display: block;
-    }
-    .carousel-center.hovered {
-      box-shadow: 0 0 64px #ff2d55, 0 8px 48px rgba(0,0,0,0.5);
-      border-color: #fff;
-      transform: translate(-50%, -50%) scale(1.07);
-    }
-    /* Animated outline effect when liked */
-    .carousel-center.liked {
-      animation: likedOutline 0.6s cubic-bezier(.4,0,.2,1);
-      border-color: #ff2d55;
-      box-shadow: 0 0 32px #ff2d55, 0 8px 48px rgba(0,0,0,0.5);
-    }
-    @keyframes likedOutline {
-      0% {
-        border-width: 3px;
-        box-shadow: 0 0 0 #ff2d55;
-      }
-      40% {
-        border-width: 8px;
-        box-shadow: 0 0 32px #ff2d55;
-      }
-      80% {
-        border-width: 8px;
-        box-shadow: 0 0 64px #ff2d55;
-      }
-      100% {
-        border-width: 3px;
-        box-shadow: 0 0 32px #ff2d55, 0 8px 48px rgba(0,0,0,0.5);
-      }
-    }
-    .tiktok-icons {
-      position: absolute;
-      right: 18px;
-      top: 50%;
-      transform: translateY(-50%);
-      display: flex;
-      flex-direction: column;
-      gap: 32px;
-      z-index: 3;
-      align-items: center;
-    }
-    .tiktok-icon {
-      width: 54px;
-      height: 54px;
-      background: rgba(30,30,30,0.45);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-size: 2rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-      cursor: pointer;
-      transition: background 0.2s, transform 0.2s;
-      border: none;
-      backdrop-filter: blur(4px);
-      opacity: 0.95;
-      position: relative;
-      overflow: visible;
-    }
-    .tiktok-icon svg {
-      width: 28px;
-      height: 28px;
-      display: block;
-    }
-    .tiktok-icon.heart-pop {
-      animation: heartPop 0.4s cubic-bezier(.4,0,.2,1);
-    }
-    @keyframes heartPop {
-      0% { transform: scale(1); }
-      60% { transform: scale(1.4); }
-      100% { transform: scale(1); }
-    }
-    .tiktok-icon:hover {
-      background: #ff2d55cc;
-      opacity: 1;
-    }
-    .carousel-controls {
-      position: absolute;
-      bottom: 48px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 18px;
-      z-index: 3;
-    }
-    .carousel-btn {
-      background: #222;
-      color: #fff;
-      border: none;
-      border-radius: 50%;
-      width: 48px;
-      height: 48px;
-      font-size: 2rem;
-      cursor: pointer;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-      transition: background 0.2s;
-    }
-    .carousel-btn:hover {
-      background: #ff2d55;
-      color: #fff;
-    }
-    @media (max-width: 600px) {
-      .carousel-fixed {
-        flex-direction: row;
-        align-items: center; /* Vertically center carousel */
-        justify-content: center;
-        height: 100vh;
-      }
-      .carousel-side {
-        width: 44px;
-        height: 60px;
-        position: static;
-        margin: 0 2px;
-        opacity: 0.7;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        align-self: flex-end; /* Side video not centered */
-      }
-      /* Hide extra side videos on mobile and style main/side video sizes */
-      @media (max-width: 600px) {
-        #carouselLeft2, #carouselRight2 {
-          display: none !important;
+    <meta charset="UTF-8">
+    <title>Jaime Mendez | Portfolio Showcase</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Curated Typography: Google Fonts (Inter & Outfit) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Outfit:wght@400;700;900&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #ffffff;
+            --accent: #ff2d55;
+            --bg: #050505;
+            --card-bg: rgba(18, 18, 18, 0.45);
+            --card-border: rgba(255, 255, 255, 0.08);
         }
-        .carousel-fixed {
-          justify-content: center;
-          align-items: center;
-          position: fixed;
-          inset: 0;
-          width: 100vw;
-          height: 100vh;
-          display: flex;
+
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            color: var(--primary);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
         }
-        .carousel-center {
-          width: 90vw;
-          max-width: 340px;
-          height: 60vh;
-          min-height: 260px;
-          margin: 0 auto;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          position: relative;
-          left: 0;
-          top: 0;
-          transform: none;
-          z-index: 2;
+
+        /* 3D Elements Canvas */
+        #bgCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.6;
         }
-        .carousel-center video {
-          position: static;
-          width: 100%;
-          height: 100%;
-          object-fit: contain;
-          background: #000;
-          border-radius: 24px;
-          display: block;
-          box-shadow: 0 0 32px #ff2d55;
-          transition: box-shadow 0.3s;
+
+        /* Real-time Metrics Overlay */
+        #metricsOverlay {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.5);
+            z-index: 100;
+            text-align: right;
+            pointer-events: none;
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
         }
-        .carousel-center.fullscreen {
-          width: 100vw !important;
-          max-width: 100vw !important;
-          height: 100vh !important;
-          min-height: 100vh !important;
-          z-index: 99;
-          background: #000;
+
+        .metric-data {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
         }
-        .carousel-side.hide-on-fullscreen {
-          display: none !important;
+
+        .metric-bars {
+            display: flex;
+            align-items: flex-end;
+            gap: 2px;
+            height: 20px;
         }
-        .carousel-side {
-          width: 60px;
-          height: 80px;
-          margin: 0 2vw;
-          align-self: flex-end;
-          position: absolute;
-          left: 5vw;
-          bottom: 8vh;
-          transform: none;
+
+        .metric-bar {
+            width: 3px;
+            background: var(--accent);
+            opacity: 0.6;
+            transition: height 0.2s ease;
         }
-      }
-      .carousel-center {
-        width: 220px;
-        height: 340px;
-        position: static;
-        margin: 0 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        /* Prevent layout shift when video is played */
-        transition: all 0.3s;
-      }
-      .carousel-center video {
-        width: 100%;
-        height: 100%;
-        object-fit: cover; /* Remove black bars, fill container */
-        background: transparent;
-        border-radius: 24px;
-        display: block;
-        box-shadow: 0 0 32px #ff2d55;
-        transition: box-shadow 0.3s;
-      }
-      .carousel-center.liked video {
-        animation: glowPulse 0.6s cubic-bezier(.4,0,.2,1);
-        box-shadow: 0 0 64px #ff2d55, 0 0 32px #fff;
-      }
-      @keyframes glowPulse {
-        0% {
-          box-shadow: 0 0 0 #ff2d55;
+
+        /* Container for the scroll flow */
+        .showcase-container {
+            position: relative;
+            z-index: 1;
         }
-        40% {
-          box-shadow: 0 0 64px #ff2d55, 0 0 32px #fff;
+
+        .project-section {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding-left: 8vw;
+            box-sizing: border-box;
         }
-        80% {
-          box-shadow: 0 0 32px #ff2d55;
+
+        .video-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            background: #000;
         }
-        100% {
-          box-shadow: 0 0 32px #ff2d55;
+
+        /* Smooth Parallax Video */
+        .project-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scale(1.15);
+            /* Room for parallax */
+            filter: brightness(0.35) contrast(1.1);
+            /* Darken to support readability */
+            will-change: transform, filter;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
         }
-      }
-      .tiktok-icons {
-        right: 8px;
-        gap: 18px;
-      }
-      .tiktok-icon {
-        width: 36px;
-        height: 36px;
-        font-size: 1.2rem;
-      }
-      .tiktok-icon svg {
-        width: 18px;
-        height: 18px;
-      }
-      .carousel-controls {
-        bottom: 18px;
-        display: none !important; /* Hide nav arrows on mobile */
-      }
-    }
-  </style>
+
+        .project-video.loaded {
+            opacity: 1;
+        }
+
+        /* Metadata Card System */
+        .metadata-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 3rem;
+            max-width: 550px;
+            width: 90%;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(255, 255, 255, 0.02);
+            transform: translateY(60px);
+            opacity: 0;
+            will-change: transform, opacity;
+            position: relative;
+            z-index: 2;
+        }
+
+        .project-context {
+            font-family: 'Outfit', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-size: 0.8rem;
+            color: var(--accent);
+            margin-bottom: 0.8rem;
+            font-weight: 700;
+        }
+
+        .project-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 4rem;
+            line-height: 1;
+            margin: 0 0 1.5rem 0;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ffffff 0%, #a0a0a0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+
+        .tech-stack {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .tech-stack .highlight {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .description {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 2rem;
+        }
+
+        /* Personal Info Toggle */
+        .personal-info-btn {
+            background: rgba(255, 45, 85, 0.1);
+            border: 1px solid var(--accent);
+            color: #fff;
+            font-family: 'Outfit', sans-serif;
+            padding: 0.85rem 1.8rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.05em;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .personal-info-btn::before {
+            content: '+';
+            color: var(--accent);
+            transition: color 0.3s;
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+
+        .personal-info-btn.open::before {
+            content: '−';
+        }
+
+        .personal-info-btn:hover {
+            background: var(--accent);
+            box-shadow: 0 0 25px rgba(255, 45, 85, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .personal-info-btn:hover::before {
+            color: #fff;
+        }
+
+        .info-container {
+            margin-top: 1.5rem;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 45, 85, 0.3);
+            display: none;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.4s, transform 0.4s;
+        }
+
+        .info-container.active {
+            display: block;
+        }
+
+        .info-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            color: #e0e0e0;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .info-text strong {
+            color: #ffffff;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .info-text a {
+            color: #00ffcc;
+            text-decoration: none;
+        }
+
+        .info-text a:hover {
+            text-decoration: underline;
+        }
+
+        /* Progress indicator */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: var(--accent);
+            width: 0%;
+            z-index: 9999;
+            box-shadow: 0 0 10px rgba(255, 45, 85, 0.8);
+        }
+
+        @media (max-width: 768px) {
+            .project-section {
+                padding: 0 5vw;
+                justify-content: center;
+            }
+
+            .project-title {
+                font-size: 3rem;
+            }
+
+            .metadata-card {
+                padding: 2rem;
+            }
+        }
+
+        /* Mac-level Accent Button */
+        @keyframes rgbSpin {
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        @keyframes rgbIntermittent {
+
+            0%,
+            50% {
+                opacity: 0;
+                filter: brightness(1) blur(0px);
+            }
+
+            55% {
+                opacity: 0.3;
+                filter: brightness(0.6) blur(2px);
+            }
+
+            /* Anticipation */
+            60% {
+                opacity: 1;
+                filter: brightness(1.5) blur(0px);
+            }
+
+            90% {
+                opacity: 0.8;
+                filter: brightness(1.2) blur(0px);
+            }
+
+            100% {
+                opacity: 0;
+                filter: brightness(1) blur(0px);
+            }
+        }
+
+        .mac-pulse-btn {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            z-index: 99;
+            background: transparent;
+            color: #fff;
+            padding: 10px 24px 10px 14px;
+            border-radius: 50px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: grab;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            overflow: hidden;
+        }
+
+        .mac-pulse-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 250%;
+            height: 500%;
+            background: conic-gradient(from 0deg, #ff2d55, #ff9a00, #d0de21, #4fce5d, #00c0ff, #aa1a38, #ff2d55);
+            transform-origin: center;
+            transform: translate(-50%, -50%);
+            animation: rgbSpin 1.5s linear infinite, rgbIntermittent 8s ease-in-out infinite;
+            z-index: -2;
+            opacity: 0;
+            /* Subtle intermittent razer rainbow */
+        }
+
+        .mac-pulse-btn::after {
+            content: '';
+            position: absolute;
+            inset: 2px;
+            background: rgba(20, 20, 20, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 50px;
+            z-index: -1;
+        }
+
+        .mac-pulse-btn>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        .mac-pulse-btn:active {
+            cursor: grabbing;
+        }
+
+        .mac-pulse-btn .icon-ring {
+            background: linear-gradient(135deg, var(--accent) 0%, #aa1a38 100%);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(255, 45, 85, 0.6);
+            transition: transform 0.3s;
+        }
+
+        .mac-pulse-btn svg {
+            width: 14px;
+            height: 14px;
+            stroke: #fff;
+        }
+
+        .mac-pulse-btn:hover {
+            background: rgba(40, 40, 40, 0.7);
+            transform: scale(1.05);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+        }
+
+        .mac-pulse-btn:hover .icon-ring {
+            transform: rotate(90deg);
+        }
+
+        .file-explorer-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            z-index: 1000;
+            visibility: hidden;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.5s cubic-bezier(0.19, 1, 0.22, 1), visibility 0.5s;
+        }
+
+        .file-explorer-modal.active {
+            visibility: visible;
+            pointer-events: auto;
+            opacity: 1;
+        }
+
+        /* Apple Finder Style */
+        .file-explorer-window {
+            width: 85%;
+            max-width: 1100px;
+            height: 75vh;
+            background: rgba(30, 30, 32, 0.7);
+            backdrop-filter: blur(35px);
+            -webkit-backdrop-filter: blur(35px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+            opacity: 0;
+            will-change: transform, opacity, border-radius;
+            /* GSAP handles absolute transitions */
+        }
+
+        .file-explorer-window.maximized {
+            width: 100vw !important;
+            height: 100vh !important;
+            max-width: none !important;
+            border-radius: 0 !important;
+            transform: translate(0, 0) scale(1) !important;
+            border: none !important;
+            transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .window-titlebar {
+            height: 52px;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            background: rgba(20, 20, 20, 0.5);
+        }
+
+        .mac-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .mac-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.9;
+        }
+
+        .mac-btn:hover {
+            opacity: 1;
+        }
+
+        .mac-close {
+            background: #ff5f56;
+        }
+
+        .mac-min {
+            background: #ffbd2e;
+            cursor: default;
+        }
+
+        .mac-max {
+            background: #27c93f;
+            cursor: default;
+        }
+
+        .window-title {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #dfdfdf;
+            letter-spacing: 0.5px;
+        }
+
+        .window-content {
+            padding: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 30px;
+            overflow-y: auto;
+            flex: 1;
+            align-content: start;
+        }
+
+        /* Thumbnail Items */
+        .explorer-item {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .explorer-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .file-thumb {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #111;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .file-thumb video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s;
+        }
+
+        .explorer-item:hover .file-thumb video {
+            transform: scale(1.05);
+        }
+
+        .file-name {
+            font-size: 0.9rem;
+            text-align: center;
+            color: #eee;
+            font-weight: 500;
+            word-break: break-all;
+        }
+
+        /* Clean Lightbox overlay */
+        .video-lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .video-lightbox.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .video-lightbox video {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(255, 45, 85, 0.3);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 40px;
+            right: 40px;
+            background: rgba(25, 25, 25, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox-close:hover {
+            background: var(--accent);
+            transform: scale(1.1);
+        }
+    </style>
 </head>
+
 <body>
-  <!-- Blurry floating video background -->
-  <video id="bgVideo" class="bg-blur" autoplay loop muted playsinline></video>
-  <div class="carousel-fixed">
-    <!-- Five video containers: two left, one center, two right -->
-    <div class="carousel-side carousel-left-2" id="carouselLeft2"></div>
-    <div class="carousel-side carousel-left-1" id="carouselLeft1"></div>
-    <div class="carousel-center" id="carouselCenter"></div>
-    <div class="carousel-side carousel-right-1" id="carouselRight1"></div>
-    <div class="carousel-side carousel-right-2" id="carouselRight2"></div>
-    <div class="carousel-controls">
-      <button class="carousel-btn" id="prevBtn">&#8592;</button>
-      <button class="carousel-btn" id="nextBtn">&#8594;</button>
+
+    <div class="scroll-progress" id="scrollProgress"></div>
+    <canvas id="bgCanvas"></canvas>
+
+    <div id="metricsOverlay">
+        <div class="metric-data">
+            <span>NET: <span id="netMetric">12ms</span></span>
+            <span>FPS: <span id="fpsMetric">60</span></span>
+        </div>
+        <div class="metric-bars" id="metricBars">
+            <!-- Generated via JS -->
+        </div>
     </div>
-  </div>
-  <script>
-    // --- Use only current video files from carousel folder ---
-    // Dynamically load all .mp4 files from carousel folder
-    // (Update this list if new videos are added)
-    const fileList = [
-       "carousel/1001.webm",
-        "carousel/1002.webm",
-  "carousel/1003.webm",
-  "carousel/1004.webm",
-  "carousel/1005.webm",
-  "carousel/1006.webm",
-  "carousel/1007.webm",     
-  "carousel/1008.webm",
-  "carousel/1009.webm",
-  "carousel/1010.webm",
-  "carousel/1011.webm",
-  "carousel/1012.webm"
 
-    ];
-    const sources = fileList.map(f => ({ type: 'video', src: f }));
+    <button id="fileBrowserBtn" class="mac-pulse-btn">
+        <div class="icon-ring">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polygon points="12 4 4 20 20 20"></polygon>
+            </svg>
+        </div>
+        <span>Asset Vault</span>
+    </button>
 
-    let current = 0;
-    const videoCache = {};
+    <div id="fileExplorerModal" class="file-explorer-modal">
+        <div class="file-explorer-window">
+            <div class="window-titlebar">
+                <div class="mac-buttons">
+                    <button class="mac-btn mac-close" id="closeExplorerBtn"></button>
+                    <button class="mac-btn mac-min"></button>
+                    <button class="mac-btn mac-max"></button>
+                </div>
+                <div class="window-title">C:\Vault\Renderings</div>
+            </div>
+            <div class="window-content" id="explorerGrid">
+                <!-- Populated via JS -->
+            </div>
+        </div>
+    </div>
 
-    // Set background video (first video found)
-    const bgVideo = document.getElementById('bgVideo');
-    function setBgVideo(idx) {
-      const vidSrc = sources[idx].src;
-      const fallbackSrc = sources[idx].fallback;
-      // Try webm first, fallback to mp4 if webm fails
-      bgVideo.src = vidSrc;
-      bgVideo.onerror = function() {
-        if (bgVideo.src !== fallbackSrc) {
-          bgVideo.src = fallbackSrc;
-          bgVideo.load();
+    <div id="videoLightbox" class="video-lightbox">
+        <button id="closeLightboxBtn" class="lightbox-close">×</button>
+        <video id="lightboxVideo" controls autoplay playsinline></video>
+    </div>
+
+    <main class="showcase-container">
+
+        <!-- PROJECT 1: Career -->
+        <section class="project-section" id="project-1">
+            <div class="video-wrapper">
+                <video loop muted playsinline class="project-video" data-src="carousel/1001.webm"></video>
+            </div>
+            <div class="metadata-card">
+                <div class="project-context">High-End VFX & Video Generation</div>
+                <h2 class="project-title">Cinematic Quality</h2>
+                <p class="tech-stack">Focus: <span class="highlight">VFX, Compositing, & AI Video Generation</span></p>
+                <p class="description">As a Senior VFX Artist, I bring cinematic quality to any project. Whether it's a
+                    small business promo or a large-scale commercial, I deliver stunning visual effects that captivate
+                    audiences.</p>
+
+                <button class="personal-info-btn">About My Career</button>
+                <div class="info-container">
+                    <div class="info-text">
+                        Hi, I'm Jaime Mendez, a <strong>Senior Compositing Artist</strong> with over 6 years of
+                        experience creating stunning visual effects.<br><br>
+                        I am currently a Lead Compositor at <em>Ingenuity Studios Inc.</em>, with past experience at
+                        CINEMA MAQUINA, Ollin VFX, mighty studio, and The Mill. I specialize in feature film and
+                        commercial post-production.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROJECT 2: Education -->
+        <section class="project-section" id="project-2">
+            <div class="video-wrapper">
+                <video loop muted playsinline class="project-video" data-src="carousel/1002.webm"></video>
+            </div>
+            <div class="metadata-card">
+                <div class="project-context">Commercial & Indie Projects</div>
+                <h2 class="project-title">Tight Budgets, Big Impact</h2>
+                <p class="tech-stack">Focus: <span class="highlight">Resource Optimization & Creative Solutions</span>
+                </p>
+                <p class="description">Good taste and technical expertise mean you don't need a huge budget to achieve a
+                    premium look. I specialize in maximizing resources to achieve high-end cinematic visuals without
+                    compromise.</p>
+
+                <button class="personal-info-btn">My Education</button>
+                <div class="info-container">
+                    <div class="info-text">
+                        <strong>Coco School México</strong><br>Master VFX, Visual Effects (2017)<br><br>
+                        <strong>Universidad Politecnica Metropolitana de Hidalgo</strong><br>Animation and Visual
+                        Effects (2014 - 2017)<br><br>
+                        <strong>Instituto Cardan</strong><br>Nuke Compositing (2015 - 2016)
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROJECT 3: Hobbies -->
+        <section class="project-section" id="project-3">
+            <div class="video-wrapper">
+                <video loop muted playsinline class="project-video" data-src="carousel/1003.webm"></video>
+            </div>
+            <div class="metadata-card">
+                <div class="project-context">Visual Storytelling</div>
+                <h2 class="project-title">Imagination is the Limit</h2>
+                <p class="tech-stack">Focus: <span class="highlight">Motion Graphics, 3D Elements, & Live Action</span>
+                </p>
+                <p class="description">From initial concept and video generation to the final composite, I help bring
+                    your imagination to life. If you can dream it, we can create it. Let's craft videos that tell your
+                    brand's unique story.</p>
+
+                <button class="personal-info-btn">Hobbies & Passions</button>
+                <div class="info-container">
+                    <div class="info-text">
+                        Beyond live-action compositing, I am incredibly passionate about digital arts and staying at the
+                        forefront of creative technology.<br><br>
+                        I am a team player who enjoys pushing creative boundaries, continually eager to learn new
+                        software techniques to stay at the top of my game in the ever-evolving VFX industry!
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROJECT 4: Location -->
+        <section class="project-section" id="project-4">
+            <div class="video-wrapper">
+                <video loop muted playsinline class="project-video" data-src="carousel/1004.webm"></video>
+            </div>
+            <div class="metadata-card">
+                <div class="project-context">End-To-End Production</div>
+                <h2 class="project-title">Elevate Your Brand</h2>
+                <p class="tech-stack">Focus: <span class="highlight">Color Grading, Relighting, & Seamless
+                        Integration</span></p>
+                <p class="description">Stand out in a crowded market. I offer full-suite post-production and video
+                    generation services tailored to elevate your brand's visual identity and effectively engage your
+                    targeted clients.</p>
+
+                <button class="personal-info-btn">Where I Live</button>
+                <div class="info-container">
+                    <div class="info-text">
+                        <strong>Mexico City, Mexico</strong><br>
+                        (Mexico City Metropolitan Area)<br><br>
+                        Currently based in the vibrant heart of the city, perfectly situated to collaborate globally
+                        across different time zones.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROJECT 5: Contact Info -->
+        <section class="project-section" id="project-5">
+            <div class="video-wrapper">
+                <video loop muted playsinline class="project-video" data-src="carousel/1005.webm"></video>
+            </div>
+            <div class="metadata-card">
+                <div class="project-context">Ready for the Next Project</div>
+                <h2 class="project-title">Let's Collaborate</h2>
+                <p class="tech-stack">Focus: <span class="highlight">Remote Freelance, Fast Turnaround, & Professional
+                        Polish</span></p>
+                <p class="description">Looking for a dedicated video generator and VFX compositor for your next
+                    campaign? I am currently taking on new clients and ready to turn your tight deadline into a
+                    masterpiece.</p>
+
+                <button class="personal-info-btn">Let's Connect</button>
+                <div class="info-container">
+                    <div class="info-text">
+                        <strong>Email:</strong> <a href="mailto:jaimess0000@gmail.com">jaimess0000@gmail.com</a><br>
+                        <strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/jaime-mendez-5a1063113"
+                            target="_blank">linkedin.com/in/jaime-mendez-5a1063113</a><br><br>
+                        Let's connect and explore new opportunities in the industry!
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <script>
+        class ShowcaseManager {
+            constructor() {
+                this.sections = document.querySelectorAll('.project-section');
+                this.initLazyLoading();
+                this.initGSAP();
+                this.initPersonalInfoToggles();
+                this.initThreeJS();
+                this.initMetrics();
+                this.initScrollProgress();
+                this.initDraggablePill();
+                this.initFileExplorer();
+            }
+
+            initDraggablePill() {
+                const btn = document.getElementById('fileBrowserBtn');
+                let isDragging = false;
+                let hasDragged = false;
+                let startX, startY;
+                let currentX = 0, currentY = 0;
+                let velX = 0, velY = 0;
+                let lastX, lastY, lastTime;
+                let animFrame = null;
+
+                const dragStart = (e) => {
+                    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                    startX = clientX - currentX;
+                    startY = clientY - currentY;
+                    lastX = clientX;
+                    lastY = clientY;
+                    lastTime = performance.now();
+                    isDragging = true;
+                    hasDragged = false;
+                    cancelAnimationFrame(animFrame);
+                    btn.style.transition = 'none';
+                    btn.style.cursor = 'grabbing';
+                };
+
+                const dragMove = (e) => {
+                    if (!isDragging) return;
+                    e.preventDefault();
+                    hasDragged = true;
+
+                    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+                    const now = performance.now();
+                    const dt = now - lastTime;
+
+                    currentX = clientX - startX;
+                    currentY = clientY - startY;
+
+                    if (dt > 0) {
+                        velX = (clientX - lastX) / dt;
+                        velY = (clientY - lastY) / dt;
+                    }
+
+                    lastX = clientX;
+                    lastY = clientY;
+                    lastTime = now;
+
+                    btn.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
+                };
+
+                const dragEnd = () => {
+                    if (!isDragging) return;
+                    isDragging = false;
+                    btn.style.cursor = 'grab';
+
+                    lastTime = performance.now();
+                    animFrame = requestAnimationFrame(inertia);
+                };
+
+                const inertia = () => {
+                    const now = performance.now();
+                    const dt = Math.min(now - lastTime, 32);
+                    lastTime = now;
+
+                    currentX += velX * dt;
+                    currentY += velY * dt;
+
+                    velX *= 0.92;
+                    velY *= 0.92;
+
+                    const rect = btn.getBoundingClientRect();
+                    const margin = 20;
+                    const w = window.innerWidth;
+                    const h = window.innerHeight;
+                    let bounced = false;
+
+                    if (rect.left < margin) {
+                        currentX += (margin - rect.left);
+                        velX *= -0.6; bounced = true;
+                    } else if (rect.right > w - margin) {
+                        currentX -= (rect.right - (w - margin));
+                        velX *= -0.6; bounced = true;
+                    }
+
+                    if (rect.top < margin) {
+                        currentY += (margin - rect.top);
+                        velY *= -0.6; bounced = true;
+                    } else if (rect.bottom > h - margin) {
+                        currentY -= (rect.bottom - (h - margin));
+                        velY *= -0.6; bounced = true;
+                    }
+
+                    btn.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
+
+                    if (Math.abs(velX) > 0.05 || Math.abs(velY) > 0.05 || bounced) {
+                        animFrame = requestAnimationFrame(inertia);
+                    } else {
+                        btn.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                    }
+                };
+
+                btn.addEventListener('mousedown', dragStart);
+                window.addEventListener('mousemove', dragMove, { passive: false });
+                window.addEventListener('mouseup', dragEnd);
+
+                btn.addEventListener('touchstart', dragStart, { passive: false });
+                window.addEventListener('touchmove', dragMove, { passive: false });
+                window.addEventListener('touchend', dragEnd);
+
+                btn.addEventListener('click', (e) => {
+                    if (hasDragged) {
+                        e.preventDefault();
+                        e.stopImmediatePropagation();
+                    }
+                });
+            }
+
+            initFileExplorer() {
+                const fileBrowserBtn = document.getElementById('fileBrowserBtn');
+                const fileExplorerModal = document.getElementById('fileExplorerModal');
+                const closeExplorerBtn = document.getElementById('closeExplorerBtn');
+
+                // Mac OS Action Buttons
+                const minExplorerBtn = document.querySelector('.mac-min');
+                const maxExplorerBtn = document.querySelector('.mac-max');
+                const windowEl = document.querySelector('.file-explorer-window');
+
+                const explorerGrid = document.getElementById('explorerGrid');
+
+                const videoLightbox = document.getElementById('videoLightbox');
+                const closeLightboxBtn = document.getElementById('closeLightboxBtn');
+                const lightboxVideo = document.getElementById('lightboxVideo');
+
+                const videos = [
+                    '1001.webm', '1002.webm', '1003.webm', '1004.webm',
+                    '1005.webm', '1006.webm', '1007.webm', '1008.webm',
+                    '1009.webm', '1010.webm', '1011(.webm', '1011.webm', '1012.webm'
+                ];
+
+                videos.forEach(vid => {
+                    const item = document.createElement('div');
+                    item.className = 'explorer-item';
+                    item.innerHTML = `
+                      <div class="file-thumb">
+                        <video src="carousel/${vid}#t=0.1" preload="metadata" muted playsinline></video>
+                      </div>
+                      <div class="file-name">${vid.split('.')[0]}</div>
+                    `;
+
+                    const thumbVideo = item.querySelector('video');
+                    item.addEventListener('mouseenter', () => {
+                        thumbVideo.play().catch(e => e); // Ignore play promise errors
+                    });
+                    item.addEventListener('mouseleave', () => {
+                        thumbVideo.pause();
+                    });
+
+                    item.addEventListener('click', () => {
+                        lightboxVideo.src = 'carousel/' + vid;
+                        videoLightbox.classList.add('active');
+                    });
+                    explorerGrid.appendChild(item);
+                });
+
+                fileBrowserBtn.addEventListener('click', () => {
+                    fileExplorerModal.classList.add('active');
+
+                    const btnRect = fileBrowserBtn.getBoundingClientRect();
+                    const startX = btnRect.left + btnRect.width / 2 - (window.innerWidth / 2);
+                    const startY = btnRect.top + btnRect.height / 2 - (window.innerHeight / 2);
+
+                    gsap.fromTo(windowEl, {
+                        x: startX,
+                        y: startY,
+                        scaleX: 0.05,
+                        scaleY: 0.01,
+                        opacity: 0,
+                        borderRadius: '100px'
+                    }, {
+                        x: 0, y: 0, scaleX: 1, scaleY: 1, opacity: 1, borderRadius: '16px',
+                        duration: 0.7, ease: "back.out(1.2)"
+                    });
+                });
+
+                closeExplorerBtn.addEventListener('click', () => {
+                    const btnRect = fileBrowserBtn.getBoundingClientRect();
+                    const endX = btnRect.left + btnRect.width / 2 - (window.innerWidth / 2);
+                    const endY = btnRect.top + btnRect.height / 2 - (window.innerHeight / 2);
+
+                    gsap.to(windowEl, {
+                        x: endX,
+                        y: endY,
+                        scaleX: 0.05,
+                        scaleY: 0.01,
+                        opacity: 0,
+                        borderRadius: '100px',
+                        duration: 0.5,
+                        ease: "power3.in",
+                        onComplete: () => {
+                            fileExplorerModal.classList.remove('active');
+                        }
+                    });
+                });
+
+                // Mac OS Minimize (Genie Sucker)
+                minExplorerBtn.addEventListener('click', () => {
+                    const btnRect = fileBrowserBtn.getBoundingClientRect();
+                    const endX = btnRect.left + btnRect.width / 2 - (window.innerWidth / 2);
+                    const endY = btnRect.top + btnRect.height / 2 - (window.innerHeight / 2);
+
+                    gsap.to(windowEl, {
+                        x: endX,
+                        y: endY,
+                        scaleX: 0.01,
+                        scaleY: 0.05,
+                        opacity: 0,
+                        borderRadius: '100px',
+                        duration: 0.6,
+                        ease: "back.in(1.2)",
+                        onComplete: () => {
+                            fileExplorerModal.classList.remove('active');
+                        }
+                    });
+                });
+
+                // Mac OS Maximize Hook
+                let isMaximized = false;
+                maxExplorerBtn.addEventListener('click', () => {
+                    if (!isMaximized) {
+                        windowEl.classList.add('maximized');
+                        isMaximized = true;
+                    } else {
+                        windowEl.classList.remove('maximized');
+                        isMaximized = false;
+                    }
+                });
+
+                closeLightboxBtn.addEventListener('click', () => {
+                    videoLightbox.classList.remove('active');
+                    lightboxVideo.pause();
+                    lightboxVideo.src = '';
+                });
+            }
+
+            initLazyLoading() {
+                const options = {
+                    root: null,
+                    rootMargin: '100% 0px',
+                    threshold: 0
+                };
+
+                const imageObserver = new IntersectionObserver((entries, obs) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const video = entry.target.querySelector('.project-video');
+                            if (video && video.dataset.src && !video.src) {
+                                video.src = video.dataset.src;
+                                video.load();
+
+                                video.addEventListener('canplay', () => {
+                                    video.classList.add('loaded'); // Trigger fade in
+                                }, { once: true });
+
+                                obs.unobserve(entry.target);
+                            }
+                        }
+                    });
+                }, options);
+
+                const playbackObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        const video = entry.target.querySelector('.project-video');
+                        if (video && video.src) {
+                            if (entry.intersectionRatio > 0) {
+                                video.play().catch(e => console.warn("Video Play Blocked: ", e));
+                            } else {
+                                video.pause();
+                            }
+                        }
+                    });
+                }, { threshold: [0, 0.5] });
+
+                this.sections.forEach(sec => {
+                    imageObserver.observe(sec);
+                    playbackObserver.observe(sec);
+                });
+            }
+
+            initGSAP() {
+                gsap.registerPlugin(ScrollTrigger);
+
+                this.sections.forEach((sec) => {
+                    const video = sec.querySelector('.project-video');
+                    const card = sec.querySelector('.metadata-card');
+
+                    gsap.set(video, { force3D: true });
+                    gsap.set(card, { force3D: true });
+
+                    gsap.to(video, {
+                        scale: 1,
+                        yPercent: 15,
+                        filter: "brightness(0.1) contrast(1.3)",
+                        ease: "none",
+                        scrollTrigger: {
+                            trigger: sec,
+                            start: "top bottom",
+                            end: "bottom top",
+                            scrub: true
+                        }
+                    });
+
+                    gsap.to(card, {
+                        y: 0,
+                        opacity: 1,
+                        duration: 1.4,
+                        ease: "power3.out",
+                        scrollTrigger: {
+                            trigger: sec,
+                            start: "top 65%",
+                            toggleActions: "play reverse play reverse"
+                        }
+                    });
+                });
+            }
+
+            initPersonalInfoToggles() {
+                const buttons = document.querySelectorAll('.personal-info-btn');
+                buttons.forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const btnEl = e.currentTarget;
+                        const container = btnEl.nextElementSibling;
+
+                        if (container.classList.contains('active')) {
+                            // Hide Animation
+                            container.classList.remove('active');
+                            btnEl.classList.remove('open');
+                            container.style.opacity = '0';
+                            container.style.transform = 'translateY(-10px)';
+                            setTimeout(() => container.style.display = 'none', 400);
+                        } else {
+                            // Show Animation
+                            container.style.display = 'block';
+                            btnEl.classList.add('open');
+                            // Force reflow
+                            void container.offsetWidth;
+                            container.classList.add('active');
+                            container.style.opacity = '1';
+                            container.style.transform = 'translateY(0)';
+                        }
+                    });
+                });
+            }
+
+            initThreeJS() {
+                const canvas = document.getElementById('bgCanvas');
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: false });
+
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+
+                const particlesGeometry = new THREE.BufferGeometry();
+                const count = 1000;
+                const positions = new Float32Array(count * 3);
+
+                for (let i = 0; i < count * 3; i++) {
+                    positions[i] = (Math.random() - 0.5) * 15;
+                }
+
+                particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+                const material = new THREE.PointsMaterial({
+                    size: 0.02,
+                    color: 0xff2d55,
+                    transparent: true,
+                    opacity: 0.6,
+                    blending: THREE.AdditiveBlending
+                });
+
+                const particlesMesh = new THREE.Points(particlesGeometry, material);
+                scene.add(particlesMesh);
+                camera.position.z = 4;
+
+                let mouseX = 0;
+                let mouseY = 0;
+                let targetX = 0;
+                let targetY = 0;
+
+                document.addEventListener('mousemove', (e) => {
+                    mouseX = (e.clientX / window.innerWidth) - 0.5;
+                    mouseY = (e.clientY / window.innerHeight) - 0.5;
+                });
+
+                const clock = new THREE.Clock();
+
+                function animate() {
+                    requestAnimationFrame(animate);
+                    const elapsedTime = clock.getElapsedTime();
+
+                    targetX = mouseX * 0.5;
+                    targetY = mouseY * 0.5;
+
+                    particlesMesh.rotation.y += 0.001 + (targetX - particlesMesh.rotation.y) * 0.05;
+                    particlesMesh.rotation.x += (targetY - particlesMesh.rotation.x) * 0.05;
+                    particlesMesh.rotation.z = elapsedTime * 0.02;
+
+                    renderer.render(scene, camera);
+                }
+                animate();
+
+                window.addEventListener('resize', () => {
+                    camera.aspect = window.innerWidth / window.innerHeight;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(window.innerWidth, window.innerHeight);
+                });
+            }
+
+            initMetrics() {
+                const netMetric = document.getElementById('netMetric');
+                const fpsMetric = document.getElementById('fpsMetric');
+                const barsContainer = document.getElementById('metricBars');
+
+                for (let i = 0; i < 8; i++) {
+                    const bar = document.createElement('div');
+                    bar.className = 'metric-bar';
+                    bar.style.height = (Math.random() * 12 + 4) + 'px';
+                    barsContainer.appendChild(bar);
+                }
+
+                setInterval(() => {
+                    netMetric.innerText = Math.floor(Math.random() * 6 + 12) + 'ms';
+                    const bars = barsContainer.querySelectorAll('.metric-bar');
+                    bars.forEach(bar => {
+                        bar.style.height = (Math.random() * 16 + 4) + 'px';
+                    });
+                }, 300);
+
+                let frameCount = 0;
+                let lastTime = performance.now();
+
+                function measureFPS() {
+                    frameCount++;
+                    const now = performance.now();
+                    if (now - lastTime >= 1000) {
+                        fpsMetric.innerText = frameCount;
+                        frameCount = 0;
+                        lastTime = now;
+                    }
+                    requestAnimationFrame(measureFPS);
+                }
+                measureFPS();
+            }
+
+            initScrollProgress() {
+                const progressBar = document.getElementById('scrollProgress');
+                window.addEventListener('scroll', () => {
+                    const scrollPx = document.documentElement.scrollTop;
+                    const winHeightPx = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                    const scrolled = `${(scrollPx / winHeightPx) * 100}%`;
+                    progressBar.style.width = scrolled;
+                });
+            }
         }
-      };
-      bgVideo.load();
-    }
-    setBgVideo(current);
 
-    // Preload adjacent videos for smoother navigation
-    function preloadNeighborVideos() {
-      const indicesToPreload = [
-        (current - 2 + sources.length) % sources.length,
-        (current - 1 + sources.length) % sources.length,
-        (current + 1) % sources.length,
-        (current + 2) % sources.length
-      ];
-      for (const idx of indicesToPreload) {
-        if (sources[idx] && !videoCache[idx]) {
-          const vid = document.createElement('video');
-          vid.src = sources[idx].src;
-          vid.loop = true;
-          vid.muted = true;
-          vid.playsInline = true;
-          vid.preload = 'auto';
-          vid.load(); // Start loading the video data
-          videoCache[idx] = vid;
-        }
-      }
-    }
-
-    // Render fixed carousel with 5 videos (2 left, 2 right, 1 center)
-    function renderFixedCarousel() {
-      // Pause all cached videos first
-      for (const key in videoCache) {
-        if (videoCache.hasOwnProperty(key)) {
-          const vid = videoCache[key];
-          if (vid && typeof vid.pause === 'function') {
-            vid.pause();
-          }
-        }
-      }
-
-      // Helper to render a side video
-      function renderSide(divId, vidIdx) {
-        const div = document.getElementById(divId);
-        div.innerHTML = '';
-        // Only show side video if there are at least 5 videos
-        if (sources.length < 5 || vidIdx < 0 || vidIdx >= sources.length) {
-          div.style.opacity = '0';
-          div.style.background = 'transparent';
-          div.innerHTML = '';
-          div.onclick = null;
-          return;
-        }
-        div.style.opacity = '0.6';
-        div.style.background = '#222';
-        let vid = videoCache[vidIdx];
-        if (!vid) {
-          vid = document.createElement('video');
-          vid.src = sources[vidIdx].src;
-          vid.loop = true;
-          vid.muted = true;
-          vid.playsInline = true;
-          videoCache[vidIdx] = vid;
-        }
-        div.appendChild(vid);
-        div.onclick = () => {
-          current = vidIdx;
-          setBgVideo(current);
-          renderFixedCarousel();
-        };
-      }
-
-      // Indices for 5 videos
-      const left2Idx = (current - 2 + sources.length) % sources.length;
-      const left1Idx = (current - 1 + sources.length) % sources.length;
-      const right1Idx = (current + 1) % sources.length;
-      const right2Idx = (current + 2) % sources.length;
-
-      preloadNeighborVideos();
-
-      // User agent detection for iPhone/Android
-      const isMobileDevice = /iphone|ipad|ipod|android/i.test(navigator.userAgent);
-
-      // Render sides
-      if (window.innerWidth <= 600 || window.innerHeight < window.innerWidth) {
-        // Only show one side video on mobile or horizontal view
-        renderSide('carouselLeft2', -1); // Hide
-        renderSide('carouselLeft1', left1Idx);
-        renderSide('carouselRight1', right1Idx);
-        renderSide('carouselRight2', -1); // Hide
-
-        // Make side videos much smaller on iPhone/Android
-        if (isMobileDevice) {
-          document.getElementById('carouselLeft1').style.width = '28px';
-          document.getElementById('carouselLeft1').style.height = '36px';
-          document.getElementById('carouselRight1').style.width = '28px';
-          document.getElementById('carouselRight1').style.height = '36px';
-          document.getElementById('carouselLeft2').style.width = '18px';
-          document.getElementById('carouselLeft2').style.height = '24px';
-          document.getElementById('carouselRight2').style.width = '18px';
-          document.getElementById('carouselRight2').style.height = '24px';
-        }
-      } else {
-        document.getElementById('carouselLeft1').style.width = '';
-        document.getElementById('carouselLeft1').style.height = '';
-        document.getElementById('carouselRight1').style.width = '';
-        document.getElementById('carouselRight1').style.height = '';
-        renderSide('carouselLeft2', left2Idx);
-        renderSide('carouselLeft1', left1Idx);
-        renderSide('carouselRight1', right1Idx);
-        renderSide('carouselRight2', right2Idx);
-      }
-
-      // Center media (current)
-      const centerDiv = document.getElementById('carouselCenter');
-      centerDiv.innerHTML = '';
-      let centerMedia = videoCache[current];
-      if (!centerMedia) {
-        centerMedia = document.createElement('video');
-        videoCache[current] = centerMedia;
-      }
-      centerMedia.loop = true;
-      centerMedia.playsInline = true;
-      centerMedia.setAttribute('webkit-playsinline', 'true'); // Prevent iOS fullscreen popup
-      centerMedia.autoplay = true;
-      // iOS autoplay fix: must be muted to autoplay
-      centerMedia.muted = true;
-      // Remove controls on mobile to prevent layout shift
-      if (window.innerWidth > 600) {
-        centerMedia.controls = true;
-        centerMedia.muted = false; // Enable audio on desktop
-      }
-      // Prefer webm, fallback to mp4
-      centerMedia.src = sources[current].src;
-      centerMedia.onerror = function() {
-        if (centerMedia.src !== sources[current].fallback) {
-          centerMedia.src = sources[current].fallback;
-          centerMedia.load();
-        }
-      };
-      centerDiv.appendChild(centerMedia);
-      centerMedia.play();
-
-      // iOS: Enable audio after first user gesture
-      if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
-        document.body.addEventListener('touchend', function enableAudioOnce() {
-          centerMedia.muted = false;
-          centerMedia.play();
-          document.body.removeEventListener('touchend', enableAudioOnce);
-        }, { once: true });
-      }
-
-      // Double tap to fullscreen and hide side video on mobile
-      let lastTap = 0;
-      centerMedia.addEventListener('touchend', function(e) {
-        const now = Date.now();
-        if (now - lastTap < 350) {
-          // Double tap detected
-          centerDiv.classList.toggle('fullscreen');
-          document.getElementById('carouselLeft1').classList.toggle('hide-on-fullscreen');
-          document.getElementById('carouselRight1').classList.toggle('hide-on-fullscreen');
-        }
-        lastTap = now;
-      });
-
-      // Reload video on click
-      // Disabled to prevent video moving from its position
-      // centerMedia.onclick = () => {
-      //   centerMedia.pause();
-      //   centerMedia.currentTime = 0;
-      //   centerMedia.play();
-      // };
-
-      // TikTok icons (SVG, animated, transparent)
-      const iconsDiv = document.createElement('div');
-      iconsDiv.className = 'tiktok-icons';
-      iconsDiv.innerHTML = `
-        <button class="tiktok-icon" id="likeBtn" title="Like">
-          <svg viewBox="0 0 48 48" fill="none">
-            <path d="M24 42s-1.5-1.3-7.2-6.2C7.7 30.1 4 25.7 4 20.5 4 14.7 8.7 10 14.5 10c3.1 0 6.1 1.5 7.5 4.1C23.4 11.5 26.4 10 29.5 10 35.3 10 40 14.7 40 20.5c0 5.2-3.7 9.6-12.8 15.3C25.5 40.7 24 42 24 42z" stroke="#fff" stroke-width="3" fill="#ff2d55"/>
-          </svg>
-        </button>
-        <button class="tiktok-icon" title="Comment">
-          <svg viewBox="0 0 48 48" fill="none">
-            <path d="M8 38V12a4 4 0 0 1 4-4h24a4 4 0 0 1 4 4v16a4 4 0 0 1-4 4H16l-8 6z" stroke="#fff" stroke-width="3" fill="#222"/>
-          </svg>
-        </button>
-        <button class="tiktok-icon" title="Bookmark">
-          <svg viewBox="0 0 48 48" fill="none">
-            <path d="M12 8a4 4 0 0 1 4-4h16a4 4 0 0 1 4 4v32l-12-8-12 8V8z" stroke="#fff" stroke-width="3" fill="#222"/>
-          </svg>
-        </button>
-      `;
-      centerDiv.appendChild(iconsDiv);
-
-      // Heart pop animation on like
-      const likeBtn = iconsDiv.querySelector('#likeBtn');
-      likeBtn.onclick = () => {
-        likeBtn.classList.add('heart-pop');
-        setTimeout(() => likeBtn.classList.remove('heart-pop'), 400);
-      };
-
-      // Highlight animation on hover for main video
-      centerDiv.onmouseenter = () => {
-        centerDiv.classList.add('hovered');
-      };
-      centerDiv.onmouseleave = () => {
-        centerDiv.classList.remove('hovered');
-      };
-
-      // Render right sides
-      renderSide('carouselRight1', right1Idx);
-      renderSide('carouselRight2', right2Idx);
-    }
-    renderFixedCarousel();
-
-    // Carousel controls
-    document.getElementById('prevBtn').onclick = () => {
-      current = (current - 1 + sources.length) % sources.length;
-      setBgVideo(current);
-      renderFixedCarousel();
-    };
-    document.getElementById('nextBtn').onclick = () => {
-      current = (current + 1) % sources.length;
-      setBgVideo(current);
-      renderFixedCarousel();
-    };
-
-    // Responsive background video sizing
-    function resizeBg() {
-      bgVideo.style.width = window.innerWidth + 'px';
-      bgVideo.style.height = window.innerHeight + 'px';
-    }
-    window.addEventListener('resize', resizeBg);
-    resizeBg();
-
-    // --- Swipe navigation for mobile devices ---
-    // Simple touch event listeners for left/right swipe
-    // Documented for maintainability: see /maintenance/carousel-doc.md
-    let touchStartX = null;
-    let touchEndX = null;
-    function handleGesture() {
-      if (touchStartX !== null && touchEndX !== null) {
-        const dx = touchEndX - touchStartX;
-        if (Math.abs(dx) > 50) { // Minimum swipe distance
-          if (dx < 0) {
-            // Swipe left: next video
-            current = (current + 1) % sources.length;
-            setBgVideo(current);
-            renderFixedCarousel();
-          } else {
-            // Swipe right: previous video
-            current = (current - 1 + sources.length) % sources.length;
-            setBgVideo(current);
-            renderFixedCarousel();
-          }
-        }
-      }
-      touchStartX = null;
-      touchEndX = null;
-    }
-    document.querySelector('.carousel-fixed').addEventListener('touchstart', function(e) {
-      if (e.touches.length === 1) {
-        touchStartX = e.touches[0].clientX;
-      }
-    });
-    document.querySelector('.carousel-fixed').addEventListener('touchend', function(e) {
-      if (e.changedTouches.length === 1) {
-        touchEndX = e.changedTouches[0].clientX;
-        handleGesture();
-      }
-    });
-  </script>
+        document.addEventListener('DOMContentLoaded', () => {
+            new ShowcaseManager();
+        });
+    </script>
 </body>
+
 </html>
