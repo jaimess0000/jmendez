@@ -644,6 +644,124 @@
             background: var(--accent);
             transform: scale(1.1);
         }
+
+        .censored-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ff2d55;
+            font-weight: 700;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            z-index: 10;
+            text-align: center;
+            pointer-events: none;
+            backdrop-filter: blur(5px);
+        }
+
+        .blur-video {
+            filter: blur(15px) brightness(0.5);
+        }
+
+        .warning-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 3000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .warning-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .warning-content {
+            background: rgba(20, 20, 20, 0.9);
+            border: 1px solid var(--accent);
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(255, 45, 85, 0.3);
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .warning-modal.active .warning-content {
+            transform: scale(1);
+        }
+
+        .warning-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--accent);
+        }
+
+        .warning-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .warning-text {
+            color: #ccc;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .warning-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .warning-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .btn-cancel {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-proceed {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .btn-proceed:hover {
+            background: #ff1a40;
+            box-shadow: 0 0 15px rgba(255, 45, 85, 0.5);
+        }
     </style>
 </head>
 
@@ -691,6 +809,18 @@
     <div id="videoLightbox" class="video-lightbox">
         <button id="closeLightboxBtn" class="lightbox-close">×</button>
         <video id="lightboxVideo" controls autoplay playsinline></video>
+    </div>
+
+    <div id="warningModal" class="warning-modal">
+        <div class="warning-content">
+            <div class="warning-icon">⚠️</div>
+            <div class="warning-title">Sensitive Content</div>
+            <div class="warning-text">This video contains material that may be sensitive or inappropriate. Do you wish to proceed?</div>
+            <div class="warning-actions">
+                <button id="warningCancel" class="warning-btn btn-cancel">Go Back</button>
+                <button id="warningProceed" class="warning-btn btn-proceed">I Understand</button>
+            </div>
+        </div>
     </div>
 
     <main class="showcase-container">
@@ -980,18 +1110,39 @@
                 const closeLightboxBtn = document.getElementById('closeLightboxBtn');
                 const lightboxVideo = document.getElementById('lightboxVideo');
 
+                const warningModal = document.getElementById('warningModal');
+                const warningCancel = document.getElementById('warningCancel');
+                const warningProceed = document.getElementById('warningProceed');
+                let pendingVideo = null;
+
+                warningCancel.addEventListener('click', () => {
+                    warningModal.classList.remove('active');
+                    pendingVideo = null;
+                });
+
+                warningProceed.addEventListener('click', () => {
+                    warningModal.classList.remove('active');
+                    if (pendingVideo) {
+                        lightboxVideo.src = 'carousel/' + pendingVideo;
+                        videoLightbox.classList.add('active');
+                        pendingVideo = null;
+                    }
+                });
+
                 const videos = [
                     '1001.webm', '1002.webm', '1003.webm', '1004.webm',
                     '1005.webm', '1006.webm', '1007.webm', '1008.webm',
-                    '1009.webm', '1010.webm', '1011(.webm', '1011.webm', '1012.webm'
+                    '1009.webm', '1010.webm'
                 ];
 
                 videos.forEach(vid => {
+                    const isCensored = vid === '1008.webm';
                     const item = document.createElement('div');
                     item.className = 'explorer-item';
                     item.innerHTML = `
                       <div class="file-thumb">
-                        <video src="carousel/${vid}#t=0.1" preload="metadata" muted playsinline></video>
+                        <video src="carousel/${vid}#t=0.1" preload="metadata" muted playsinline class="${isCensored ? 'blur-video' : ''}"></video>
+                        ${isCensored ? '<div class="censored-overlay">CENSORED</div>' : ''}
                       </div>
                       <div class="file-name">${vid.split('.')[0]}</div>
                     `;
@@ -1005,8 +1156,13 @@
                     });
 
                     item.addEventListener('click', () => {
-                        lightboxVideo.src = 'carousel/' + vid;
-                        videoLightbox.classList.add('active');
+                        if (isCensored) {
+                            pendingVideo = vid;
+                            warningModal.classList.add('active');
+                        } else {
+                            lightboxVideo.src = 'carousel/' + vid;
+                            videoLightbox.classList.add('active');
+                        }
                     });
                     explorerGrid.appendChild(item);
                 });
