@@ -286,9 +286,18 @@
         }
 
         @media (max-width: 768px) {
+            #metricsOverlay {
+                right: 12px;
+                bottom: 12px;
+                transform: scale(0.9);
+                transform-origin: bottom right;
+            }
+
             .project-section {
                 padding: 0 5vw;
                 justify-content: center;
+                min-height: calc(100vh - 180px);
+                padding-bottom: 180px;
             }
 
             .project-title {
@@ -339,8 +348,8 @@
 
         .mac-pulse-btn {
             position: fixed;
-            top: 30px;
-            right: 30px;
+            top: 50%;
+            right: 50%;
             z-index: 99;
             background: transparent;
             color: #fff;
@@ -357,6 +366,7 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             border: none;
             overflow: hidden;
+            transform: translate3d(250px, calc(-32% + 20px), 0);
         }
 
         .mac-pulse-btn::before {
@@ -415,12 +425,147 @@
 
         .mac-pulse-btn:hover {
             background: rgba(40, 40, 40, 0.7);
-            transform: scale(1.05);
+            transform: translate3d(250px, calc(-32% + 20px), 0) scale(1.05);
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.3);
         }
 
         .mac-pulse-btn:hover .icon-ring {
             transform: rotate(90deg);
+        }
+
+        @keyframes promptFloat {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        @keyframes arrowNudge {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            50% {
+                transform: translateX(6px);
+            }
+        }
+
+        .explorer-prompt {
+            position: fixed;
+            top: 50%;
+            right: 50%;
+            z-index: 98;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            padding: 20px 24px;
+            max-width: 460px;
+            color: #fff;
+            background: linear-gradient(135deg, rgba(255, 45, 85, 0.22), rgba(10, 10, 10, 0.86));
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 24px;
+            box-shadow: 0 28px 56px rgba(0, 0, 0, 0.42);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            animation: promptFloat 3.4s ease-in-out infinite;
+            transform: translate(14px, -50%);
+            transform-origin: center;
+            transition: opacity 0.35s ease, transform 0.35s ease;
+            pointer-events: none;
+        }
+
+        .explorer-prompt::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: -12px;
+            width: 24px;
+            height: 24px;
+            background: rgba(33, 14, 21, 0.95);
+            border-top: 1px solid rgba(255, 255, 255, 0.14);
+            border-left: 1px solid rgba(255, 255, 255, 0.14);
+            transform: translateY(-50%) rotate(135deg);
+        }
+
+        .explorer-prompt.hidden {
+            opacity: 0;
+            transform: translate(14px, calc(-50% - 20px)) scale(0.96);
+        }
+
+        .prompt-copy {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .prompt-eyebrow {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.86rem;
+            font-weight: 700;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: #ff8ca7;
+        }
+
+        .prompt-text {
+            font-size: 1.2rem;
+            line-height: 1.45;
+            color: rgba(255, 255, 255, 0.92);
+        }
+
+        .prompt-arrow {
+            flex: 0 0 auto;
+            width: 42px;
+            height: 42px;
+            color: var(--accent);
+            animation: arrowNudge 1.2s ease-in-out infinite;
+        }
+
+        @media (max-width: 768px) {
+            .mac-pulse-btn {
+                top: auto;
+                bottom: 20px;
+                right: auto;
+                left: 18px;
+                transform: none;
+            }
+
+            .mac-pulse-btn:hover {
+                transform: scale(1.05);
+            }
+
+            .explorer-prompt {
+                top: auto;
+                bottom: 88px;
+                left: 18px;
+                right: 118px;
+                max-width: none;
+                width: auto;
+                padding: 16px 18px;
+                transform: none;
+            }
+
+            .explorer-prompt::after {
+                top: auto;
+                bottom: -12px;
+                right: 36px;
+                transform: rotate(225deg);
+            }
+
+            .prompt-text {
+                font-size: 1rem;
+            }
+
+            .explorer-prompt.hidden {
+                transform: translateY(-18px) scale(0.96);
+            }
         }
 
         .file-explorer-modal {
@@ -790,6 +935,18 @@
         <span>File explorer</span>
     </button>
 
+    <div id="explorerPrompt" class="explorer-prompt" aria-hidden="true">
+        <div class="prompt-copy">
+            <span class="prompt-eyebrow">Latest Work</span>
+            <span class="prompt-text">Open File Explorer to browse the newest AI video generations.</span>
+        </div>
+        <svg class="prompt-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 12h12"></path>
+            <path d="m11 5 7 7-7 7"></path>
+        </svg>
+    </div>
+
     <div id="fileExplorerModal" class="file-explorer-modal">
         <div class="file-explorer-window">
             <div class="window-titlebar">
@@ -1099,6 +1256,7 @@
 
             initFileExplorer() {
                 const fileBrowserBtn = document.getElementById('fileBrowserBtn');
+                const explorerPrompt = document.getElementById('explorerPrompt');
                 const fileExplorerModal = document.getElementById('fileExplorerModal');
                 const closeExplorerBtn = document.getElementById('closeExplorerBtn');
 
@@ -1135,7 +1293,8 @@
                 const videos = [
                     '1001.webm', '1002.webm', '1003.webm', '1004.webm',
                     '1005.webm', '1006.webm', '1007.webm', '1008.webm',
-                    '1009.webm', '1010.webm'
+                    '1009.webm', '1010.webm', '1011.webm', '1012.webm',
+                    '1013.webm', '1014.webm'
                 ];
 
                 videos.forEach(vid => {
@@ -1170,7 +1329,15 @@
                     explorerGrid.appendChild(item);
                 });
 
+                const hidePrompt = () => {
+                    if (!explorerPrompt || explorerPrompt.classList.contains('hidden')) return;
+                    explorerPrompt.classList.add('hidden');
+                };
+
+                setTimeout(hidePrompt, 12000);
+
                 fileBrowserBtn.addEventListener('click', () => {
+                    hidePrompt();
                     fileExplorerModal.classList.add('active');
 
                     const btnRect = fileBrowserBtn.getBoundingClientRect();

@@ -1731,17 +1731,20 @@
         });
 
         // Password protection and video transition
-        // Password "animation" loads demo2.mp4 (animation)
-        // Password "liveaction" loads demo.mp4 (live action)
+        // Password "antagonist" loads antagonist.mp4
+        // Password "animation" loads demo2.mp4
+        // Password "liveaction" loads demo.mp4
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const password = document.getElementById('password').value;
 
             let videoSource = '';
-            if (password === 'animation') {
-                videoSource = 'antagonist.mp4'; // Animation video
+            if (password === 'antagonist') {
+                videoSource = 'antagonist.mp4';
+            } else if (password === 'animation') {
+                videoSource = 'demo2.mp4';
             } else if (password === 'liveaction') {
-                videoSource = 'demo.mp4'; // Live action video
+                videoSource = 'demo.mp4';
             } else if (password === 'resume') {
                 // Redirect to comp.html for resume
                 window.location.href = 'comp.html';
