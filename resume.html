@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Jaime Méndez — Arquitecto UX</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* =========================================================
+   APPLE BASE STYLES & THEMING
+   ========================================================= */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      /* LIGHT MODE (Normal) */
+      --bg: #f5f5f7;
+      --card-bg: #ffffff;
+      --text-main: #1d1d1f;
+      --text-sub: #86868b;
+      --nav-bg: rgba(255, 255, 255, 0.8);
+      --nav-border: rgba(0, 0, 0, 0.1);
+      --nav-link: rgba(0, 0, 0, 0.8);
+      --nav-link-hover: #000;
+      --icon-fill: #1d1d1f;
+
+      --badge-bg: rgba(0, 0, 0, 0.06);
+      --badge-text: #1d1d1f;
+
+      --hero-gradient: linear-gradient(180deg, #622A76 0%, #CE0E81 100%);
+      --profile-border: rgba(0, 0, 0, 0.08);
+
+      --btn-primary-bg: #622A76;
+      --btn-primary-text: #fff;
+      --btn-secondary-bg: rgba(0, 0, 0, 0.08);
+      --btn-secondary-text: #1d1d1f;
+      --btn-secondary-hover: rgba(0, 0, 0, 0.15);
+
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', sans-serif;
+    }
+
+    [data-theme="dark"] {
+      /* DARK MODE */
+      --bg: #000000;
+      --card-bg: #1c1c1e;
+      --text-main: #f5f5f7;
+      --text-sub: #86868b;
+      --nav-bg: rgba(0, 0, 0, 0.8);
+      --nav-border: rgba(255, 255, 255, 0.1);
+      --nav-link: rgba(255, 255, 255, 0.8);
+      --nav-link-hover: #fff;
+      --icon-fill: #f5f5f7;
+
+      --badge-bg: rgba(255, 255, 255, 0.1);
+      --badge-text: #f5f5f7;
+
+      --hero-gradient: linear-gradient(180deg, #CE0E81 0%, #a1a1a6 100%);
+      --profile-border: rgba(255, 255, 255, 0.15);
+
+      --btn-primary-bg: #CE0E81;
+      --btn-primary-text: #fff;
+      --btn-secondary-bg: rgba(255, 255, 255, 0.1);
+      --btn-secondary-text: #fff;
+      --btn-secondary-hover: rgba(255, 255, 255, 0.2);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text-main);
+      font-family: var(--font);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    /* =========================================================
+   GLOBAL NAV
+   ========================================================= */
+    .apple-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 44px;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      z-index: 9000;
+      transition: background 0.3s ease;
+    }
+
+    .apple-nav svg.logo {
+      fill: var(--icon-fill);
+      opacity: 0.8;
+      transition: fill 0.3s ease;
+    }
+
+    .apple-nav a {
+      color: var(--nav-link);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      transition: color 0.2s;
+    }
+
+    .apple-nav a:hover,
+    .apple-nav svg.logo:hover {
+      color: var(--nav-link-hover);
+      opacity: 1;
+    }
+
+    .theme-toggle {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--nav-link);
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      transition: color 0.3s;
+    }
+
+    .theme-toggle:hover {
+      color: var(--nav-link-hover);
+    }
+
+    /* =========================================================
+   SUB NAV (Product Nav)
+   ========================================================= */
+    .product-nav {
+      position: sticky;
+      top: 44px;
+      left: 0;
+      right: 0;
+      height: 52px;
+      background: var(--nav-bg);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 8999;
+      border-bottom: 1px solid var(--nav-border);
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+
+    .product-nav .brand {
+      font-size: 21px;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+      color: var(--text-main);
+      transition: color 0.3s;
+    }
+
+    .product-nav .buy-btn {
+      background: var(--btn-primary-bg);
+      color: var(--btn-primary-text);
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: opacity 0.2s, background 0.3s, color 0.3s;
+    }
+
+    .product-nav .buy-btn:hover {
+      opacity: 0.8;
+    }
+
+    /* =========================================================
+   HERO SECTION (2 COLUMNS)
+   ========================================================= */
+    .hero {
+      text-align: center;
+      padding: 100px 20px 60px;
+      min-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 60px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    @media (min-width: 900px) {
+      .hero {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+        padding-top: 140px;
+      }
+    }
+
+    .hero-content {
+      flex: 1;
+      max-width: 480px;
+    }
+
+    .hero-visual {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+    }
+
+    .hero-eyebrow {
+      font-size: 21px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 8px;
+      transition: color 0.3s;
+    }
+
+    .hero-title {
+      font-size: clamp(48px, 8vw, 96px);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      background: var(--hero-gradient);
+      -webkit-background-clip: text;
+      color: transparent;
+      margin-bottom: 24px;
+      transition: background 0.3s;
+    }
+
+    .hero-desc {
+      font-size: clamp(19px, 2.5vw, 24px);
+      font-weight: 500;
+      color: var(--text-sub);
+      margin: 0 auto;
+      line-height: 1.35;
+      transition: color 0.3s;
+    }
+
+    @media (min-width: 900px) {
+      .hero-desc {
+        margin: 0;
+      }
+    }
+
+    /* =========================================================
+   IPHONE MOCKUP
+   ========================================================= */
+    .iphone-frame {
+      position: relative;
+      width: 340px;
+      height: 700px;
+      background: var(--card-bg);
+      border-radius: 54px;
+      /* Outer curve */
+      box-shadow:
+        0 0 0 10px #000,
+        0 0 0 14px #3a3a3c,
+        /* Titanium edge */
+        0 30px 60px rgba(0, 0, 0, 0.3);
+      /* Drop shadow */
+      transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+      transform: perspective(1000px) rotateY(-5deg) rotateX(2deg);
+    }
+
+    .iphone-frame:hover {
+      transform: perspective(1000px) rotateY(-2deg) rotateX(1deg) translateY(-8px);
+    }
+
+    /* Inner Screen Mask */
+    .iphone-screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 54px;
+      /* MUST exactly match iphone-frame outer radius because they share identical boundaries */
+      overflow: hidden;
+      background: var(--bg);
+      z-index: 1;
+    }
+
+    /* Hardware details */
+    .iphone-island {
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 110px;
+      height: 32px;
+      background: #000;
+      border-radius: 16px;
+      z-index: 100;
+    }
+
+    .iphone-home {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 130px;
+      height: 5px;
+      background: rgba(150, 150, 150, 0.4);
+      border-radius: 10px;
+      z-index: 100;
+    }
+
+    /* Glare Layer Overlay (Must be top layer, pointer-events none) */
+    .iphone-glare {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 54px;
+      /* MUST exactly match iphone-frame outer radius */
+      background: linear-gradient(110deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.05) 30%, rgba(255, 255, 255, 0) 50%);
+      z-index: 110;
+      pointer-events: none;
+    }
+
+
+    /* =========================================================
+   IN-APP PROFILE UI 
+   ========================================================= */
+    .app-cover {
+      position: relative;
+      width: 100%;
+      height: 280px;
+      background: url('foto_jaime.jpg') center 20% / cover no-repeat;
+    }
+
+    .app-top-nav {
+      position: absolute;
+      top: 54px;
+      /* Below dynamic island */
+      left: 0;
+      right: 0;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #fff;
+      z-index: 10;
+    }
+
+    .app-top-nav .icon-group {
+      display: flex;
+      gap: 12px;
+    }
+
+    .app-wrapper {
+      position: relative;
+      background: var(--card-bg);
+      border-radius: 28px 28px 0 0;
+      margin-top: -28px;
+      /* Overlaps the cover image, identical to reference */
+      padding: 0 20px 20px;
+      height: calc(100% - 280px + 28px);
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+      z-index: 20;
+    }
+
+
+
+    .app-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 16px;
+      margin-bottom: 2px;
+    }
+
+    .app-name {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+    }
+
+    .app-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .app-btn-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--nav-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-main);
+      background: transparent;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .app-btn-icon:hover {
+      background: var(--badge-bg);
+    }
+
+    .app-role {
+      font-size: 13px;
+      color: var(--text-sub);
+      margin-bottom: 4px;
+    }
+
+    .app-role strong {
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    .app-location {
+      font-size: 11px;
+      color: var(--text-sub);
+      margin-bottom: 12px;
+    }
+
+    .app-rating {
+      font-size: 12px;
+      color: #ff9f0a;
+      /* Apple star */
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 18px;
+    }
+
+    .app-rating span {
+      color: var(--text-sub);
+      font-weight: 400;
+    }
+
+    .app-bio {
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--text-main);
+      margin-bottom: 24px;
+    }
+
+    .app-tabs {
+      display: flex;
+      gap: 16px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-sub);
+      margin-bottom: 6px;
+    }
+
+    .app-tabs .active {
+      color: var(--text-main);
+    }
+
+    .app-tabs-help {
+      font-size: 11px;
+      color: var(--text-sub);
+      margin-bottom: 14px;
+    }
+
+    /* Internal Card */
+    .app-card {
+      background: var(--bg);
+      border: 1px solid var(--nav-border);
+      border-radius: 16px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: background 0.3s, border-color 0.3s;
+    }
+
+    .app-card-img {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      background: rgba(41, 151, 255, 0.1);
+      color: #2997ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .app-card-info {
+      flex: 1;
+    }
+
+    .app-card-info h4 {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 2px;
+    }
+
+    .app-card-info p {
+      font-size: 11px;
+      color: var(--text-sub);
+      margin-bottom: 4px;
+    }
+
+    .app-card-info .price {
+      font-size: 13px;
+      font-weight: 600;
+      color: #2997ff;
+    }
+
+    .app-card-add {
+      color: var(--text-main);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* =========================================================
+   SECTIONS
+   ========================================================= */
+    .section {
+      padding: 100px 20px;
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .section-headline {
+      font-size: clamp(32px, 5vw, 64px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 20px;
+      line-height: 1.1;
+      transition: color 0.3s;
+    }
+
+    .section-sub {
+      font-size: 21px;
+      font-weight: 500;
+      color: var(--text-sub);
+      margin-bottom: 60px;
+      line-height: 1.4;
+      max-width: 800px;
+      transition: color 0.3s;
+    }
+
+    /* =========================================================
+   TILES GRID (BENTO)
+   ========================================================= */
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .bento-card {
+      background: var(--card-bg);
+      border-radius: 24px;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.3s ease;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.02);
+    }
+
+    .bento-card:hover {
+      transform: scale(1.02);
+    }
+
+    .bento-icon {
+      font-size: 40px;
+      margin-bottom: 24px;
+    }
+
+    .bento-title {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+      transition: color 0.3s;
+    }
+
+    .bento-text {
+      font-size: 17px;
+      color: var(--text-sub);
+      line-height: 1.4;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    /* =========================================================
+   EXPERIENCE LIST
+   ========================================================= */
+    .exp-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .exp-item {
+      background: var(--card-bg);
+      border-radius: 24px;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.02);
+    }
+
+    @media (min-width: 768px) {
+      .exp-item {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+
+    .exp-item-content {
+      max-width: 600px;
+    }
+
+    .exp-item h3 {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+      transition: color 0.3s;
+    }
+
+    .exp-item p {
+      font-size: 17px;
+      color: var(--text-sub);
+      line-height: 1.5;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    .exp-badge {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: var(--badge-bg);
+      color: var(--badge-text);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    @media (min-width: 768px) {
+      .exp-badge {
+        margin-top: 0;
+        margin-left: 20px;
+      }
+    }
+
+    /* =========================================================
+   SKILLS GRID
+   ========================================================= */
+    .skills-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .skill-bar-card {
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 20px;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.02);
+    }
+
+    .skill-name {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      transition: color 0.3s;
+    }
+
+    .sk-track {
+      height: 6px;
+      background: var(--nav-border);
+      border-radius: 999px;
+      overflow: hidden;
+      transition: background 0.3s;
+    }
+
+    .sk-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #622A76, #CE0E81);
+      border-radius: 999px;
+      transform-origin: left;
+      transform: scaleX(0);
+      transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .skill-bar-card.in-view .sk-fill {
+      transform: scaleX(1);
+    }
+
+    /* =========================================================
+   FOOTER / CONTACT
+   ========================================================= */
+    .footer {
+      background: var(--card-bg);
+      padding: 80px 20px 120px;
+      text-align: center;
+      margin-top: 80px;
+      transition: background-color 0.3s ease;
+    }
+
+    .footer-title {
+      font-size: clamp(32px, 5vw, 48px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      transition: color 0.3s;
+    }
+
+    .footer-text {
+      font-size: 19px;
+      color: var(--text-sub);
+      margin-bottom: 40px;
+      transition: color 0.3s;
+    }
+
+    .contact-links {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: var(--btn-primary-bg);
+      color: var(--btn-primary-text);
+      padding: 14px 28px;
+      border-radius: 999px;
+      font-size: 17px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: transform 0.2s, background 0.3s, color 0.3s;
+    }
+
+    .btn-primary:hover {
+      transform: scale(1.05);
+    }
+
+    .btn-secondary {
+      background: var(--btn-secondary-bg);
+      color: var(--btn-secondary-text);
+      padding: 14px 28px;
+      border-radius: 999px;
+      font-size: 17px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.2s, color 0.3s;
+    }
+
+    .btn-secondary:hover {
+      background: var(--btn-secondary-hover);
+    }
+
+    /* =========================================================
+   VIDEO SCROLL SHOWCASE (NEW)
+   ========================================================= */
+    .video-showcase {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      /* Let GSAP handle the pin spacing */
+      background: #000;
+      overflow: hidden;
+    }
+
+    .video-sticky {
+      position: relative;
+      height: 100vh;
+      width: 100%;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #000;
+    }
+
+    .video-sticky canvas {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.35;
+      /* Strong purple tint to contrast with white text */
+      filter: blur(12px) contrast(1.2) brightness(0.25) saturate(1.8) sepia(0.8) hue-rotate(280deg);
+    }
+
+    .noise-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      opacity: 0.16;
+      /* INCREASED from 0.08 to make the grain much stronger */
+      mix-blend-mode: overlay;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    /* Apple-style floating text over video */
+    .video-text-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      pointer-events: none;
+      /* Let clicks pass through */
+    }
+
+    .video-msg {
+      position: absolute;
+      color: #ffffff;
+      font-size: clamp(48px, 8vw, 96px);
+      /* Mayor protagonismo */
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      text-align: center;
+      opacity: 0;
+      transform: scale(0.8) translateY(30px);
+      filter: blur(10px);
+      max-width: 1000px;
+      padding: 0 20px;
+      text-shadow: 0 10px 40px rgba(0, 0, 0, 1), 0 4px 15px rgba(0, 0, 0, 0.8);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- GLOBAL NAV -->
+  <nav class="apple-nav">
+    <div class="logo"
+      style="font-size: 16px; font-weight: 700; color: var(--icon-fill); letter-spacing: -1px; cursor: default; user-select: none;">
+      JM</div>
+    <a href="#perfil">Perfil</a>
+    <a href="#recorrido">Recorrido</a>
+    <a href="#habilidades">Habilidades</a>
+    <a href="#experiencia">Experiencia</a>
+
+    <!-- Theme Toggle -->
+    <button id="theme-btn" class="theme-toggle" aria-label="Cambiar modo claro / oscuro">
+      <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+        viewBox="0 0 16 16" style="display:none;">
+        <path
+          d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z" />
+      </svg>
+      <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+        viewBox="0 0 16 16">
+        <path
+          d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z" />
+      </svg>
+    </button>
+  </nav>
+
+  <!-- PRODUCT NAV -->
+  <div class="product-nav">
+    <div class="brand">Jaime Méndez</div>
+    <a href="#contacto" class="buy-btn">Contratar</a>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero" id="perfil">
+    <div class="hero-content">
+      <div class="hero-eyebrow">Perfil Especializado</div>
+      <h1 class="hero-title">Arquitecto UX.</h1>
+      <p class="hero-desc">experiencia en generación de contenidos y análisis de información de
+        soluciones web. Con cédula profesional y vocación de servicio.</p>
+    </div>
+
+    <div class="hero-visual">
+      <!-- IPHONE MOCKUP -->
+      <div class="iphone-frame">
+        <div class="iphone-island"></div>
+        <div class="iphone-home"></div>
+
+        <div class="iphone-screen">
+          <!-- Inside App UI -->
+          <div class="app-cover">
+            <div class="app-top-nav">
+              <!-- Botones decorativos eliminados por claridad de UX -->
+            </div>
+          </div>
+
+          <div class="app-wrapper">
+
+            <div class="app-header">
+              <div>
+                <h2 class="app-name">Jaime Méndez</h2>
+                <div class="app-role">Arquitecto de Experiencias <strong>UX/UI</strong></div>
+              </div>
+              <div class="app-actions">
+                <a href="mailto:anallely.najera@ine.mx,arlette.lopez@ine.mx?subject=Postulación%20Arquitecto%20de%20Experiencias%20de%20Usuario"
+                  target="_blank" rel="noopener noreferrer" class="app-btn-icon"><svg width="18" height="18" fill="none"
+                    stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path
+                      d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z">
+                    </path>
+                  </svg></a>
+                <a href="mailto:anallely.najera@ine.mx,arlette.lopez@ine.mx?subject=Postulación%20Arquitecto%20de%20Experiencias%20de%20Usuario"
+                  target="_blank" rel="noopener noreferrer" class="app-btn-icon"><svg width="18" height="18" fill="none"
+                    stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z"></path>
+                  </svg></a>
+              </div>
+            </div>
+
+            <div class="app-location">Sur CDMX (Disponibilidad)</div>
+
+            <div class="app-rating">
+              🥇Cuento con Cédula Profesional <span>·✅</span>
+            </div>
+
+            <div class="app-bio">
+              Profesional en composición visual y herramientas de IA, enfocado al UX. Especialista en optimizar
+              interacción y flujos de usuarios para generar narrativas visuales e interfaces usables de alto impacto.
+            </div>
+
+            <div class="app-tabs">
+              <span class="active">UX/UI</span> <span>Contenidos Web</span>
+            </div>
+            <div class="app-tabs-help">
+              Pulsa la tarjeta para enviar un correo de contacto o descargar CV.
+            </div>
+
+            <div class="app-card">
+              <div class="app-card-img">
+                <!-- User icon -->
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2Z"
+                    fill="currentColor" />
+                  <path
+                    d="M4.271 18.3458C4.271 18.3458 6.5 15.5 12 15.5C17.5 15.5 19.729 18.3458 19.729 18.3458C20.4079 19.2359 19.7735 20.5 18.6534 20.5H5.34657C4.22652 20.5 3.59212 19.2359 4.271 18.3458Z"
+                    fill="currentColor" />
+                </svg>
+              </div>
+              <div class="app-card-info">
+                <h4>Generación de Contenidos Web</h4>
+                <p>Disponibilidad de Horario</p>
+                <span class="price">Inmediata</span>
+              </div>
+              <a href="CV%20INE.pdf" download="CV_Jaime_Mendez.pdf" class="app-card-add"
+                style="display: flex; align-items: center; justify-content: center; text-decoration: none;"
+                title="Descargar CV en PDF">
+                <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <path d="M12 8v6m0 0l-2.5-2.5M12 14l2.5-2.5M8 17h8"></path>
+                </svg>
+              </a>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- GLARE MUST BE ON TOP of screen, but pointer-events:none -->
+        <div class="iphone-glare"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VIDEO SHOWCASE -->
+  <section class="video-showcase" id="recorrido">
+    <div class="video-sticky">
+      <canvas id="hero-canvas"></canvas>
+      <div class="noise-overlay"></div>
+
+      <div class="video-text-container">
+        <div class="video-msg msg-1">Interfaces intuitivas.</div>
+        <div class="video-msg msg-2">Análisis de información sólido.</div>
+        <div class="video-msg msg-3">Soluciones web centradas en la ciudadanía.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BENTO GRID (Tiles) -->
+  <section class="section" id="habilidades">
+    <h2 class="section-headline">Conoce al candidato.</h2>
+    <p class="section-sub">Atributos técnicos e interpersonales para la construcción de interfaces efectivas.</p>
+
+    <div class="bento-grid">
+      <div class="bento-card">
+        <div class="bento-icon">🎬</div>
+        <h3 class="bento-title">Narrativa Visual (VFX)</h3>
+        <p class="bento-text">Sólida capacidad para guiar la atención del usuario e iterar prototipos, traduciendo lo
+          complejo en historias visuales claras.</p>
+      </div>
+      <div class="bento-card">
+        <div class="bento-icon">🤖</div>
+        <h3 class="bento-title">Interacción AI Integrada</h3>
+        <p class="bento-text">Experiencia práctica optimizando la interacción humano-máquina mediante generación de
+          contenido avanzado y flujos AI guiados.</p>
+      </div>
+      <div class="bento-card">
+        <div class="bento-icon">🏠</div>
+        <h3 class="bento-title">Análisis de Comportamiento</h3>
+        <p class="bento-text">Levantamiento real de pain points, diseño basado en datos del cliente y optimización del
+          journey (experiencia comprobada en entornos reales de hospedaje).</p>
+      </div>
+      <div class="bento-card">
+        <div class="bento-icon">🤝</div>
+        <h3 class="bento-title">Trabajo Multidisciplinario</h3>
+        <p class="bento-text">Colaboración dinámica con equipos técnicos y creativos altamente especializados para
+          asegurar la materialización de un producto eficiente.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section class="section">
+    <h2 class="section-headline">Capacidades clave.</h2>
+    <p class="section-sub">Construido para destacar en entornos exigentes.</p>
+
+    <div class="skills-container">
+      <div class="skill-bar-card" data-pct="0.95">
+        <div class="skill-name">Arquitectura de Información</div>
+        <div class="sk-track">
+          <div class="sk-fill" style="--pct:95%"></div>
+        </div>
+      </div>
+      <div class="skill-bar-card" data-pct="0.92">
+        <div class="skill-name">Análisis UX/UI</div>
+        <div class="sk-track">
+          <div class="sk-fill" style="--pct:92%"></div>
+        </div>
+      </div>
+      <div class="skill-bar-card" data-pct="0.90">
+        <div class="skill-name">Gestión de Contenidos Web</div>
+        <div class="sk-track">
+          <div class="sk-fill" style="--pct:90%"></div>
+        </div>
+      </div>
+      <div class="skill-bar-card" data-pct="0.88">
+        <div class="skill-name">Comunicación efectiva</div>
+        <div class="sk-track">
+          <div class="sk-fill" style="--pct:88%"></div>
+        </div>
+      </div>
+      <div class="skill-bar-card" data-pct="0.86">
+        <div class="skill-name">Soluciones Multi-plataforma</div>
+        <div class="sk-track">
+          <div class="sk-fill" style="--pct:86%"></div>
+        </div>
+      </div>
+      <div class="skill-bar-card" data-pct="0.82">
+        <div class="skill-name">Diseño Centrado en el Usuario</div>
+        <div class="sk-track">
+          <div class="sk-fill" style="--pct:82%"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section class="section" id="experiencia">
+    <h2 class="section-headline">Lo que he construido.</h2>
+    <p class="section-sub">Soluciones enfocadas en mejorar la usabilidad y la democratización de la información.</p>
+
+    <div class="exp-list">
+      <div class="exp-item">
+        <div class="exp-item-content">
+          <h3>Compositor y Artista Digital</h3>
+          <p><strong>Ingenuity Studios (3 años):</strong> Desarrollo de producciones visuales centradas en impactar al
+            espectador. Optimización de la claridad narrativa trabajando con Nuke, After Effects y Unreal Engine bajo
+            metodologías de retroalimentación constante e iteración técnica.</p>
+        </div>
+        <div class="exp-badge">Storytelling Visual</div>
+      </div>
+      <div class="exp-item">
+        <div class="exp-item-content">
+          <h3>Análisis de Usuarios y UX Digital</h3>
+          <p><strong>Bienes Raíces / Airbnb (Proyecto Propio):</strong> Optimización de la experiencia del huésped en
+            plataforma, identificando dudas frecuentes y fricciones en el flujo de reserva. Las mejoras de copywriting e
+            interfaces visuales se tradujeron en una mayor tasa de conversión.</p>
+        </div>
+        <div class="exp-badge">Investigación + Pain Points</div>
+      </div>
+      <div class="exp-item">
+        <div class="exp-item-content">
+          <h3>Integración de I.A. en Flujos de Usuario</h3>
+          <p><strong>Generación de Contenido Avanzado:</strong> Creación de flujos de trabajo e interfaces intuitivas
+            que simplifican el uso de inteligencia artificial para usos creativos (ComfyUI), demostrando la capacidad de
+            mejorar la interacción humano-máquina a través de diseño lógico.</p>
+        </div>
+        <div class="exp-badge">Innovación + AI</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer" id="contacto">
+    <h2 class="footer-title">Hablemos.</h2>
+    <p class="footer-text">Pachuca / Mineral de la Reforma · Disponibilidad inmediata</p>
+    <div class="contact-links">
+      <a href="mailto:jaime.castro@humanview.studio?subject=Propuestas%20de%20de%20trabajo%" class="btn-primary">Enviar
+        Correo</a>
+      <a href="#" class="btn-secondary" title="Prueba los casos de estudio de Diseño (Próximamente)">📂 Casos de Estudio
+        (Mini Portafolio)</a>
+    </div>
+  </footer>
+
+  <script>
+    /* ============================================================
+       SKILL BARS ANIMATION ON SCROLL
+       ============================================================ */
+    (function () {
+      const cards = document.querySelectorAll('.skill-bar-card');
+      const obs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            const card = e.target;
+            const pct = card.dataset.pct;
+            const fill = card.querySelector('.sk-fill');
+            if (fill) fill.style.width = (parseFloat(pct) * 100) + '%';
+            card.classList.add('in-view');
+            obs.unobserve(card);
+          }
+        });
+      }, { threshold: 0.3 });
+      cards.forEach(c => obs.observe(c));
+    })();
+
+    /* ============================================================
+       THEME TOGGLE LOGIC
+       ============================================================ */
+    (function () {
+      const btn = document.getElementById('theme-btn');
+      const moon = document.getElementById('moon-icon');
+      const sun = document.getElementById('sun-icon');
+
+      // Set light mode as default, check local storage or system preference
+      let currentTheme = localStorage.getItem('theme');
+      if (!currentTheme) {
+        currentTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+
+      function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        if (theme === 'dark') {
+          moon.style.display = 'none';
+          sun.style.display = 'block';
+        } else {
+          sun.style.display = 'none';
+          moon.style.display = 'block';
+        }
+      }
+
+      // Initial application
+      applyTheme(currentTheme);
+
+      // Button click
+      btn.addEventListener('click', () => {
+        const newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        applyTheme(newTheme);
+      });
+    })();
+  </script>
+
+  <!-- GSAP and ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <script>
+    /* ============================================================
+       VIDEO SCROLL ANIMATION (IMAGE SEQUENCE)
+       ============================================================ */
+    (function () {
+      gsap.registerPlugin(ScrollTrigger);
+
+      const canvas = document.getElementById("hero-canvas");
+      if (!canvas) return;
+      const context = canvas.getContext("2d");
+
+      const frameCount = 120;
+      const currentFrame = index => `frames/frame_${(index).toString().padStart(4, '0')}.jpg`;
+
+      const images = [];
+      const sequence = { frame: 0 };
+
+      for (let i = 0; i < frameCount; i++) {
+        const img = new Image();
+        img.src = currentFrame(i);
+        images.push(img);
+      }
+
+      images[0].onload = render;
+
+      function render() {
+        if (!images[sequence.frame] || !images[sequence.frame].complete) return;
+        const img = images[sequence.frame];
+
+        // Scale image to cover canvas (like object-fit: cover)
+        const canvasRatio = canvas.width / canvas.height;
+        const imgRatio = img.width / img.height;
+        let w, h;
+        if (canvasRatio > imgRatio) {
+          w = canvas.width;
+          h = canvas.width / imgRatio;
+        } else {
+          w = canvas.height * imgRatio;
+          h = canvas.height;
+        }
+        const x = (canvas.width - w) / 2;
+        const y = (canvas.height - h) / 2;
+
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(img, x, y, w, h);
+      }
+
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        render();
+      }
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas(); // init size
+
+      // Setup GSAP sequence timeline linked to scroll
+      let tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".video-showcase",
+          start: "top top",
+          end: "+=400%", // The section will be pinned for 4 times the viewport height
+          scrub: 1.5, // Smooth inertia
+          pin: true, // Blocks natural scroll until animation finishes!
+        }
+      });
+
+      // Background sequence
+      tl.to(sequence, {
+        frame: frameCount - 1,
+        snap: "frame",
+        ease: "none",
+        onUpdate: render,
+        duration: frameCount
+      }, 0);
+
+      // Cinematic Text animations (synchronized to exactly fit within the 120 frame duration)
+      // Mensaje 1
+      tl.to(".msg-1", { opacity: 1, scale: 1, filter: "blur(0px)", duration: 15, y: 0 }, 5)     // Entra en el frame 5
+        .to(".msg-1", { opacity: 0, scale: 1.1, filter: "blur(10px)", duration: 10, y: -20 }, 30) // Sale en el frame 30
+        // Mensaje 2
+        .to(".msg-2", { opacity: 1, scale: 1, filter: "blur(0px)", duration: 15, y: 0 }, 45)    // Entra en el frame 45
+        .to(".msg-2", { opacity: 0, scale: 1.1, filter: "blur(10px)", duration: 10, y: -20 }, 70) // Sale en el frame 70
+        // Mensaje 3
+        .to(".msg-3", { opacity: 1, scale: 1, filter: "blur(0px)", duration: 15, y: 0 }, 85)    // Entra en el frame 85
+        .to(".msg-3", { opacity: 0, scale: 1.1, filter: "blur(10px)", duration: 15, y: -20 }, 105); // Sale en el frame 105
+
+    })();
+  </script>
+</body>
+
+</html>

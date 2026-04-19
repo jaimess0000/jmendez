@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TikTok Style Fixed Carousel Experiment</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!--
+    TikTok-like fixed carousel UI/UX
+    - Main video always centered
+    - Left/right videos fixed at screen sides
+    - Hover highlight animation on main video
+    - Blurry floating video background
+    - TikTok icons for highlighted video (SVG, transparent, animated)
+    - Heart pop animation on like
+    - Loads all videos from carousel folder
+    - Simple, maintainable code
+  -->
+  <style>
+    body {
+      margin: 0;
+      background: #181818;
+      min-height: 100vh;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      overflow: hidden;
+    }
+    .bg-blur {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      filter: blur(32px) brightness(0.7) saturate(1.2);
+      object-fit: cover;
+      pointer-events: none;
+      transition: opacity 0.5s;
+    }
+    .carousel-fixed {
+      position: relative;
+      z-index: 1;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .carousel-side {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 180px;
+      height: 320px;
+      border-radius: 18px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+      background: #222;
+      overflow: hidden;
+      opacity: 0.6;
+      transition: opacity 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .carousel-side video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background: #000;
+      border-radius: 18px;
+      display: block;
+    }
+    /* Positioning for 5 videos */
+    .carousel-left-2 { left: 8px; z-index: 1; width: 120px; height: 220px; opacity: 0.3; }
+    .carousel-left-1 { left: 260px; z-index: 2; width: 220px; height: 380px; opacity: 0.85; }
+    .carousel-right-1 { right: 260px; z-index: 2; width: 220px; height: 380px; opacity: 0.85; }
+    .carousel-right-2 { right: 8px; z-index: 1; width: 120px; height: 220px; opacity: 0.3; }
+    .carousel-center { z-index: 3; }
+    /* Coverflow effect: larger side videos next to center, smaller at edges */
+    .carousel-center {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 320px;
+      height: 570px;
+      border-radius: 24px;
+      box-shadow: 0 8px 48px rgba(0,0,0,0.5);
+      background: #222;
+      overflow: hidden;
+      opacity: 1;
+      z-index: 2;
+      border: 3px solid #ff2d55;
+      transition: border 0.3s, box-shadow 0.3s, transform 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .carousel-center video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background: #000;
+      border-radius: 24px;
+      display: block;
+    }
+    .carousel-center.hovered {
+      box-shadow: 0 0 64px #ff2d55, 0 8px 48px rgba(0,0,0,0.5);
+      border-color: #fff;
+      transform: translate(-50%, -50%) scale(1.07);
+    }
+    /* Animated outline effect when liked */
+    .carousel-center.liked {
+      animation: likedOutline 0.6s cubic-bezier(.4,0,.2,1);
+      border-color: #ff2d55;
+      box-shadow: 0 0 32px #ff2d55, 0 8px 48px rgba(0,0,0,0.5);
+    }
+    @keyframes likedOutline {
+      0% {
+        border-width: 3px;
+        box-shadow: 0 0 0 #ff2d55;
+      }
+      40% {
+        border-width: 8px;
+        box-shadow: 0 0 32px #ff2d55;
+      }
+      80% {
+        border-width: 8px;
+        box-shadow: 0 0 64px #ff2d55;
+      }
+      100% {
+        border-width: 3px;
+        box-shadow: 0 0 32px #ff2d55, 0 8px 48px rgba(0,0,0,0.5);
+      }
+    }
+    .tiktok-icons {
+      position: absolute;
+      right: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      z-index: 3;
+      align-items: center;
+    }
+    .tiktok-icon {
+      width: 54px;
+      height: 54px;
+      background: rgba(30,30,30,0.45);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+      border: none;
+      backdrop-filter: blur(4px);
+      opacity: 0.95;
+      position: relative;
+      overflow: visible;
+    }
+    .tiktok-icon svg {
+      width: 28px;
+      height: 28px;
+      display: block;
+    }
+    .tiktok-icon.heart-pop {
+      animation: heartPop 0.4s cubic-bezier(.4,0,.2,1);
+    }
+    @keyframes heartPop {
+      0% { transform: scale(1); }
+      60% { transform: scale(1.4); }
+      100% { transform: scale(1); }
+    }
+    .tiktok-icon:hover {
+      background: #ff2d55cc;
+      opacity: 1;
+    }
+    .carousel-controls {
+      position: absolute;
+      bottom: 48px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 18px;
+      z-index: 3;
+    }
+    .carousel-btn {
+      background: #222;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      font-size: 2rem;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      transition: background 0.2s;
+    }
+    .carousel-btn:hover {
+      background: #ff2d55;
+      color: #fff;
+    }
+    @media (max-width: 600px) {
+      .carousel-fixed {
+        flex-direction: row;
+        align-items: center; /* Vertically center carousel */
+        justify-content: center;
+        height: 100vh;
+      }
+      .carousel-side {
+        width: 44px;
+        height: 60px;
+        position: static;
+        margin: 0 2px;
+        opacity: 0.7;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        align-self: flex-end; /* Side video not centered */
+      }
+      /* Hide extra side videos on mobile and style main/side video sizes */
+      @media (max-width: 600px) {
+        #carouselLeft2, #carouselRight2 {
+          display: none !important;
+        }
+        .carousel-fixed {
+          justify-content: center;
+          align-items: center;
+          position: fixed;
+          inset: 0;
+          width: 100vw;
+          height: 100vh;
+          display: flex;
+        }
+        .carousel-center {
+          width: 90vw;
+          max-width: 340px;
+          height: 60vh;
+          min-height: 260px;
+          margin: 0 auto;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+          left: 0;
+          top: 0;
+          transform: none;
+          z-index: 2;
+        }
+        .carousel-center video {
+          position: static;
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+          background: #000;
+          border-radius: 24px;
+          display: block;
+          box-shadow: 0 0 32px #ff2d55;
+          transition: box-shadow 0.3s;
+        }
+        .carousel-center.fullscreen {
+          width: 100vw !important;
+          max-width: 100vw !important;
+          height: 100vh !important;
+          min-height: 100vh !important;
+          z-index: 99;
+          background: #000;
+        }
+        .carousel-side.hide-on-fullscreen {
+          display: none !important;
+        }
+        .carousel-side {
+          width: 60px;
+          height: 80px;
+          margin: 0 2vw;
+          align-self: flex-end;
+          position: absolute;
+          left: 5vw;
+          bottom: 8vh;
+          transform: none;
+        }
+      }
+      .carousel-center {
+        width: 220px;
+        height: 340px;
+        position: static;
+        margin: 0 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        /* Prevent layout shift when video is played */
+        transition: all 0.3s;
+      }
+      .carousel-center video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Remove black bars, fill container */
+        background: transparent;
+        border-radius: 24px;
+        display: block;
+        box-shadow: 0 0 32px #ff2d55;
+        transition: box-shadow 0.3s;
+      }
+      .carousel-center.liked video {
+        animation: glowPulse 0.6s cubic-bezier(.4,0,.2,1);
+        box-shadow: 0 0 64px #ff2d55, 0 0 32px #fff;
+      }
+      @keyframes glowPulse {
+        0% {
+          box-shadow: 0 0 0 #ff2d55;
+        }
+        40% {
+          box-shadow: 0 0 64px #ff2d55, 0 0 32px #fff;
+        }
+        80% {
+          box-shadow: 0 0 32px #ff2d55;
+        }
+        100% {
+          box-shadow: 0 0 32px #ff2d55;
+        }
+      }
+      .tiktok-icons {
+        right: 8px;
+        gap: 18px;
+      }
+      .tiktok-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 1.2rem;
+      }
+      .tiktok-icon svg {
+        width: 18px;
+        height: 18px;
+      }
+      .carousel-controls {
+        bottom: 18px;
+        display: none !important; /* Hide nav arrows on mobile */
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Blurry floating video background -->
+  <video id="bgVideo" class="bg-blur" autoplay loop muted playsinline></video>
+  <div class="carousel-fixed">
+    <!-- Five video containers: two left, one center, two right -->
+    <div class="carousel-side carousel-left-2" id="carouselLeft2"></div>
+    <div class="carousel-side carousel-left-1" id="carouselLeft1"></div>
+    <div class="carousel-center" id="carouselCenter"></div>
+    <div class="carousel-side carousel-right-1" id="carouselRight1"></div>
+    <div class="carousel-side carousel-right-2" id="carouselRight2"></div>
+    <div class="carousel-controls">
+      <button class="carousel-btn" id="prevBtn">&#8592;</button>
+      <button class="carousel-btn" id="nextBtn">&#8594;</button>
+    </div>
+  </div>
+  <script>
+    // --- Use only current video files from carousel folder ---
+    // Dynamically load all .mp4 files from carousel folder
+    // (Update this list if new videos are added)
+    const fileList = [
+       "carousel/1001.webm",
+        "carousel/1002.webm",
+  "carousel/1003.webm",
+  "carousel/1004.webm",
+  "carousel/1005.webm",
+  "carousel/1006.webm",
+  "carousel/1007.webm",     
+  "carousel/1008.webm",
+  "carousel/1009.webm",
+  "carousel/1010.webm",
+  "carousel/1011.webm",
+  "carousel/1012.webm"
+
+    ];
+    const sources = fileList.map(f => ({ type: 'video', src: f }));
+
+    let current = 0;
+    const videoCache = {};
+
+    // Set background video (first video found)
+    const bgVideo = document.getElementById('bgVideo');
+    function setBgVideo(idx) {
+      const vidSrc = sources[idx].src;
+      const fallbackSrc = sources[idx].fallback;
+      // Try webm first, fallback to mp4 if webm fails
+      bgVideo.src = vidSrc;
+      bgVideo.onerror = function() {
+        if (bgVideo.src !== fallbackSrc) {
+          bgVideo.src = fallbackSrc;
+          bgVideo.load();
+        }
+      };
+      bgVideo.load();
+    }
+    setBgVideo(current);
+
+    // Preload adjacent videos for smoother navigation
+    function preloadNeighborVideos() {
+      const indicesToPreload = [
+        (current - 2 + sources.length) % sources.length,
+        (current - 1 + sources.length) % sources.length,
+        (current + 1) % sources.length,
+        (current + 2) % sources.length
+      ];
+      for (const idx of indicesToPreload) {
+        if (sources[idx] && !videoCache[idx]) {
+          const vid = document.createElement('video');
+          vid.src = sources[idx].src;
+          vid.loop = true;
+          vid.muted = true;
+          vid.playsInline = true;
+          vid.preload = 'auto';
+          vid.load(); // Start loading the video data
+          videoCache[idx] = vid;
+        }
+      }
+    }
+
+    // Render fixed carousel with 5 videos (2 left, 2 right, 1 center)
+    function renderFixedCarousel() {
+      // Pause all cached videos first
+      for (const key in videoCache) {
+        if (videoCache.hasOwnProperty(key)) {
+          const vid = videoCache[key];
+          if (vid && typeof vid.pause === 'function') {
+            vid.pause();
+          }
+        }
+      }
+
+      // Helper to render a side video
+      function renderSide(divId, vidIdx) {
+        const div = document.getElementById(divId);
+        div.innerHTML = '';
+        // Only show side video if there are at least 5 videos
+        if (sources.length < 5 || vidIdx < 0 || vidIdx >= sources.length) {
+          div.style.opacity = '0';
+          div.style.background = 'transparent';
+          div.innerHTML = '';
+          div.onclick = null;
+          return;
+        }
+        div.style.opacity = '0.6';
+        div.style.background = '#222';
+        let vid = videoCache[vidIdx];
+        if (!vid) {
+          vid = document.createElement('video');
+          vid.src = sources[vidIdx].src;
+          vid.loop = true;
+          vid.muted = true;
+          vid.playsInline = true;
+          videoCache[vidIdx] = vid;
+        }
+        div.appendChild(vid);
+        div.onclick = () => {
+          current = vidIdx;
+          setBgVideo(current);
+          renderFixedCarousel();
+        };
+      }
+
+      // Indices for 5 videos
+      const left2Idx = (current - 2 + sources.length) % sources.length;
+      const left1Idx = (current - 1 + sources.length) % sources.length;
+      const right1Idx = (current + 1) % sources.length;
+      const right2Idx = (current + 2) % sources.length;
+
+      preloadNeighborVideos();
+
+      // User agent detection for iPhone/Android
+      const isMobileDevice = /iphone|ipad|ipod|android/i.test(navigator.userAgent);
+
+      // Render sides
+      if (window.innerWidth <= 600 || window.innerHeight < window.innerWidth) {
+        // Only show one side video on mobile or horizontal view
+        renderSide('carouselLeft2', -1); // Hide
+        renderSide('carouselLeft1', left1Idx);
+        renderSide('carouselRight1', right1Idx);
+        renderSide('carouselRight2', -1); // Hide
+
+        // Make side videos much smaller on iPhone/Android
+        if (isMobileDevice) {
+          document.getElementById('carouselLeft1').style.width = '28px';
+          document.getElementById('carouselLeft1').style.height = '36px';
+          document.getElementById('carouselRight1').style.width = '28px';
+          document.getElementById('carouselRight1').style.height = '36px';
+          document.getElementById('carouselLeft2').style.width = '18px';
+          document.getElementById('carouselLeft2').style.height = '24px';
+          document.getElementById('carouselRight2').style.width = '18px';
+          document.getElementById('carouselRight2').style.height = '24px';
+        }
+      } else {
+        document.getElementById('carouselLeft1').style.width = '';
+        document.getElementById('carouselLeft1').style.height = '';
+        document.getElementById('carouselRight1').style.width = '';
+        document.getElementById('carouselRight1').style.height = '';
+        renderSide('carouselLeft2', left2Idx);
+        renderSide('carouselLeft1', left1Idx);
+        renderSide('carouselRight1', right1Idx);
+        renderSide('carouselRight2', right2Idx);
+      }
+
+      // Center media (current)
+      const centerDiv = document.getElementById('carouselCenter');
+      centerDiv.innerHTML = '';
+      let centerMedia = videoCache[current];
+      if (!centerMedia) {
+        centerMedia = document.createElement('video');
+        videoCache[current] = centerMedia;
+      }
+      centerMedia.loop = true;
+      centerMedia.playsInline = true;
+      centerMedia.setAttribute('webkit-playsinline', 'true'); // Prevent iOS fullscreen popup
+      centerMedia.autoplay = true;
+      // iOS autoplay fix: must be muted to autoplay
+      centerMedia.muted = true;
+      // Remove controls on mobile to prevent layout shift
+      if (window.innerWidth > 600) {
+        centerMedia.controls = true;
+        centerMedia.muted = false; // Enable audio on desktop
+      }
+      // Prefer webm, fallback to mp4
+      centerMedia.src = sources[current].src;
+      centerMedia.onerror = function() {
+        if (centerMedia.src !== sources[current].fallback) {
+          centerMedia.src = sources[current].fallback;
+          centerMedia.load();
+        }
+      };
+      centerDiv.appendChild(centerMedia);
+      centerMedia.play();
+
+      // iOS: Enable audio after first user gesture
+      if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
+        document.body.addEventListener('touchend', function enableAudioOnce() {
+          centerMedia.muted = false;
+          centerMedia.play();
+          document.body.removeEventListener('touchend', enableAudioOnce);
+        }, { once: true });
+      }
+
+      // Double tap to fullscreen and hide side video on mobile
+      let lastTap = 0;
+      centerMedia.addEventListener('touchend', function(e) {
+        const now = Date.now();
+        if (now - lastTap < 350) {
+          // Double tap detected
+          centerDiv.classList.toggle('fullscreen');
+          document.getElementById('carouselLeft1').classList.toggle('hide-on-fullscreen');
+          document.getElementById('carouselRight1').classList.toggle('hide-on-fullscreen');
+        }
+        lastTap = now;
+      });
+
+      // Reload video on click
+      // Disabled to prevent video moving from its position
+      // centerMedia.onclick = () => {
+      //   centerMedia.pause();
+      //   centerMedia.currentTime = 0;
+      //   centerMedia.play();
+      // };
+
+      // TikTok icons (SVG, animated, transparent)
+      const iconsDiv = document.createElement('div');
+      iconsDiv.className = 'tiktok-icons';
+      iconsDiv.innerHTML = `
+        <button class="tiktok-icon" id="likeBtn" title="Like">
+          <svg viewBox="0 0 48 48" fill="none">
+            <path d="M24 42s-1.5-1.3-7.2-6.2C7.7 30.1 4 25.7 4 20.5 4 14.7 8.7 10 14.5 10c3.1 0 6.1 1.5 7.5 4.1C23.4 11.5 26.4 10 29.5 10 35.3 10 40 14.7 40 20.5c0 5.2-3.7 9.6-12.8 15.3C25.5 40.7 24 42 24 42z" stroke="#fff" stroke-width="3" fill="#ff2d55"/>
+          </svg>
+        </button>
+        <button class="tiktok-icon" title="Comment">
+          <svg viewBox="0 0 48 48" fill="none">
+            <path d="M8 38V12a4 4 0 0 1 4-4h24a4 4 0 0 1 4 4v16a4 4 0 0 1-4 4H16l-8 6z" stroke="#fff" stroke-width="3" fill="#222"/>
+          </svg>
+        </button>
+        <button class="tiktok-icon" title="Bookmark">
+          <svg viewBox="0 0 48 48" fill="none">
+            <path d="M12 8a4 4 0 0 1 4-4h16a4 4 0 0 1 4 4v32l-12-8-12 8V8z" stroke="#fff" stroke-width="3" fill="#222"/>
+          </svg>
+        </button>
+      `;
+      centerDiv.appendChild(iconsDiv);
+
+      // Heart pop animation on like
+      const likeBtn = iconsDiv.querySelector('#likeBtn');
+      likeBtn.onclick = () => {
+        likeBtn.classList.add('heart-pop');
+        setTimeout(() => likeBtn.classList.remove('heart-pop'), 400);
+      };
+
+      // Highlight animation on hover for main video
+      centerDiv.onmouseenter = () => {
+        centerDiv.classList.add('hovered');
+      };
+      centerDiv.onmouseleave = () => {
+        centerDiv.classList.remove('hovered');
+      };
+
+      // Render right sides
+      renderSide('carouselRight1', right1Idx);
+      renderSide('carouselRight2', right2Idx);
+    }
+    renderFixedCarousel();
+
+    // Carousel controls
+    document.getElementById('prevBtn').onclick = () => {
+      current = (current - 1 + sources.length) % sources.length;
+      setBgVideo(current);
+      renderFixedCarousel();
+    };
+    document.getElementById('nextBtn').onclick = () => {
+      current = (current + 1) % sources.length;
+      setBgVideo(current);
+      renderFixedCarousel();
+    };
+
+    // Responsive background video sizing
+    function resizeBg() {
+      bgVideo.style.width = window.innerWidth + 'px';
+      bgVideo.style.height = window.innerHeight + 'px';
+    }
+    window.addEventListener('resize', resizeBg);
+    resizeBg();
+
+    // --- Swipe navigation for mobile devices ---
+    // Simple touch event listeners for left/right swipe
+    // Documented for maintainability: see /maintenance/carousel-doc.md
+    let touchStartX = null;
+    let touchEndX = null;
+    function handleGesture() {
+      if (touchStartX !== null && touchEndX !== null) {
+        const dx = touchEndX - touchStartX;
+        if (Math.abs(dx) > 50) { // Minimum swipe distance
+          if (dx < 0) {
+            // Swipe left: next video
+            current = (current + 1) % sources.length;
+            setBgVideo(current);
+            renderFixedCarousel();
+          } else {
+            // Swipe right: previous video
+            current = (current - 1 + sources.length) % sources.length;
+            setBgVideo(current);
+            renderFixedCarousel();
+          }
+        }
+      }
+      touchStartX = null;
+      touchEndX = null;
+    }
+    document.querySelector('.carousel-fixed').addEventListener('touchstart', function(e) {
+      if (e.touches.length === 1) {
+        touchStartX = e.touches[0].clientX;
+      }
+    });
+    document.querySelector('.carousel-fixed').addEventListener('touchend', function(e) {
+      if (e.changedTouches.length === 1) {
+        touchEndX = e.changedTouches[0].clientX;
+        handleGesture();
+      }
+    });
+  </script>
+</body>
+</html>
