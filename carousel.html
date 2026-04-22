@@ -1145,10 +1145,19 @@
                 let velX = 0, velY = 0;
                 let lastX, lastY, lastTime;
                 let animFrame = null;
+                const getCurrentTranslate = () => {
+                    const transform = getComputedStyle(btn).transform;
+                    if (!transform || transform === 'none') return { x: 0, y: 0 };
+                    const matrix = new DOMMatrixReadOnly(transform);
+                    return { x: matrix.m41, y: matrix.m42 };
+                };
 
                 const dragStart = (e) => {
                     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
                     const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                    const currentPosition = getCurrentTranslate();
+                    currentX = currentPosition.x;
+                    currentY = currentPosition.y;
                     startX = clientX - currentX;
                     startY = clientY - currentY;
                     lastX = clientX;
@@ -1164,10 +1173,12 @@
                 const dragMove = (e) => {
                     if (!isDragging) return;
                     e.preventDefault();
-                    hasDragged = true;
 
                     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
                     const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                    const dragDistance = Math.hypot(clientX - lastX, clientY - lastY);
+                    if (!hasDragged && dragDistance < 4) return;
+                    hasDragged = true;
 
                     const now = performance.now();
                     const dt = now - lastTime;
@@ -1191,6 +1202,10 @@
                     if (!isDragging) return;
                     isDragging = false;
                     btn.style.cursor = 'grab';
+                    if (!hasDragged) {
+                        btn.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                        return;
+                    }
 
                     lastTime = performance.now();
                     animFrame = requestAnimationFrame(inertia);

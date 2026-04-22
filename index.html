@@ -1066,6 +1066,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-family: inherit;
+            flex: 0 0 auto;
         }
 
         .button:hover {
@@ -1307,8 +1308,10 @@
 
         @media (max-height: 600px) {
             .login-form {
-                position: relative;
-                bottom: auto;
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
                 margin-top: 20px;
             }
         }
