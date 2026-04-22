@@ -1573,15 +1573,24 @@
             const SWIPE_THRESHOLD = 0.15; // 15% of screen width
 
             function onDragStart(e) {
+                // Only start drag when the interaction begins inside the coverflow
+                const origin = e.target || e.srcElement;
+                if (!origin || (!origin.closest || (!origin.closest('.coverflow') && !origin.closest('.coverflow-container') && !origin.closest('.coverflow-item')))) {
+                    return;
+                }
+
+                // Only respond to primary mouse button
+                if (e.type === 'mousedown' && e.button !== 0) return;
+
                 startX = e.type === 'mousedown' ? e.pageX : e.touches[0].pageX;
                 startY = e.type === 'mousedown' ? e.pageY : e.touches[0].pageY;
                 lastDragPosition = startX;
                 isVerticalScroll = false;
                 isDragging = false; // Start as false, will be set to true on actual movement
-                
+
                 // Disable transitions during drag
                 coverflow.style.transition = 'none';
-                
+
                 document.addEventListener('mousemove', onDragMove, { passive: false });
                 document.addEventListener('touchmove', onDragMove, { passive: false });
                 document.addEventListener('mouseup', onDragEnd);
@@ -1921,7 +1930,27 @@
             }
         }
 
+        // Ensure UI elements are visible on small screens and after video transitions
+        function ensureUIVisibility() {
+            try {
+                const w = window.innerWidth;
+                if (w <= 1024) {
+                    if (coverflowContainer && coverflowContainer.style.display === 'none') coverflowContainer.style.display = 'flex';
+                    if (infoPanel && infoPanel.style.display === 'none') infoPanel.style.display = 'block';
+                    if (loginForm && loginForm.style.display === 'none') loginForm.style.display = 'flex';
+                } else {
+                    // On larger screens ensure infoPanel shown
+                    if (infoPanel && getComputedStyle(infoPanel).display === 'none') infoPanel.style.display = 'block';
+                }
+            } catch (e) {
+                console.warn('ensureUIVisibility error', e);
+            }
+        }
+
+        window.addEventListener('resize', ensureUIVisibility);
+
         // Initialize
+        ensureUIVisibility();
         fetchPublicMovieAndTvShowList();
     </script>
 </body>
