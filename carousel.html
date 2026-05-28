@@ -287,10 +287,18 @@
 
         @media (max-width: 768px) {
             #metricsOverlay {
-                right: 12px;
-                bottom: 12px;
-                transform: scale(0.9);
-                transform-origin: bottom right;
+                display: none !important;
+            }
+
+            .file-explorer-window {
+                width: 95% !important;
+                height: 85vh !important;
+            }
+
+            .window-content {
+                padding: 15px !important;
+                gap: 15px !important;
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)) !important;
             }
 
             .project-section {
@@ -528,12 +536,21 @@
             animation: arrowNudge 1.2s ease-in-out infinite;
         }
 
+        @keyframes arrowNudgeMobile {
+            0%, 100% {
+                transform: rotate(90deg) translateX(0);
+            }
+            50% {
+                transform: rotate(90deg) translateX(6px);
+            }
+        }
+
         @media (max-width: 768px) {
             .mac-pulse-btn {
                 top: auto;
                 bottom: 20px;
-                right: auto;
-                left: 18px;
+                right: 18px;
+                left: auto;
                 transform: none;
             }
 
@@ -545,22 +562,28 @@
                 top: auto;
                 bottom: 88px;
                 left: 18px;
-                right: 118px;
+                right: 18px;
                 max-width: none;
                 width: auto;
                 padding: 16px 18px;
                 transform: none;
+                justify-content: space-between;
             }
 
             .explorer-prompt::after {
                 top: auto;
                 bottom: -12px;
-                right: 36px;
+                right: 30px;
+                left: auto;
                 transform: rotate(225deg);
             }
 
             .prompt-text {
                 font-size: 1rem;
+            }
+
+            .prompt-arrow {
+                animation: arrowNudgeMobile 1.2s ease-in-out infinite;
             }
 
             .explorer-prompt.hidden {
